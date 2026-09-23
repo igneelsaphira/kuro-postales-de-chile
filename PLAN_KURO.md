@@ -78,6 +78,19 @@ Especiales posibles: Rapa Nui y Antártida.
 
 Primero validar la sensación de jugar una zona pequeña. No construir todo Chile antes de saber si Kuro se siente rico al moverse y explorar.
 
+## Estado actual del prototipo
+
+- Casa de Kuro con Álbum de Viaje interactivo.
+- Barrio Yungay, Plaza Yungay y Quinta Normal conectados.
+- Mota y su primera conversación completa.
+- Museo de la ballena explorable.
+- Primera postal coleccionable: **La ballena de Quinta Normal**.
+- La postal queda guardada aunque se recargue el juego y aparece como una página real dentro del álbum.
+
+### Siguiente paso sugerido
+
+Crear el primer **mirador de Quinta Normal** y el momento de sacar una foto. Así podremos probar el ciclo completo: explorar → descubrir → fotografiar → guardar el recuerdo en el álbum.
+
 ## Primer mapa: Santiago y conexión hacia Valparaíso
 
 ```text

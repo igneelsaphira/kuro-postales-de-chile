@@ -8,6 +8,9 @@ const interactionPrompt = document.querySelector('#interaction-prompt');
 const promptAction = document.querySelector('#prompt-action');
 const locationLabel = document.querySelector('#location-label');
 const fade = document.querySelector('#fade');
+const travelAlbum = document.querySelector('#travel-album');
+const albumEmpty = document.querySelector('#album-empty');
+const whaleAlbumPage = document.querySelector('#whale-album-page');
 const keys = new Set();
 const worldWidth = 2200;
 let x = 430;
@@ -27,7 +30,7 @@ let typingTimer = null;
 let fullDialogueText = '';
 let typingComplete = true;
 let motaConversationComplete = false;
-let whalePostcardCollected = false;
+let whalePostcardCollected = localStorage.getItem('kuro-whale-postcard') === 'collected';
 
 const motaConversation = [
   ['Mota', '¡Kuro! Ven a mirar esto. El diario dice que en Japón hay gatos que esperan trenes.'],
@@ -98,6 +101,21 @@ function closeDialogue() {
   dialogue.hidden = true;
 }
 
+function renderAlbum() {
+  albumEmpty.hidden = whalePostcardCollected;
+  whaleAlbumPage.hidden = !whalePostcardCollected;
+}
+
+function openAlbum() {
+  keys.clear();
+  renderAlbum();
+  travelAlbum.hidden = false;
+}
+
+function closeAlbum() {
+  travelAlbum.hidden = true;
+}
+
 function currentInteraction() {
   if (!grounded || transitioning) return null;
   if (currentPlace === 'street' && x >= 175 && x <= 300) return 'enter-house';
@@ -152,6 +170,10 @@ function changeLocation(nextLocation, entry = 'default') {
 
 addEventListener('keydown', (event) => {
   const pressedKey = event.key.toLowerCase();
+  if (!travelAlbum.hidden) {
+    if ((pressedKey === 'escape' || pressedKey === 'e' || pressedKey === 'enter') && !event.repeat) closeAlbum();
+    return;
+  }
   if (!dialogue.hidden) {
     if (pressedKey === 'escape') closeDialogue();
     else if ((pressedKey === 'e' || pressedKey === 'enter') && !event.repeat) advanceDialogue();
@@ -172,8 +194,7 @@ addEventListener('keydown', (event) => {
     if (interaction === 'return-plaza') changeLocation('plaza', 'from-quinta');
     if (interaction === 'exit-museum') changeLocation('quinta', 'from-museum');
     if (interaction === 'open-album') {
-      dialogue.hidden = false;
-      dialogueText.textContent = 'El Álbum de Viaje todavía tiene muchas páginas vacías.';
+      openAlbum();
     }
     if (interaction === 'go-plaza') changeLocation('plaza');
     if (interaction === 'go-quinta') changeLocation('quinta');
@@ -189,6 +210,7 @@ addEventListener('keydown', (event) => {
     if (interaction === 'enter-museum') changeLocation('museum');
     if (interaction === 'collect-postcard') {
       whalePostcardCollected = true;
+      localStorage.setItem('kuro-whale-postcard', 'collected');
       scene.classList.add('postcard-collected');
       startDialogue([
         ['Álbum de Viaje', 'Postal: La ballena de Quinta Normal'],
@@ -205,16 +227,17 @@ addEventListener('keyup', (event) => {
 function loop(time) {
   const dt = Math.min((time - lastTime) / 1000, 0.033);
   lastTime = time;
-  const moving = dialogue.hidden && (keys.has('arrowright') || keys.has('d') || keys.has('arrowleft') || keys.has('a'));
+  const controlsEnabled = dialogue.hidden && travelAlbum.hidden;
+  const moving = controlsEnabled && (keys.has('arrowright') || keys.has('d') || keys.has('arrowleft') || keys.has('a'));
   const sprinting = keys.has('shift');
   const speed = sprinting ? 370 : 240;
-  if (keys.has('arrowright') || keys.has('d')) {
+  if (controlsEnabled && (keys.has('arrowright') || keys.has('d'))) {
     const activeWorldWidth = currentPlace === 'house' || currentPlace === 'museum' ? game.clientWidth : worldWidth;
     x = Math.min(activeWorldWidth - 110, x + speed * dt);
     facing = 1;
     kuro.style.setProperty('--facing', facing);
   }
-  if (keys.has('arrowleft') || keys.has('a')) {
+  if (controlsEnabled && (keys.has('arrowleft') || keys.has('a'))) {
     x = Math.max(10, x - speed * dt);
     facing = -1;
     kuro.style.setProperty('--facing', facing);
@@ -283,8 +306,16 @@ function loop(time) {
 }
 requestAnimationFrame(loop);
 
+if (whalePostcardCollected) scene.classList.add('postcard-collected');
+renderAlbum();
+
 // Vista directa para revisar escenas durante el desarrollo. No afecta el juego normal.
-const previewPlace = new URLSearchParams(window.location.search).get('preview');
+const previewParams = new URLSearchParams(window.location.search);
+const previewPlace = previewParams.get('preview');
 if (['house', 'plaza', 'quinta', 'museum'].includes(previewPlace)) {
   requestAnimationFrame(() => changeLocation(previewPlace));
+}
+if (previewParams.get('postcard') === 'collected') whalePostcardCollected = true;
+if (previewParams.get('album') === 'open') {
+  setTimeout(openAlbum, 240);
 }

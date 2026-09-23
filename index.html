@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Kuro — Primer prototipo</title>
-  <link rel="stylesheet" href="style.css?v=18" />
+  <link rel="stylesheet" href="style.css?v=19" />
 </head>
 <body>
   <main class="game" aria-label="Prototipo de Kuro">
@@ -74,9 +74,32 @@
       <div class="dialogue-help">E / Enter continuar · Esc cerrar</div>
       <div class="dialogue-next">▼</div>
     </section>
+    <section class="travel-album" id="travel-album" hidden aria-label="Álbum de Viaje">
+      <div class="album-cover-edge"></div>
+      <div class="album-pages">
+        <header class="album-heading">
+          <span>Álbum de Viaje</span>
+          <small>Recuerdos de Kuro</small>
+        </header>
+        <div id="album-empty" class="album-empty">
+          <span class="empty-photo">✦</span>
+          <p>Todavía quedan muchos lugares por conocer.</p>
+        </div>
+        <article id="whale-album-page" class="album-memory" hidden>
+          <div class="album-photo whale-photo" aria-label="Postal de la ballena del museo"></div>
+          <div class="album-caption">
+            <h2>La ballena de Quinta Normal</h2>
+            <p>Algunas criaturas recorren océanos enteros.</p>
+            <p class="album-postscript">P. D. Quizás un viaje muy grande también puede comenzar cerquita de casa.</p>
+          </div>
+        </article>
+        <div class="album-page-number">Santiago · 01</div>
+      </div>
+      <div class="album-close-help">E / Enter / Esc · cerrar álbum</div>
+    </section>
     <p class="hint">← → moverse · Shift correr · Espacio saltar</p>
     <div id="fade" class="fade"></div>
   </main>
-  <script src="script.js?v=18"></script>
+  <script src="script.js?v=19"></script>
 </body>
 </html>
