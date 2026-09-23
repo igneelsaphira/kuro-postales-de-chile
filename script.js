@@ -39,6 +39,7 @@ let motaConversationComplete = false;
 let whalePostcardCollected = localStorage.getItem('kuro-whale-postcard') === 'collected';
 let quintaPhotoCollected = localStorage.getItem('kuro-quinta-photo') === 'collected';
 let firstLetterSent = localStorage.getItem('kuro-first-letter') === 'sent';
+let sittingInChair = false;
 let albumPageIndex = 0;
 
 const motaConversation = [
@@ -168,10 +169,12 @@ albumNext.addEventListener('click', () => changeAlbumPage(1));
 
 function currentInteraction() {
   if (!grounded || transitioning) return null;
+  if (sittingInChair) return 'leave-chair';
   if (currentPlace === 'street' && x >= game.clientWidth * 0.27 && x <= game.clientWidth * 0.44) return 'enter-house';
   if (currentPlace === 'street' && x >= worldWidth - 260) return 'go-plaza';
   if (currentPlace === 'house' && x <= game.clientWidth * 0.25) return 'exit-house';
-  if (currentPlace === 'house' && x >= game.clientWidth * 0.37 && x <= game.clientWidth * 0.58) return 'look-window';
+  if (currentPlace === 'house' && x >= game.clientWidth * 0.27 && x <= game.clientWidth * 0.39) return 'sit-chair';
+  if (currentPlace === 'house' && x >= game.clientWidth * 0.40 && x <= game.clientWidth * 0.58) return 'look-window';
   if (currentPlace === 'house' && x >= game.clientWidth * 0.67) return 'open-album';
   if (currentPlace === 'plaza' && x <= 180) return 'return-street';
   if (currentPlace === 'plaza' && x >= 1010 && x <= 1270) return 'talk-mota';
@@ -195,6 +198,7 @@ function changeLocation(nextLocation, entry = 'default') {
   fade.classList.add('active');
   setTimeout(() => {
     currentPlace = nextLocation;
+    sittingInChair = entry === 'at-chair';
     const inside = currentPlace === 'house';
     const atStreet = currentPlace === 'street';
     const atPlaza = currentPlace === 'plaza';
@@ -209,7 +213,7 @@ function changeLocation(nextLocation, entry = 'default') {
     scene.classList.toggle('station', atStation);
     locationLabel.hidden = atMuseum;
     locationLabel.textContent = inside ? 'Casa de Kuro' : atPlaza ? 'Plaza Yungay' : atQuinta ? 'Quinta Normal' : atMuseum ? 'Museo · Sala de la Ballena' : atStation ? 'Estación Mapocho' : 'Barrio Yungay';
-    if (inside) x = 175;
+    if (inside) x = entry === 'at-chair' ? game.clientWidth * 0.305 : 175;
     else if (atPlaza) x = entry === 'from-quinta' ? worldWidth - 360 : 170;
     else if (atQuinta) x = entry === 'from-museum' ? 1430 : entry === 'at-mirador' ? 1980 : 170;
     else if (atMuseum) x = 170;
@@ -234,6 +238,14 @@ function changeLocation(nextLocation, entry = 'default') {
 
 addEventListener('keydown', (event) => {
   const pressedKey = event.key.toLowerCase();
+  if (sittingInChair) {
+    if ((pressedKey === 'escape' || pressedKey === 'e' || pressedKey === 'enter') && !event.repeat) {
+      sittingInChair = false;
+      x = game.clientWidth * 0.395;
+      frame = 0;
+    }
+    return;
+  }
   if (!photoMoment.hidden) {
     if ((pressedKey === 'escape' || pressedKey === 'e' || pressedKey === 'enter') && !event.repeat) closePhotoMoment();
     return;
@@ -271,6 +283,13 @@ addEventListener('keydown', (event) => {
         ['Kuro', 'Desde aquí Santiago se ve enorme.'],
         ['Kuro', 'Pero mi casa todavía se siente cerquita de todo.']
       ]);
+    }
+    if (interaction === 'sit-chair') {
+      keys.clear();
+      sittingInChair = true;
+      x = game.clientWidth * 0.305;
+      facing = 1;
+      frame = 0;
     }
     if (interaction === 'go-plaza') changeLocation('plaza');
     if (interaction === 'go-quinta') changeLocation('quinta');
@@ -332,7 +351,7 @@ addEventListener('keyup', (event) => {
 function loop(time) {
   const dt = Math.min((time - lastTime) / 1000, 0.033);
   lastTime = time;
-  const controlsEnabled = dialogue.hidden && travelAlbum.hidden && photoMoment.hidden;
+  const controlsEnabled = dialogue.hidden && travelAlbum.hidden && photoMoment.hidden && !sittingInChair;
   const moving = controlsEnabled && (keys.has('arrowright') || keys.has('d') || keys.has('arrowleft') || keys.has('a'));
   const sprinting = keys.has('shift');
   const speed = sprinting ? 370 : 240;
@@ -367,6 +386,8 @@ function loop(time) {
     'exit-house': 'Salir a Barrio Yungay',
     'open-album': 'Ver Álbum de Viaje',
     'look-window': 'Mirar por la ventana',
+    'sit-chair': 'Sentarse a leer',
+    'leave-chair': 'Levantarse',
     'go-plaza': 'Ir a Plaza Yungay',
     'return-street': 'Volver a Barrio Yungay',
     'return-plaza': 'Volver a Plaza Yungay',
@@ -388,6 +409,7 @@ function loop(time) {
   promptAction.textContent = interactionLabels[interaction] || '';
   interactionPrompt.classList.toggle('edge-left', interaction === 'exit-museum');
   interactionPrompt.classList.toggle('object-right', interaction === 'collect-postcard');
+  interactionPrompt.classList.toggle('chair-action', interaction === 'leave-chair');
   interactionPrompt.hidden = !interaction || !dialogue.hidden;
 
   const viewportWidth = game.clientWidth;
@@ -400,6 +422,7 @@ function loop(time) {
   kuro.classList.toggle('jumping', !grounded);
   kuro.classList.toggle('running', grounded && moving);
   kuro.classList.toggle('interact', grounded && !moving && !dialogue.hidden);
+  kuro.classList.toggle('chair-reading', sittingInChair);
 
   if (!grounded) {
     // Una sola secuencia por salto: impulso, subida, caída y aterrizaje.
@@ -409,7 +432,7 @@ function loop(time) {
     else frame = 3;
     kuro.style.backgroundPositionX = `${-frame * 100}px`;
   } else {
-    const frameDelay = moving ? (sprinting ? 75 : 115) : 420;
+    const frameDelay = sittingInChair ? 700 : moving ? (sprinting ? 75 : 115) : 420;
     if (time - timer > frameDelay) {
       frame = (frame + 1) % 4;
       kuro.style.backgroundPositionX = `${-frame * 100}px`;
@@ -432,6 +455,8 @@ if (['house', 'plaza', 'quinta', 'museum', 'station'].includes(previewPlace)) {
   const previewSpot = previewParams.get('at');
   const previewEntry = previewPlace === 'quinta' && previewSpot === 'mirador'
     ? 'at-mirador'
+    : previewPlace === 'house' && previewParams.get('chair') === 'sit'
+      ? 'at-chair'
     : previewPlace === 'station' && ['estafeta', 'train'].includes(previewSpot)
       ? `at-${previewSpot}`
       : 'default';

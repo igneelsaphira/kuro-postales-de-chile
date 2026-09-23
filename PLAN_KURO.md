@@ -95,6 +95,7 @@ Primero validar la sensación de jugar una zona pequeña. No construir todo Chil
 - Escala de Kuro corregida en la casa y puntos interactivos alineados con la puerta y el estante del álbum.
 - Ambientación suave añadida: pétalos de jacarandá, luz interior, polvo dorado y brillo del álbum.
 - Kuro puede mirar por la ventana y comentar cómo Santiago se siente enorme desde su casa.
+- El sillón es interactivo: Kuro puede sentarse a leer con una animación tranquila y levantarse cuando quiera.
 
 ### Siguiente paso sugerido
 
