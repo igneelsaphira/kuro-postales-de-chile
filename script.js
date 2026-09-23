@@ -178,7 +178,7 @@ function currentInteraction() {
   if (currentPlace === 'house' && x >= game.clientWidth * 0.67) return 'open-album';
   if (currentPlace === 'plaza' && x <= 180) return 'return-street';
   const motaX = game.clientWidth * 0.62;
-  if (currentPlace === 'plaza' && x >= motaX - 105 && x <= motaX + 165) return 'talk-mota';
+  if (currentPlace === 'plaza' && x >= motaX - 200 && x <= motaX + 165) return 'talk-mota';
   if (currentPlace === 'plaza' && x >= game.clientWidth - 120) return motaConversationComplete ? 'go-quinta' : 'route-blocked';
   if (currentPlace === 'quinta' && x <= 180) return 'return-plaza';
   if (currentPlace === 'quinta' && x >= 1110 && x <= 1510) return 'enter-museum';
@@ -215,7 +215,7 @@ function changeLocation(nextLocation, entry = 'default') {
     locationLabel.hidden = atMuseum;
     locationLabel.textContent = inside ? 'Casa de Kuro' : atPlaza ? 'Plaza Yungay' : atQuinta ? 'Quinta Normal' : atMuseum ? 'Museo · Sala de la Ballena' : atStation ? 'Estación Mapocho' : 'Barrio Yungay';
     if (inside) x = entry === 'at-chair' ? game.clientWidth * 0.305 : 175;
-    else if (atPlaza) x = entry === 'from-quinta' ? game.clientWidth - 150 : entry === 'at-mota' ? game.clientWidth * 0.48 : 120;
+    else if (atPlaza) x = entry === 'from-quinta' ? game.clientWidth - 150 : entry === 'at-mota' ? game.clientWidth * 0.35 : 120;
     else if (atQuinta) x = entry === 'from-museum' ? 1430 : entry === 'at-mirador' ? 1980 : 170;
     else if (atMuseum) x = 170;
     else if (atStation) x = entry === 'at-estafeta' ? 850 : entry === 'at-train' ? 1510 : entry === 'from-route' ? worldWidth - 360 : 170;

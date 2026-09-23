@@ -104,6 +104,7 @@ Primero validar la sensación de jugar una zona pequeña. No construir todo Chil
 - Al ser una escena unificada ya no necesita cortes, parches ni árboles añadidos para ocultar uniones.
 - Mota fue reducido y suavizado; una sombra bajo su silla lo integra con la línea del suelo y mantiene su apariencia gordita sin verse gigante.
 - Kuro, Mota y la silla comparten la superficie superior de la vereda; los márgenes transparentes de los sprites se compensan para que no floten ni se hundan.
+- Mota tiene un rincón habitual de once junto al sendero: una mesita baja con taza, pancito y diarios doblados explica por qué está sentado allí y refuerza su personalidad viajera y hogareña.
 
 ### Siguiente paso sugerido
 

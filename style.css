@@ -98,6 +98,7 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .plaza-monument span { position: absolute; left: 52px; top: 38px; width: 45px; height: 72px; border-radius: 50% 50% 22% 22%; background: #8a7c72; }
 .plaza-ground, .plaza-tree, .plaza-monument { display: none; }
 .mota-ground-shadow { position: absolute; z-index: 4; left: calc(min(62vw, 682px) + 8px); bottom: 18.2%; width: 118px; height: 17px; border-radius: 50%; background: #49382d42; filter: blur(3px); }
+.mota-table { position: absolute; z-index: 5; left: calc(min(62vw, 682px) - 92px); bottom: 19%; width: 100px; height: 105px; object-fit: contain; object-position: bottom; image-rendering: auto; filter: saturate(.92) drop-shadow(0 3px 2px #49382d33); }
 .mota { position: absolute; z-index: 5; left: min(62vw, 682px); bottom: 19%; width: 135px; height: 155px; object-fit: contain; object-position: bottom; image-rendering: auto; filter: saturate(.92) drop-shadow(0 3px 2px #49382d33); }
 .plaza-sign { position: absolute; z-index: 6; bottom: 43%; padding: 12px 17px; border: 5px solid #4d3b35; border-radius: 12px; background: #71806a; color: #fff4d6; font-weight: bold; }
 .plaza-sign::after { content: ''; position: absolute; left: 28px; top: 45px; width: 13px; height: 110px; background: #4d3b35; }
