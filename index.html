@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Kuro — Primer prototipo</title>
-  <link rel="stylesheet" href="style.css?v=19" />
+  <link rel="stylesheet" href="style.css?v=23" />
 </head>
 <body>
   <main class="game" aria-label="Prototipo de Kuro">
@@ -57,6 +57,11 @@
           <div class="museum-column column-three"></div>
           <div class="museum-door"></div>
         </div>
+        <div class="quinta-mirador" aria-label="Rincón para sacar una foto">
+          <div class="mirador-flowers"></div>
+          <div class="mirador-rail"></div>
+          <div class="mirador-marker">✦</div>
+        </div>
         <div class="plaza-sign quinta-back">← Plaza Yungay</div>
       </div>
       <div class="museum-layer" aria-label="Sala de la ballena">
@@ -93,13 +98,43 @@
             <p class="album-postscript">P. D. Quizás un viaje muy grande también puede comenzar cerquita de casa.</p>
           </div>
         </article>
-        <div class="album-page-number">Santiago · 01</div>
+        <article id="quinta-photo-page" class="album-memory" hidden>
+          <div class="album-photo quinta-photo-art" aria-label="Foto tomada por Kuro en Quinta Normal">
+            <span class="photo-tree photo-tree-one"></span>
+            <span class="photo-tree photo-tree-two"></span>
+            <span class="photo-museum"></span>
+            <span class="photo-kuro"></span>
+          </div>
+          <div class="album-caption">
+            <h2>Una tarde en Quinta Normal</h2>
+            <p>La primera foto que Kuro tomó durante su viaje.</p>
+            <p class="album-postscript">P. D. No hace falta ir muy lejos para empezar a mirar el mundo con otros ojos.</p>
+          </div>
+        </article>
+        <button id="album-prev" class="album-arrow album-prev" type="button" aria-label="Recuerdo anterior">‹</button>
+        <button id="album-next" class="album-arrow album-next" type="button" aria-label="Recuerdo siguiente">›</button>
+        <div id="album-page-number" class="album-page-number">Santiago · 00</div>
       </div>
-      <div class="album-close-help">E / Enter / Esc · cerrar álbum</div>
+      <div class="album-close-help">← → cambiar página · E / Enter / Esc cerrar</div>
+    </section>
+    <section id="photo-moment" class="photo-moment" hidden aria-label="Nueva foto de viaje">
+      <div class="new-polaroid">
+        <div class="polaroid-picture quinta-photo-art">
+          <span class="photo-tree photo-tree-one"></span>
+          <span class="photo-tree photo-tree-two"></span>
+          <span class="photo-museum"></span>
+          <span class="photo-kuro"></span>
+        </div>
+        <strong>Quinta Normal</strong>
+        <small>La primera foto de Kuro</small>
+      </div>
+      <p>¡Nuevo recuerdo para el Álbum de Viaje!</p>
+      <div class="photo-close-help">E / Enter · guardar</div>
     </section>
     <p class="hint">← → moverse · Shift correr · Espacio saltar</p>
     <div id="fade" class="fade"></div>
+    <div id="shutter-flash" class="shutter-flash"></div>
   </main>
-  <script src="script.js?v=19"></script>
+  <script src="script.js?v=23"></script>
 </body>
 </html>

@@ -11,6 +11,12 @@ const fade = document.querySelector('#fade');
 const travelAlbum = document.querySelector('#travel-album');
 const albumEmpty = document.querySelector('#album-empty');
 const whaleAlbumPage = document.querySelector('#whale-album-page');
+const quintaPhotoPage = document.querySelector('#quinta-photo-page');
+const albumPageNumber = document.querySelector('#album-page-number');
+const albumPrev = document.querySelector('#album-prev');
+const albumNext = document.querySelector('#album-next');
+const photoMoment = document.querySelector('#photo-moment');
+const shutterFlash = document.querySelector('#shutter-flash');
 const keys = new Set();
 const worldWidth = 2200;
 let x = 430;
@@ -31,6 +37,8 @@ let fullDialogueText = '';
 let typingComplete = true;
 let motaConversationComplete = false;
 let whalePostcardCollected = localStorage.getItem('kuro-whale-postcard') === 'collected';
+let quintaPhotoCollected = localStorage.getItem('kuro-quinta-photo') === 'collected';
+let albumPageIndex = 0;
 
 const motaConversation = [
   ['Mota', '¡Kuro! Ven a mirar esto. El diario dice que en Japón hay gatos que esperan trenes.'],
@@ -102,8 +110,28 @@ function closeDialogue() {
 }
 
 function renderAlbum() {
-  albumEmpty.hidden = whalePostcardCollected;
-  whaleAlbumPage.hidden = !whalePostcardCollected;
+  const pages = [];
+  if (whalePostcardCollected) pages.push({ element: whaleAlbumPage, number: 'Santiago · 01' });
+  if (quintaPhotoCollected) pages.push({ element: quintaPhotoPage, number: 'Santiago · 02' });
+  albumPageIndex = Math.max(0, Math.min(albumPageIndex, pages.length - 1));
+  albumEmpty.hidden = pages.length > 0;
+  whaleAlbumPage.hidden = true;
+  quintaPhotoPage.hidden = true;
+  albumPrev.hidden = pages.length < 2;
+  albumNext.hidden = pages.length < 2;
+  if (pages.length) {
+    pages[albumPageIndex].element.hidden = false;
+    albumPageNumber.textContent = `${pages[albumPageIndex].number} · ${albumPageIndex + 1}/${pages.length}`;
+  } else {
+    albumPageNumber.textContent = 'Santiago · 00';
+  }
+}
+
+function changeAlbumPage(direction) {
+  const pageCount = Number(whalePostcardCollected) + Number(quintaPhotoCollected);
+  if (pageCount < 2) return;
+  albumPageIndex = (albumPageIndex + direction + pageCount) % pageCount;
+  renderAlbum();
 }
 
 function openAlbum() {
@@ -116,6 +144,27 @@ function closeAlbum() {
   travelAlbum.hidden = true;
 }
 
+function takeQuintaPhoto() {
+  keys.clear();
+  quintaPhotoCollected = true;
+  localStorage.setItem('kuro-quinta-photo', 'collected');
+  scene.classList.add('quinta-photo-collected');
+  shutterFlash.classList.remove('active');
+  void shutterFlash.offsetWidth;
+  shutterFlash.classList.add('active');
+  setTimeout(() => {
+    photoMoment.hidden = false;
+    shutterFlash.classList.remove('active');
+  }, 230);
+}
+
+function closePhotoMoment() {
+  photoMoment.hidden = true;
+}
+
+albumPrev.addEventListener('click', () => changeAlbumPage(-1));
+albumNext.addEventListener('click', () => changeAlbumPage(1));
+
 function currentInteraction() {
   if (!grounded || transitioning) return null;
   if (currentPlace === 'street' && x >= 175 && x <= 300) return 'enter-house';
@@ -127,6 +176,7 @@ function currentInteraction() {
   if (currentPlace === 'plaza' && x >= worldWidth - 280) return motaConversationComplete ? 'go-quinta' : 'route-blocked';
   if (currentPlace === 'quinta' && x <= 180) return 'return-plaza';
   if (currentPlace === 'quinta' && x >= 1110 && x <= 1510) return 'enter-museum';
+  if (currentPlace === 'quinta' && x >= 1840) return quintaPhotoCollected ? 'view-mirador' : 'take-photo';
   if (currentPlace === 'museum' && x <= 75) return 'exit-museum';
   if (currentPlace === 'museum' && !whalePostcardCollected && x >= game.clientWidth - 300) return 'collect-postcard';
   return null;
@@ -150,7 +200,7 @@ function changeLocation(nextLocation, entry = 'default') {
     locationLabel.textContent = inside ? 'Casa de Kuro' : atPlaza ? 'Plaza Yungay' : atQuinta ? 'Quinta Normal' : atMuseum ? 'Museo · Sala de la Ballena' : 'Barrio Yungay';
     if (inside) x = 175;
     else if (atPlaza) x = entry === 'from-quinta' ? worldWidth - 360 : 170;
-    else if (atQuinta) x = entry === 'from-museum' ? 1430 : 170;
+    else if (atQuinta) x = entry === 'from-museum' ? 1430 : entry === 'at-mirador' ? 1980 : 170;
     else if (atMuseum) x = 170;
     else x = entry === 'from-plaza' ? worldWidth - 360 : 315;
     y = 0;
@@ -158,6 +208,7 @@ function changeLocation(nextLocation, entry = 'default') {
     grounded = true;
     if (entry === 'from-plaza' || entry === 'from-quinta') cameraX = Math.max(0, worldWidth - game.clientWidth);
     else if (entry === 'from-museum') cameraX = Math.max(0, Math.min(worldWidth - game.clientWidth, 1430 - game.clientWidth * 0.45));
+    else if (entry === 'at-mirador') cameraX = Math.max(0, worldWidth - game.clientWidth);
     else cameraX = 0;
     dialogue.hidden = true;
     scene.style.transform = 'translateX(0)';
@@ -170,8 +221,14 @@ function changeLocation(nextLocation, entry = 'default') {
 
 addEventListener('keydown', (event) => {
   const pressedKey = event.key.toLowerCase();
+  if (!photoMoment.hidden) {
+    if ((pressedKey === 'escape' || pressedKey === 'e' || pressedKey === 'enter') && !event.repeat) closePhotoMoment();
+    return;
+  }
   if (!travelAlbum.hidden) {
-    if ((pressedKey === 'escape' || pressedKey === 'e' || pressedKey === 'enter') && !event.repeat) closeAlbum();
+    if (pressedKey === 'arrowleft' && !event.repeat) changeAlbumPage(-1);
+    else if (pressedKey === 'arrowright' && !event.repeat) changeAlbumPage(1);
+    else if ((pressedKey === 'escape' || pressedKey === 'e' || pressedKey === 'enter') && !event.repeat) closeAlbum();
     return;
   }
   if (!dialogue.hidden) {
@@ -208,6 +265,10 @@ addEventListener('keydown', (event) => {
       dialogueText.textContent = 'El camino hacia Quinta Normal todavía está cerrado.';
     }
     if (interaction === 'enter-museum') changeLocation('museum');
+    if (interaction === 'take-photo') takeQuintaPhoto();
+    if (interaction === 'view-mirador') {
+      startDialogue([['Kuro', 'Desde aquí todo se ve distinto. Me alegra haber guardado este momento.']]);
+    }
     if (interaction === 'collect-postcard') {
       whalePostcardCollected = true;
       localStorage.setItem('kuro-whale-postcard', 'collected');
@@ -227,7 +288,7 @@ addEventListener('keyup', (event) => {
 function loop(time) {
   const dt = Math.min((time - lastTime) / 1000, 0.033);
   lastTime = time;
-  const controlsEnabled = dialogue.hidden && travelAlbum.hidden;
+  const controlsEnabled = dialogue.hidden && travelAlbum.hidden && photoMoment.hidden;
   const moving = controlsEnabled && (keys.has('arrowright') || keys.has('d') || keys.has('arrowleft') || keys.has('a'));
   const sprinting = keys.has('shift');
   const speed = sprinting ? 370 : 240;
@@ -268,6 +329,8 @@ function loop(time) {
     'route-blocked': 'Revisar el camino',
     'go-quinta': 'Ir a Quinta Normal',
     'enter-museum': 'Entrar al museo',
+    'take-photo': 'Sacar una foto',
+    'view-mirador': 'Mirar el paisaje',
     'exit-museum': 'Salir a Quinta Normal',
     'collect-postcard': 'Revisar vitrina'
   };
@@ -307,15 +370,21 @@ function loop(time) {
 requestAnimationFrame(loop);
 
 if (whalePostcardCollected) scene.classList.add('postcard-collected');
+if (quintaPhotoCollected) scene.classList.add('quinta-photo-collected');
 renderAlbum();
 
 // Vista directa para revisar escenas durante el desarrollo. No afecta el juego normal.
 const previewParams = new URLSearchParams(window.location.search);
 const previewPlace = previewParams.get('preview');
 if (['house', 'plaza', 'quinta', 'museum'].includes(previewPlace)) {
-  requestAnimationFrame(() => changeLocation(previewPlace));
+  const previewEntry = previewPlace === 'quinta' && previewParams.get('at') === 'mirador' ? 'at-mirador' : 'default';
+  requestAnimationFrame(() => changeLocation(previewPlace, previewEntry));
 }
 if (previewParams.get('postcard') === 'collected') whalePostcardCollected = true;
+if (previewParams.get('photo') === 'collected') quintaPhotoCollected = true;
 if (previewParams.get('album') === 'open') {
   setTimeout(openAlbum, 240);
+}
+if (previewParams.get('photoView') === 'open') {
+  setTimeout(() => { photoMoment.hidden = false; }, 240);
 }

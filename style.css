@@ -67,7 +67,7 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .quinta-ground { position: absolute; inset: 65% 0 0; border-top: 10px solid #70865d; background: #c49c74; }
 .quinta-tree { position: absolute; bottom: 34%; width: 50px; height: 245px; border-radius: 24px 24px 5px 5px; background: #725043; }
 .quinta-tree::before { content: ''; position: absolute; left: -95px; top: -120px; width: 240px; height: 205px; border-radius: 49%; background: #82986a; box-shadow: inset -24px -18px 0 #6f855a; }
-.quinta-tree-one { left: 350px; } .quinta-tree-two { left: 830px; } .quinta-tree-three { left: 1880px; }
+.quinta-tree-one { left: 350px; } .quinta-tree-two { left: 830px; } .quinta-tree-three { left: 1760px; }
 .museum-building { position: absolute; left: 1190px; bottom: 34%; width: 500px; height: 310px; border: 9px solid #76594d; background: #e4c79e; }
 .museum-roof { position: absolute; left: -28px; right: -28px; top: -65px; height: 70px; border: 9px solid #76594d; background: #a96855; clip-path: polygon(50% 0, 100% 100%, 0 100%); }
 .museum-title { position: absolute; left: 160px; top: 28px; width: 180px; padding: 8px; border: 5px solid #76594d; background: #fff0c9; color: #76594d; text-align: center; font-weight: bold; letter-spacing: 5px; }
@@ -75,6 +75,12 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .column-one { left: 44px; } .column-two { left: 204px; } .column-three { right: 44px; }
 .museum-door { position: absolute; left: 275px; bottom: 0; width: 82px; height: 145px; border: 8px solid #76594d; background: #71806a; }
 .quinta-back { left: 35px; }
+.quinta-mirador { position: absolute; z-index: 2; left: 1900px; bottom: 30%; width: 240px; height: 150px; }
+.mirador-rail { position: absolute; left: 5px; right: 5px; bottom: 16px; height: 72px; border: 8px solid #76594d; border-top-width: 12px; background: repeating-linear-gradient(90deg, transparent 0 34px, #76594d 35px 43px); }
+.mirador-marker { position: absolute; left: 88px; top: -24px; display: grid; place-items: center; width: 62px; height: 72px; border: 6px solid #76594d; border-radius: 30px 30px 10px 10px; background: #fff0c9; color: #c98262; font-size: 27px; box-shadow: 0 5px 0 #4d3b3530; animation: marker-bob 1.2s ease-in-out infinite alternate; }
+.mirador-flowers { position: absolute; left: -15px; right: -15px; bottom: 0; height: 35px; border-radius: 50%; background: radial-gradient(circle at 10% 40%, #f5d36f 0 5px, transparent 6px), radial-gradient(circle at 28% 65%, #e79786 0 6px, transparent 7px), radial-gradient(circle at 76% 55%, #f5d36f 0 5px, transparent 6px), radial-gradient(circle at 92% 35%, #e79786 0 6px, transparent 7px), #718c66; }
+.scene.quinta-photo-collected .mirador-marker { animation: none; color: #71806a; }
+@keyframes marker-bob { to { transform: translateY(-7px); } }
 .museum-layer { display: none; position: absolute; left: 0; top: 0; bottom: 0; width: min(100vw, 1100px); z-index: 1; background: #c9b28f url('assets/museum-whale-hall.png') center center / cover no-repeat; }
 .scene.museum .exterior-layer, .scene.museum .interior-layer, .scene.museum .plaza-layer, .scene.museum .quinta-layer { display: none; }
 .scene.museum .museum-layer { display: block; }
@@ -111,8 +117,35 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .album-caption h2 { margin: 0 0 16px; color: #765044; font-size: clamp(20px, 2.5vw, 32px); }
 .album-caption p { margin: 0 0 10px; }
 .album-postscript { color: #8b6658; font-style: italic; }
+.album-arrow { position: absolute; z-index: 2; top: 50%; translate: 0 -50%; width: 34px; height: 52px; border: 0; border-radius: 18px; background: #9b5f50dd; color: #fff2cf; font: bold 32px/1 Georgia, serif; cursor: pointer; }
+.album-arrow[hidden] { display: none; }
+.album-prev { left: 8px; }
+.album-next { right: 8px; }
 .album-page-number { position: absolute; right: 30px; bottom: 14px; color: #9a7b6e; font-size: 13px; }
 .album-close-help { position: absolute; left: 50%; bottom: 10px; translate: -50% 0; color: #fff2cf; font-size: 12px; }
+.quinta-photo-art { overflow: hidden; background: linear-gradient(#acd8dc 0 52%, #91a974 53% 70%, #c9a378 71%); }
+.photo-tree { position: absolute; bottom: 23%; width: 12%; height: 38%; border-radius: 8px 8px 0 0; background: #6d5044; }
+.photo-tree::before { content: ''; position: absolute; left: -80%; top: -72%; width: 260%; aspect-ratio: 1; border-radius: 50%; background: #789264; box-shadow: inset -10px -8px 0 #687f59; }
+.photo-tree-one { left: 13%; }
+.photo-tree-two { right: 12%; scale: .8; }
+.photo-museum { position: absolute; left: 35%; bottom: 22%; width: 35%; height: 34%; border: 4px solid #76594d; background: #e3c59d; }
+.photo-museum::before { content: ''; position: absolute; left: -8%; right: -8%; top: -35%; height: 38%; background: #a96855; clip-path: polygon(50% 0, 100% 100%, 0 100%); }
+.photo-kuro { position: absolute; left: 47%; bottom: 15%; width: 14%; height: 14%; border-radius: 48% 52% 42% 45%; background: #211d28; }
+.photo-kuro::before { content: ''; position: absolute; right: -28%; top: -36%; width: 58%; height: 70%; background: #211d28; clip-path: polygon(0 30%, 10% 0, 38% 25%, 72% 0, 100% 30%, 92% 100%, 8% 100%); }
+.photo-kuro::after { content: ''; position: absolute; left: -46%; top: -4%; width: 58%; height: 55%; border: 5px solid #211d28; border-right: 0; border-bottom: 0; border-radius: 100% 0 0 0; transform: rotate(15deg); }
+.photo-moment { position: absolute; z-index: 16; inset: 5%; display: grid; place-content: center; justify-items: center; border-radius: 28px; background: #59433bd9; color: #fff2cf; text-align: center; }
+.photo-moment[hidden] { display: none; }
+.new-polaroid { width: min(48vw, 360px); padding: 14px 14px 24px; background: #fffaf0; color: #6a4840; box-shadow: 0 16px 30px #211d2866; transform: rotate(-2deg); animation: photo-arrive .45s cubic-bezier(.2,.9,.3,1.2); }
+.polaroid-picture { position: relative; width: 100%; aspect-ratio: 4 / 3; margin-bottom: 13px; }
+.new-polaroid strong, .new-polaroid small { display: block; }
+.new-polaroid strong { font-size: clamp(18px, 2.5vw, 28px); }
+.new-polaroid small { margin-top: 4px; font-style: italic; }
+.photo-moment > p { margin: 22px 0 5px; font-size: clamp(16px, 2vw, 23px); font-weight: bold; }
+.photo-close-help { font-size: 12px; opacity: .85; }
+@keyframes photo-arrive { from { opacity: 0; transform: translateY(-45px) rotate(5deg) scale(.75); } }
+.shutter-flash { position: absolute; z-index: 30; inset: 0; pointer-events: none; background: white; opacity: 0; }
+.shutter-flash.active { animation: shutter .35s ease-out; }
+@keyframes shutter { 0%, 25% { opacity: 1; } 100% { opacity: 0; } }
 .interaction-prompt { position: absolute; z-index: 6; left: 50%; bottom: 28%; translate: -50% 0; padding: 6px 10px; border: 2px solid #c98262; border-radius: 12px; background: #fff4d6ee; font-size: 14px; font-weight: bold; box-shadow: 0 3px 0 #4d3b3530; }
 .interaction-prompt.edge-left { left: 22px; translate: 0 0; }
 .interaction-prompt.object-right { left: auto; right: 28px; bottom: 36%; translate: 0 0; }
