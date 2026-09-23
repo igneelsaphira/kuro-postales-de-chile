@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kuro — Primer prototipo</title>
+  <link rel="stylesheet" href="style.css?v=18" />
+</head>
+<body>
+  <main class="game" aria-label="Prototipo de Kuro">
+    <div class="sky"></div>
+    <div id="scene" class="scene">
+      <div class="sun exterior-layer"></div>
+      <div class="hill hill-back exterior-layer"></div>
+      <div class="hill hill-front exterior-layer"></div>
+      <div class="house exterior-layer" aria-label="Casa de Kuro">
+        <div class="house-roof"></div>
+        <div class="house-body">
+          <div class="window window-left"></div>
+          <div class="window window-right"></div>
+          <div class="door"></div>
+        </div>
+      </div>
+      <div class="neighbor-house neighbor-one exterior-layer"></div>
+      <div class="neighbor-house neighbor-two exterior-layer"></div>
+      <div class="street-tree exterior-layer"></div>
+      <div class="street-lamp exterior-layer"></div>
+      <div class="road-sign exterior-layer"><span>Plaza Yungay</span><b>→</b></div>
+      <div class="interior-layer" aria-label="Interior de la casa de Kuro">
+        <div class="interior-wall"></div>
+        <div class="interior-window"></div>
+        <div class="interior-door"></div>
+        <div class="album-shelf"><span class="album-object"></span></div>
+        <div class="interior-rug"></div>
+        <div class="interior-plant"></div>
+      </div>
+      <div class="plaza-layer" aria-label="Plaza Yungay">
+        <div class="plaza-ground"></div>
+        <div class="plaza-tree plaza-tree-left"></div>
+        <div class="plaza-tree plaza-tree-right"></div>
+        <div class="plaza-monument"><span></span></div>
+        <img id="mota" class="mota" src="assets/mota-reading.png" alt="Mota leyendo el diario" />
+        <div class="plaza-sign sign-back">← Barrio Yungay</div>
+        <div class="plaza-sign sign-forward">Quinta Normal →</div>
+        <div class="route-blocker">Camino en preparación</div>
+      </div>
+      <div class="quinta-layer" aria-label="Quinta Normal">
+        <div class="quinta-ground"></div>
+        <div class="quinta-tree quinta-tree-one"></div>
+        <div class="quinta-tree quinta-tree-two"></div>
+        <div class="quinta-tree quinta-tree-three"></div>
+        <div class="museum-building" aria-label="Museo Nacional de Historia Natural">
+          <div class="museum-roof"></div>
+          <div class="museum-title">MUSEO</div>
+          <div class="museum-column column-one"></div>
+          <div class="museum-column column-two"></div>
+          <div class="museum-column column-three"></div>
+          <div class="museum-door"></div>
+        </div>
+        <div class="plaza-sign quinta-back">← Plaza Yungay</div>
+      </div>
+      <div class="museum-layer" aria-label="Sala de la ballena">
+      </div>
+      <div id="kuro" class="kuro" aria-label="Kuro"></div>
+      <div class="ground exterior-layer"></div>
+    </div>
+    <div id="location-label" class="location-label">Barrio Yungay</div>
+    <div id="interaction-prompt" class="interaction-prompt" hidden>
+      <kbd>E</kbd> <span id="prompt-action">Entrar a casa</span>
+    </div>
+    <section class="dialogue" id="dialogue" hidden>
+      <div id="dialogue-name" class="dialogue-name">Kuro</div>
+      <div id="dialogue-text"></div>
+      <div class="dialogue-help">E / Enter continuar · Esc cerrar</div>
+      <div class="dialogue-next">▼</div>
+    </section>
+    <p class="hint">← → moverse · Shift correr · Espacio saltar</p>
+    <div id="fade" class="fade"></div>
+  </main>
+  <script src="script.js?v=18"></script>
+</body>
+</html>

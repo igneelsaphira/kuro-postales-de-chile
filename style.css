@@ -1,0 +1,101 @@
+:root { font-family: Georgia, serif; color: #4d3b35; background: #eadfc8; }
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
+.game { width: min(100vw, 1100px); aspect-ratio: 16 / 9; overflow: hidden; position: relative; background: #f6e8c8; box-shadow: 0 18px 50px #4d3b3526; }
+.sky { position: absolute; inset: 0 0 42%; background: #b9d8d5; }
+.scene { position: absolute; left: 0; top: 0; bottom: 0; width: 2200px; overflow: hidden; will-change: transform; }
+.sun { position: absolute; width: 90px; height: 90px; right: 12%; top: 12%; border-radius: 50%; background: #f3c969; opacity: .9; }
+.hill { position: absolute; bottom: 34%; border-radius: 50% 50% 0 0; }
+.hill-back { width: 75%; height: 32%; left: -10%; background: #9aa87b; }
+.hill-front { width: 80%; height: 25%; right: -15%; background: #768967; }
+.ground { position: absolute; left: 0; right: 0; bottom: 0; height: 35%; background: #b98b69; border-top: 9px solid #89966a; }
+.house { position: absolute; z-index: 2; left: 80px; bottom: 31%; width: 300px; height: 210px; }
+.house-roof { position: absolute; left: -18px; top: 0; width: 336px; height: 92px; background: #9b5f50; border: 8px solid #6a4840; clip-path: polygon(50% 0, 100% 100%, 0 100%); }
+.house-body { position: absolute; left: 30px; right: 30px; bottom: 0; height: 145px; background: #e7b985; border: 8px solid #6a4840; }
+.window { position: absolute; top: 25px; width: 48px; height: 48px; background: #a9d6d3; border: 6px solid #6a4840; box-shadow: inset 0 0 0 3px #f6e8c8; }
+.window-left { left: 18px; }
+.window-right { right: 18px; }
+.door { position: absolute; bottom: 0; left: calc(50% - 25px); width: 50px; height: 88px; background: #71806a; border: 6px solid #6a4840; }
+.neighbor-house { position: absolute; z-index: 1; bottom: 31%; border: 8px solid #6a4840; border-bottom: 0; }
+.neighbor-one { left: 920px; width: 390px; height: 250px; background: #d58a69; }
+.neighbor-two { left: 1460px; width: 470px; height: 210px; background: #e6c08e; }
+.neighbor-house::before { content: ''; position: absolute; left: 35px; top: 42px; width: 65px; height: 72px; border: 7px solid #6a4840; background: #a9d6d3; box-shadow: 205px 0 0 -7px #a9d6d3, 205px 0 0 0 #6a4840; }
+.street-tree { position: absolute; z-index: 2; left: 700px; bottom: 31%; width: 40px; height: 210px; border-radius: 20px 20px 5px 5px; background: #6a4840; }
+.street-tree::before { content: ''; position: absolute; width: 220px; height: 190px; left: -90px; top: -100px; border-radius: 48% 52% 45% 55%; background: #89966a; }
+.street-lamp { position: absolute; z-index: 2; left: 1360px; bottom: 31%; width: 18px; height: 185px; border-radius: 8px 8px 0 0; background: #4d3b35; }
+.street-lamp::before { content: ''; position: absolute; left: -20px; top: -34px; width: 58px; height: 58px; border: 6px solid #4d3b35; border-radius: 45% 45% 25% 25%; background: #f3c969; }
+.road-sign { position: absolute; z-index: 3; left: 1900px; bottom: 34%; width: 210px; height: 62px; padding: 14px 18px; border: 6px solid #4d3b35; border-radius: 12px 22px 22px 12px; background: #71806a; color: #fff4d6; font-weight: bold; font-size: 20px; }
+.road-sign::after { content: ''; position: absolute; left: 28px; top: 56px; width: 16px; height: 120px; background: #4d3b35; }
+.road-sign b { float: right; font-size: 26px; line-height: 18px; }
+.interior-layer { display: none; position: absolute; inset: 0; z-index: 1; background: #eac99d; }
+.scene.inside .exterior-layer { display: none; }
+.scene.inside .interior-layer { display: block; }
+.interior-wall { position: absolute; inset: 0 0 31%; background: #f3dfb9; border-bottom: 14px solid #8a604d; }
+.interior-wall::before { content: ''; position: absolute; inset: 0; opacity: .25; background: repeating-linear-gradient(90deg, transparent 0 120px, #c98262 121px 124px); }
+.interior-window { position: absolute; left: 330px; bottom: 52%; width: 170px; height: 125px; border: 10px solid #6a4840; background: linear-gradient(#a9d6d3 65%, #89966a 66%); box-shadow: inset 0 0 0 5px #f6e8c8; }
+.interior-window::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent 46%, #6a4840 47% 53%, transparent 54%), linear-gradient(transparent 46%, #6a4840 47% 53%, transparent 54%); }
+.interior-door { position: absolute; left: 42px; bottom: 31%; width: 92px; height: 180px; border: 9px solid #6a4840; background: #71806a; }
+.interior-door::after { content: ''; position: absolute; right: 12px; top: 86px; width: 10px; height: 10px; border-radius: 50%; background: #f3c969; }
+.album-shelf { position: absolute; left: 590px; bottom: 31%; width: 235px; height: 120px; border: 9px solid #6a4840; border-top-width: 14px; background: #b8795c; }
+.album-shelf::before { content: ''; position: absolute; left: 18px; right: 18px; top: 48px; height: 8px; background: #6a4840; }
+.album-object { position: absolute; left: 92px; top: -60px; width: 58px; height: 68px; border: 6px solid #6a4840; border-radius: 5px; background: #fff0c5; transform: rotate(-4deg); }
+.album-object::after { content: '✦'; position: absolute; inset: 12px; color: #c98262; font-size: 24px; text-align: center; }
+.interior-rug { position: absolute; left: 280px; bottom: 20%; width: 370px; height: 70px; border-radius: 50%; background: #c98262; box-shadow: inset 0 0 0 10px #e8ad7f; }
+.interior-plant { position: absolute; left: 880px; bottom: 31%; width: 58px; height: 70px; border-radius: 5px 5px 18px 18px; background: #b8795c; }
+.interior-plant::before { content: ''; position: absolute; left: -35px; top: -100px; width: 125px; height: 120px; border-radius: 50%; background: #89966a; }
+.plaza-layer { display: none; position: absolute; inset: 0; z-index: 1; background: linear-gradient(#b9d8d5 0 62%, #b99370 62%); }
+.scene.plaza .exterior-layer, .scene.plaza .interior-layer { display: none; }
+.scene.plaza .plaza-layer { display: block; }
+.plaza-ground { position: absolute; left: 0; right: 0; bottom: 0; height: 35%; border-top: 10px solid #89966a; background: #c59a75; }
+.plaza-tree { position: absolute; bottom: 34%; width: 45px; height: 250px; border-radius: 20px 20px 4px 4px; background: #6a4840; }
+.plaza-tree::before { content: ''; position: absolute; left: -95px; top: -105px; width: 235px; height: 190px; border-radius: 48%; background: #89966a; box-shadow: inset -22px -16px 0 #768967; }
+.plaza-tree-left { left: 380px; }
+.plaza-tree-right { left: 1700px; }
+.plaza-monument { position: absolute; left: 805px; bottom: 34%; width: 165px; height: 240px; border: 8px solid #6a584e; background: #b9aea1; clip-path: polygon(22% 0, 78% 0, 88% 70%, 100% 70%, 100% 100%, 0 100%, 0 70%, 12% 70%); }
+.plaza-monument span { position: absolute; left: 52px; top: 38px; width: 45px; height: 72px; border-radius: 50% 50% 22% 22%; background: #8a7c72; }
+.mota { position: absolute; z-index: 3; left: 1120px; bottom: 29.5%; width: 170px; height: 190px; object-fit: contain; object-position: bottom; image-rendering: pixelated; }
+.plaza-sign { position: absolute; z-index: 3; bottom: 43%; padding: 12px 17px; border: 5px solid #4d3b35; border-radius: 12px; background: #71806a; color: #fff4d6; font-weight: bold; }
+.plaza-sign::after { content: ''; position: absolute; left: 28px; top: 45px; width: 13px; height: 110px; background: #4d3b35; }
+.sign-back { left: 38px; }
+.sign-forward { left: 1920px; background: #9b5f50; }
+.route-blocker { position: absolute; z-index: 4; left: 1960px; bottom: 31%; width: 210px; padding: 12px; border: 5px dashed #6a4840; border-radius: 12px; background: #fff4d6; color: #6a4840; text-align: center; font-weight: bold; }
+.scene.mota-complete .route-blocker { display: none; }
+.scene.mota-complete .sign-forward { background: #71806a; }
+.quinta-layer { display: none; position: absolute; inset: 0; z-index: 1; background: linear-gradient(#b7dbd2 0 59%, #9fb47c 59% 65%, #bd976f 65%); }
+.scene.quinta .exterior-layer, .scene.quinta .interior-layer, .scene.quinta .plaza-layer { display: none; }
+.scene.quinta .quinta-layer { display: block; }
+.quinta-ground { position: absolute; inset: 65% 0 0; border-top: 10px solid #70865d; background: #c49c74; }
+.quinta-tree { position: absolute; bottom: 34%; width: 50px; height: 245px; border-radius: 24px 24px 5px 5px; background: #725043; }
+.quinta-tree::before { content: ''; position: absolute; left: -95px; top: -120px; width: 240px; height: 205px; border-radius: 49%; background: #82986a; box-shadow: inset -24px -18px 0 #6f855a; }
+.quinta-tree-one { left: 350px; } .quinta-tree-two { left: 830px; } .quinta-tree-three { left: 1880px; }
+.museum-building { position: absolute; left: 1190px; bottom: 34%; width: 500px; height: 310px; border: 9px solid #76594d; background: #e4c79e; }
+.museum-roof { position: absolute; left: -28px; right: -28px; top: -65px; height: 70px; border: 9px solid #76594d; background: #a96855; clip-path: polygon(50% 0, 100% 100%, 0 100%); }
+.museum-title { position: absolute; left: 160px; top: 28px; width: 180px; padding: 8px; border: 5px solid #76594d; background: #fff0c9; color: #76594d; text-align: center; font-weight: bold; letter-spacing: 5px; }
+.museum-column { position: absolute; bottom: 0; width: 48px; height: 205px; border: 7px solid #76594d; background: #f2ddb7; }
+.column-one { left: 44px; } .column-two { left: 204px; } .column-three { right: 44px; }
+.museum-door { position: absolute; left: 275px; bottom: 0; width: 82px; height: 145px; border: 8px solid #76594d; background: #71806a; }
+.quinta-back { left: 35px; }
+.museum-layer { display: none; position: absolute; left: 0; top: 0; bottom: 0; width: min(100vw, 1100px); z-index: 1; background: #c9b28f url('assets/museum-whale-hall.png') center center / cover no-repeat; }
+.scene.museum .exterior-layer, .scene.museum .interior-layer, .scene.museum .plaza-layer, .scene.museum .quinta-layer { display: none; }
+.scene.museum .museum-layer { display: block; }
+.scene.museum .kuro { z-index: 8; bottom: calc(20% + var(--jump-y, 0px)); }
+.location-label { position: absolute; z-index: 7; top: 48px; left: 50%; translate: -50% 0; padding: 7px 16px; border-radius: 20px; background: #fff4d6d9; color: #6a4840; font-weight: bold; opacity: .9; }
+.kuro { position: absolute; z-index: 3; left: 22%; bottom: calc(31% + var(--jump-y, 0px)); width: 100px; height: 100px; background-image: url('assets/kuro-idle-sprite-sheet.png'); background-repeat: no-repeat; background-size: 400px 133px; background-position: 0 calc(100% + 36px); image-rendering: pixelated; transform: scaleX(var(--facing, 1)); transform-origin: center bottom; }
+.kuro.running { background-image: url('assets/kuro-run-sprite-sheet.png'); background-size: 400px 69px; background-position-y: calc(100% + 6px); }
+.kuro.jumping { background-image: url('assets/kuro-jump-sprite-sheet.png'); background-size: 400px 69px; background-position-y: calc(100% + 6px); }
+.kuro.interact { background-image: url('assets/kuro-interact-sprite-sheet.png'); background-size: 400px 133px; background-position-y: calc(100% + 36px); }
+.dialogue { position: absolute; z-index: 5; left: 4%; right: 4%; bottom: 4%; min-height: 18%; padding: 18px 24px 36px; border: 4px solid #c98262; border-radius: 28px 20px 28px 14px; background: #fff4d6ee; box-shadow: 0 6px 0 #4d3b3530; font-size: clamp(16px, 2vw, 24px); }
+.dialogue-name { color: #c05f4b; font-weight: bold; margin-bottom: 6px; }
+.dialogue-name.kuro-speaker { color: #211d28; }
+.dialogue-name.mota-speaker { color: #b95843; }
+.dialogue-name.album-speaker { color: #71806a; }
+.dialogue-help { position: absolute; left: 24px; bottom: 10px; color: #7d6b61; font-size: 12px; }
+.dialogue-next { position: absolute; right: 24px; bottom: 12px; color: #c98262; animation: dialogue-bob .8s ease-in-out infinite alternate; }
+@keyframes dialogue-bob { to { transform: translateY(4px); } }
+.interaction-prompt { position: absolute; z-index: 6; left: 50%; bottom: 28%; translate: -50% 0; padding: 6px 10px; border: 2px solid #c98262; border-radius: 12px; background: #fff4d6ee; font-size: 14px; font-weight: bold; box-shadow: 0 3px 0 #4d3b3530; }
+.interaction-prompt.edge-left { left: 22px; translate: 0 0; }
+.interaction-prompt.object-right { left: auto; right: 28px; bottom: 36%; translate: 0 0; }
+.interaction-prompt kbd { display: inline-grid; place-items: center; min-width: 23px; height: 23px; margin-right: 4px; border: 2px solid #6a4840; border-radius: 6px; background: white; font: inherit; }
+.hint { position: absolute; z-index: 6; left: 18px; top: 12px; margin: 0; padding: 6px 10px; border-radius: 10px; background: #fff4d6bb; font-size: 13px; }
+.fade { position: absolute; z-index: 20; inset: 0; pointer-events: none; background: #4d3b35; opacity: 0; transition: opacity .18s ease; }
+.fade.active { opacity: 1; }
