@@ -79,8 +79,9 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .scene.plaza .plaza-layer { display: block; }
 .plaza-art { position: absolute; z-index: 2; top: 0; bottom: 0; width: min(100vw, 1100px); background-position: center; background-size: cover; background-repeat: no-repeat; }
 .plaza-art-entrance { left: 0; background-image: url('assets/plaza-yungay-entrada-v1.png'); }
-.plaza-art-continuation { left: min(100vw, 1100px); background-image: url('assets/plaza-yungay-continuacion-v1.png'); }
-.plaza-atmosphere { position: absolute; z-index: 4; inset: 0 auto 0 0; width: calc(min(100vw, 1100px) + min(100vw, 1100px)); overflow: hidden; pointer-events: none; }
+.plaza-art-continuation { left: calc(min(100vw, 1100px) - 90px); background-image: url('assets/plaza-yungay-continuacion-v1.png'); -webkit-mask-image: linear-gradient(to right, transparent 0, #000 90px); mask-image: linear-gradient(to right, transparent 0, #000 90px); }
+.plaza-seam-tree { position: absolute; z-index: 3; left: calc(min(100vw, 1100px) - 180px); bottom: 13.5%; width: 180px; height: auto; pointer-events: none; filter: saturate(.9) drop-shadow(0 4px 3px #49382d2e); }
+.plaza-atmosphere { position: absolute; z-index: 4; inset: 0 auto 0 0; width: calc(min(100vw, 1100px) + min(100vw, 1100px) - 90px); overflow: hidden; pointer-events: none; }
 .plaza-atmosphere i { position: absolute; top: -8%; width: 9px; height: 6px; border-radius: 70% 20% 70% 20%; background: #b88be0; opacity: .72; animation: petal-fall 10s linear infinite; }
 .plaza-atmosphere i:nth-child(1) { left: 7%; animation-delay: -2s; }
 .plaza-atmosphere i:nth-child(2) { left: 18%; animation-delay: -7s; animation-duration: 12s; }
@@ -98,11 +99,12 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .plaza-monument { position: absolute; left: 805px; bottom: 34%; width: 165px; height: 240px; border: 8px solid #6a584e; background: #b9aea1; clip-path: polygon(22% 0, 78% 0, 88% 70%, 100% 70%, 100% 100%, 0 100%, 0 70%, 12% 70%); }
 .plaza-monument span { position: absolute; left: 52px; top: 38px; width: 45px; height: 72px; border-radius: 50% 50% 22% 22%; background: #8a7c72; }
 .plaza-ground, .plaza-tree, .plaza-monument { display: none; }
-.mota { position: absolute; z-index: 5; left: calc(min(100vw, 1100px) + 160px); bottom: 14%; width: 170px; height: 190px; object-fit: contain; object-position: bottom; image-rendering: pixelated; }
+.mota-ground-shadow { position: absolute; z-index: 4; left: calc(min(100vw, 1100px) + 170px); bottom: 13.2%; width: 128px; height: 18px; border-radius: 50%; background: #49382d42; filter: blur(3px); }
+.mota { position: absolute; z-index: 5; left: calc(min(100vw, 1100px) + 160px); bottom: 14%; width: 145px; height: 165px; object-fit: contain; object-position: bottom; image-rendering: auto; filter: saturate(.92) drop-shadow(0 3px 2px #49382d33); }
 .plaza-sign { position: absolute; z-index: 6; bottom: 43%; padding: 12px 17px; border: 5px solid #4d3b35; border-radius: 12px; background: #71806a; color: #fff4d6; font-weight: bold; }
 .plaza-sign::after { content: ''; position: absolute; left: 28px; top: 45px; width: 13px; height: 110px; background: #4d3b35; }
 .sign-back { left: 38px; }
-.sign-forward { left: calc(min(100vw, 1100px) + min(100vw, 1100px) - 245px); background: #9b5f50; }
+.sign-forward { left: calc(min(100vw, 1100px) + min(100vw, 1100px) - 335px); background: #9b5f50; }
 .route-blocker { display: none; }
 .scene.mota-complete .route-blocker { display: none; }
 .scene.mota-complete .sign-forward { background: #71806a; }
