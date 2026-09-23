@@ -415,6 +415,7 @@ function loop(time) {
   interactionPrompt.classList.toggle('edge-left', interaction === 'exit-museum');
   interactionPrompt.classList.toggle('object-right', interaction === 'collect-postcard');
   interactionPrompt.classList.toggle('chair-action', interaction === 'leave-chair');
+  interactionPrompt.classList.toggle('talk-mota', interaction === 'talk-mota');
   interactionPrompt.hidden = !interaction || !dialogue.hidden;
 
   const viewportWidth = game.clientWidth;

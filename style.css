@@ -97,8 +97,8 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .plaza-monument { position: absolute; left: 805px; bottom: 34%; width: 165px; height: 240px; border: 8px solid #6a584e; background: #b9aea1; clip-path: polygon(22% 0, 78% 0, 88% 70%, 100% 70%, 100% 100%, 0 100%, 0 70%, 12% 70%); }
 .plaza-monument span { position: absolute; left: 52px; top: 38px; width: 45px; height: 72px; border-radius: 50% 50% 22% 22%; background: #8a7c72; }
 .plaza-ground, .plaza-tree, .plaza-monument { display: none; }
-.mota-ground-shadow { position: absolute; z-index: 4; left: calc(min(62vw, 682px) + 8px); bottom: 13.2%; width: 118px; height: 17px; border-radius: 50%; background: #49382d42; filter: blur(3px); }
-.mota { position: absolute; z-index: 5; left: min(62vw, 682px); bottom: 14%; width: 135px; height: 155px; object-fit: contain; object-position: bottom; image-rendering: auto; filter: saturate(.92) drop-shadow(0 3px 2px #49382d33); }
+.mota-ground-shadow { position: absolute; z-index: 4; left: calc(min(62vw, 682px) + 8px); bottom: 18.2%; width: 118px; height: 17px; border-radius: 50%; background: #49382d42; filter: blur(3px); }
+.mota { position: absolute; z-index: 5; left: min(62vw, 682px); bottom: 19%; width: 135px; height: 155px; object-fit: contain; object-position: bottom; image-rendering: auto; filter: saturate(.92) drop-shadow(0 3px 2px #49382d33); }
 .plaza-sign { position: absolute; z-index: 6; bottom: 43%; padding: 12px 17px; border: 5px solid #4d3b35; border-radius: 12px; background: #71806a; color: #fff4d6; font-weight: bold; }
 .plaza-sign::after { content: ''; position: absolute; left: 28px; top: 45px; width: 13px; height: 110px; background: #4d3b35; }
 .sign-back { left: 38px; }
@@ -165,13 +165,13 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .station-blocker { position: absolute; z-index: 4; left: 1995px; bottom: 31%; width: 150px; padding: 9px; border: 4px dashed #6a4840; border-radius: 10px; background: #fff4d6; text-align: center; font-weight: bold; }
 .scene.museum .kuro { z-index: 8; bottom: calc(20% + var(--jump-y, 0px)); }
 .location-label { position: absolute; z-index: 7; top: 48px; left: 50%; translate: -50% 0; padding: 7px 16px; border-radius: 20px; background: #fff4d6d9; color: #6a4840; font-weight: bold; opacity: .9; }
-.kuro { position: absolute; z-index: 5; left: 22%; bottom: calc(31% + var(--jump-y, 0px)); width: 100px; height: 100px; background-image: url('assets/kuro-idle-sprite-sheet.png'); background-repeat: no-repeat; background-size: 400px 133px; background-position: 0 calc(100% + 36px); image-rendering: pixelated; transform: scaleX(var(--facing, 1)) scale(var(--kuro-scale, 1)); transform-origin: center bottom; }
+.kuro { position: absolute; z-index: 5; left: 22%; bottom: calc(31% + var(--jump-y, 0px)); width: 100px; height: 133px; background-image: url('assets/kuro-idle-sprite-sheet.png'); background-repeat: no-repeat; background-size: 400px 133px; background-position: 0 0; image-rendering: pixelated; transform: scaleX(var(--facing, 1)) scale(var(--kuro-scale, 1)); transform-origin: center bottom; }
 .scene.street .kuro, .scene.inside .kuro { --kuro-scale: .76; bottom: calc(14% + var(--jump-y, 0px)); }
-.scene.plaza .kuro { --kuro-scale: .76; bottom: calc(14% + var(--jump-y, 0px)); }
+.scene.plaza .kuro { --kuro-scale: .76; bottom: calc(15.5% + var(--jump-y, 0px)); }
 .scene.inside .kuro.chair-reading { bottom: 21.5%; width: 100px; height: 133px; background-image: url('assets/kuro-reading-seated-sprite-sheet.png'); background-size: 400px 133px; background-position-y: 0; }
 .kuro.running { background-image: url('assets/kuro-run-sprite-sheet.png'); background-size: 400px 69px; background-position-y: calc(100% + 6px); }
 .kuro.jumping { background-image: url('assets/kuro-jump-sprite-sheet.png'); background-size: 400px 69px; background-position-y: calc(100% + 6px); }
-.kuro.interact { background-image: url('assets/kuro-interact-sprite-sheet.png'); background-size: 400px 133px; background-position-y: calc(100% + 36px); }
+.kuro.interact { background-image: url('assets/kuro-interact-sprite-sheet.png'); background-size: 400px 133px; background-position-y: 0; }
 .dialogue { position: absolute; z-index: 5; left: 4%; right: 4%; bottom: 4%; min-height: 18%; padding: 18px 24px 36px; border: 4px solid #c98262; border-radius: 28px 20px 28px 14px; background: #fff4d6ee; box-shadow: 0 6px 0 #4d3b3530; font-size: clamp(16px, 2vw, 24px); }
 .dialogue-name { color: #c05f4b; font-weight: bold; margin-bottom: 6px; }
 .dialogue-name.kuro-speaker { color: #211d28; }
@@ -232,6 +232,7 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .interaction-prompt.edge-left { left: 22px; translate: 0 0; }
 .interaction-prompt.object-right { left: auto; right: 28px; bottom: 36%; translate: 0 0; }
 .interaction-prompt.chair-action { bottom: 7%; }
+.interaction-prompt.talk-mota { bottom: 53%; }
 .interaction-prompt kbd { display: inline-grid; place-items: center; min-width: 23px; height: 23px; margin-right: 4px; border: 2px solid #6a4840; border-radius: 6px; background: white; font: inherit; }
 .hint { position: absolute; z-index: 6; left: 18px; top: 12px; margin: 0; padding: 6px 10px; border-radius: 10px; background: #fff4d6bb; font-size: 13px; }
 .fade { position: absolute; z-index: 20; inset: 0; pointer-events: none; background: #4d3b35; opacity: 0; transition: opacity .18s ease; }

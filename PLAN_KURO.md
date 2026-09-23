@@ -103,6 +103,7 @@ Primero validar la sensación de jugar una zona pequeña. No construir todo Chil
 - El letrero hacia Quinta cambia de color después de conversar con Mota y reemplaza el antiguo bloqueo visual provisional.
 - Al ser una escena unificada ya no necesita cortes, parches ni árboles añadidos para ocultar uniones.
 - Mota fue reducido y suavizado; una sombra bajo su silla lo integra con la línea del suelo y mantiene su apariencia gordita sin verse gigante.
+- Kuro, Mota y la silla comparten la superficie superior de la vereda; los márgenes transparentes de los sprites se compensan para que no floten ni se hundan.
 
 ### Siguiente paso sugerido
 
