@@ -38,6 +38,7 @@ let typingComplete = true;
 let motaConversationComplete = false;
 let whalePostcardCollected = localStorage.getItem('kuro-whale-postcard') === 'collected';
 let quintaPhotoCollected = localStorage.getItem('kuro-quinta-photo') === 'collected';
+let firstLetterSent = localStorage.getItem('kuro-first-letter') === 'sent';
 let albumPageIndex = 0;
 
 const motaConversation = [
@@ -176,9 +177,14 @@ function currentInteraction() {
   if (currentPlace === 'plaza' && x >= worldWidth - 280) return motaConversationComplete ? 'go-quinta' : 'route-blocked';
   if (currentPlace === 'quinta' && x <= 180) return 'return-plaza';
   if (currentPlace === 'quinta' && x >= 1110 && x <= 1510) return 'enter-museum';
-  if (currentPlace === 'quinta' && x >= 1840) return quintaPhotoCollected ? 'view-mirador' : 'take-photo';
+  if (currentPlace === 'quinta' && x >= 2050) return quintaPhotoCollected ? 'go-station' : 'station-locked';
+  if (currentPlace === 'quinta' && x >= 1840 && x <= 2035) return quintaPhotoCollected ? 'view-mirador' : 'take-photo';
   if (currentPlace === 'museum' && x <= 75) return 'exit-museum';
   if (currentPlace === 'museum' && !whalePostcardCollected && x >= game.clientWidth - 300) return 'collect-postcard';
+  if (currentPlace === 'station' && x <= 180) return 'return-quinta';
+  if (currentPlace === 'station' && x >= 720 && x <= 1010) return 'use-estafeta';
+  if (currentPlace === 'station' && x >= 1370 && x <= 1780) return 'inspect-train';
+  if (currentPlace === 'station' && x >= 2040) return 'station-route-blocked';
   return null;
 }
 
@@ -192,16 +198,19 @@ function changeLocation(nextLocation, entry = 'default') {
     const atPlaza = currentPlace === 'plaza';
     const atQuinta = currentPlace === 'quinta';
     const atMuseum = currentPlace === 'museum';
+    const atStation = currentPlace === 'station';
     scene.classList.toggle('inside', inside);
     scene.classList.toggle('plaza', atPlaza);
     scene.classList.toggle('quinta', atQuinta);
     scene.classList.toggle('museum', atMuseum);
+    scene.classList.toggle('station', atStation);
     locationLabel.hidden = atMuseum;
-    locationLabel.textContent = inside ? 'Casa de Kuro' : atPlaza ? 'Plaza Yungay' : atQuinta ? 'Quinta Normal' : atMuseum ? 'Museo · Sala de la Ballena' : 'Barrio Yungay';
+    locationLabel.textContent = inside ? 'Casa de Kuro' : atPlaza ? 'Plaza Yungay' : atQuinta ? 'Quinta Normal' : atMuseum ? 'Museo · Sala de la Ballena' : atStation ? 'Estación Mapocho' : 'Barrio Yungay';
     if (inside) x = 175;
     else if (atPlaza) x = entry === 'from-quinta' ? worldWidth - 360 : 170;
     else if (atQuinta) x = entry === 'from-museum' ? 1430 : entry === 'at-mirador' ? 1980 : 170;
     else if (atMuseum) x = 170;
+    else if (atStation) x = entry === 'at-estafeta' ? 850 : entry === 'at-train' ? 1510 : entry === 'from-route' ? worldWidth - 360 : 170;
     else x = entry === 'from-plaza' ? worldWidth - 360 : 315;
     y = 0;
     velocityY = 0;
@@ -209,6 +218,7 @@ function changeLocation(nextLocation, entry = 'default') {
     if (entry === 'from-plaza' || entry === 'from-quinta') cameraX = Math.max(0, worldWidth - game.clientWidth);
     else if (entry === 'from-museum') cameraX = Math.max(0, Math.min(worldWidth - game.clientWidth, 1430 - game.clientWidth * 0.45));
     else if (entry === 'at-mirador') cameraX = Math.max(0, worldWidth - game.clientWidth);
+    else if (entry === 'at-estafeta' || entry === 'at-train') cameraX = Math.max(0, Math.min(worldWidth - game.clientWidth, x - game.clientWidth * 0.45));
     else cameraX = 0;
     dialogue.hidden = true;
     scene.style.transform = 'translateX(0)';
@@ -265,9 +275,34 @@ addEventListener('keydown', (event) => {
       dialogueText.textContent = 'El camino hacia Quinta Normal todavía está cerrado.';
     }
     if (interaction === 'enter-museum') changeLocation('museum');
+    if (interaction === 'go-station') changeLocation('station');
+    if (interaction === 'return-quinta') changeLocation('quinta', 'at-mirador');
+    if (interaction === 'station-locked') {
+      startDialogue([['Kuro', 'Quiero seguir, pero antes debería guardar una foto de este lugar.']]);
+    }
     if (interaction === 'take-photo') takeQuintaPhoto();
     if (interaction === 'view-mirador') {
       startDialogue([['Kuro', 'Desde aquí todo se ve distinto. Me alegra haber guardado este momento.']]);
+    }
+    if (interaction === 'inspect-train') {
+      startDialogue([['Kuro', 'Mota tenía razón. Las estaciones sí dan ganas de conocer lugares nuevos.']]);
+    }
+    if (interaction === 'station-route-blocked') {
+      startDialogue([['Kuro', 'El camino hacia el centro todavía no está listo. Volveré después.']]);
+    }
+    if (interaction === 'use-estafeta') {
+      if (firstLetterSent) {
+        startDialogue([['Estafeta Gatuna', 'Tu carta ya va en camino. El viaje de hoy está guardado.']]);
+      } else {
+        firstLetterSent = true;
+        localStorage.setItem('kuro-first-letter', 'sent');
+        scene.classList.add('letter-sent');
+        startDialogue([
+          ['Kuro', 'Abuelita: hoy vi una ballena enorme y saqué mi primera foto.'],
+          ['Kuro', 'Empecé cerquita de casa, pero siento que el mundo ya se hizo más grande.'],
+          ['Estafeta Gatuna', 'Carta enviada. Tu viaje quedó guardado.']
+        ]);
+      }
     }
     if (interaction === 'collect-postcard') {
       whalePostcardCollected = true;
@@ -329,8 +364,14 @@ function loop(time) {
     'route-blocked': 'Revisar el camino',
     'go-quinta': 'Ir a Quinta Normal',
     'enter-museum': 'Entrar al museo',
+    'go-station': 'Ir a Estación Mapocho',
+    'return-quinta': 'Volver a Quinta Normal',
+    'station-locked': 'Revisar la ruta',
     'take-photo': 'Sacar una foto',
     'view-mirador': 'Mirar el paisaje',
+    'use-estafeta': firstLetterSent ? 'Revisar Estafeta' : 'Enviar carta a la abuelita',
+    'inspect-train': 'Mirar el tren',
+    'station-route-blocked': 'Revisar próxima ruta',
     'exit-museum': 'Salir a Quinta Normal',
     'collect-postcard': 'Revisar vitrina'
   };
@@ -371,13 +412,19 @@ requestAnimationFrame(loop);
 
 if (whalePostcardCollected) scene.classList.add('postcard-collected');
 if (quintaPhotoCollected) scene.classList.add('quinta-photo-collected');
+if (firstLetterSent) scene.classList.add('letter-sent');
 renderAlbum();
 
 // Vista directa para revisar escenas durante el desarrollo. No afecta el juego normal.
 const previewParams = new URLSearchParams(window.location.search);
 const previewPlace = previewParams.get('preview');
-if (['house', 'plaza', 'quinta', 'museum'].includes(previewPlace)) {
-  const previewEntry = previewPlace === 'quinta' && previewParams.get('at') === 'mirador' ? 'at-mirador' : 'default';
+if (['house', 'plaza', 'quinta', 'museum', 'station'].includes(previewPlace)) {
+  const previewSpot = previewParams.get('at');
+  const previewEntry = previewPlace === 'quinta' && previewSpot === 'mirador'
+    ? 'at-mirador'
+    : previewPlace === 'station' && ['estafeta', 'train'].includes(previewSpot)
+      ? `at-${previewSpot}`
+      : 'default';
   requestAnimationFrame(() => changeLocation(previewPlace, previewEntry));
 }
 if (previewParams.get('postcard') === 'collected') whalePostcardCollected = true;

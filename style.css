@@ -75,6 +75,7 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .column-one { left: 44px; } .column-two { left: 204px; } .column-three { right: 44px; }
 .museum-door { position: absolute; left: 275px; bottom: 0; width: 82px; height: 145px; border: 8px solid #76594d; background: #71806a; }
 .quinta-back { left: 35px; }
+.quinta-forward { left: 1980px; bottom: 49%; }
 .quinta-mirador { position: absolute; z-index: 2; left: 1900px; bottom: 30%; width: 240px; height: 150px; }
 .mirador-rail { position: absolute; left: 5px; right: 5px; bottom: 16px; height: 72px; border: 8px solid #76594d; border-top-width: 12px; background: repeating-linear-gradient(90deg, transparent 0 34px, #76594d 35px 43px); }
 .mirador-marker { position: absolute; left: 88px; top: -24px; display: grid; place-items: center; width: 62px; height: 72px; border: 6px solid #76594d; border-radius: 30px 30px 10px 10px; background: #fff0c9; color: #c98262; font-size: 27px; box-shadow: 0 5px 0 #4d3b3530; animation: marker-bob 1.2s ease-in-out infinite alternate; }
@@ -84,6 +85,38 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .museum-layer { display: none; position: absolute; left: 0; top: 0; bottom: 0; width: min(100vw, 1100px); z-index: 1; background: #c9b28f url('assets/museum-whale-hall.png') center center / cover no-repeat; }
 .scene.museum .exterior-layer, .scene.museum .interior-layer, .scene.museum .plaza-layer, .scene.museum .quinta-layer { display: none; }
 .scene.museum .museum-layer { display: block; }
+.station-layer { display: none; position: absolute; inset: 0; z-index: 1; overflow: hidden; background: linear-gradient(#b9d8d5 0 58%, #9d826e 58% 63%, #b58c68 63%); }
+.scene.station .exterior-layer, .scene.station .interior-layer, .scene.station .plaza-layer, .scene.station .quinta-layer, .scene.station .museum-layer { display: none; }
+.scene.station .station-layer { display: block; }
+.station-skyline { position: absolute; left: 0; right: 0; bottom: 42%; height: 120px; opacity: .45; background: linear-gradient(90deg, #8c8177 0 8%, transparent 8% 11%, #8c8177 11% 19%, transparent 19% 23%, #8c8177 23% 31%, transparent 31% 36%, #8c8177 36% 45%, transparent 45% 100%); }
+.station-ground { position: absolute; inset: 63% 0 0; border-top: 10px solid #775c4d; background: repeating-linear-gradient(90deg, #b78f6d 0 110px, #c19b78 111px 220px); }
+.station-building { position: absolute; left: 390px; bottom: 36%; width: 820px; height: 330px; border: 10px solid #715044; background: #d9aa79; box-shadow: inset 0 0 0 9px #efc995; }
+.station-building::before { content: ''; position: absolute; left: -35px; right: -35px; top: -62px; height: 70px; border: 9px solid #715044; background: #9d5c4e; clip-path: polygon(6% 100%, 12% 28%, 46% 28%, 50% 0, 54% 28%, 88% 28%, 94% 100%); }
+.station-name { position: absolute; left: 50%; top: 24px; translate: -50% 0; padding: 7px 22px; border: 5px solid #715044; background: #fff0c9; color: #715044; font-weight: bold; letter-spacing: 4px; white-space: nowrap; }
+.station-arch { position: absolute; bottom: 0; width: 210px; height: 230px; border: 10px solid #715044; border-radius: 105px 105px 0 0; background: linear-gradient(#9dc9cb 0 56%, #5e7367 57%); box-shadow: inset 0 0 0 7px #efd4a4; }
+.arch-one { left: 85px; }
+.arch-two { right: 85px; }
+.station-clock { position: absolute; left: 50%; top: 88px; translate: -50% 0; display: grid; place-items: center; width: 72px; height: 72px; border: 7px solid #715044; border-radius: 50%; background: #fff0c9; color: #c98262; font-size: 26px; }
+.old-train { position: absolute; z-index: 3; left: 1380px; bottom: 31%; width: 470px; height: 205px; }
+.train-cabin { position: absolute; left: 0; bottom: 38px; width: 190px; height: 145px; border: 9px solid #443d3b; background: #7b3f3e; }
+.train-cabin span { position: absolute; top: 23px; width: 58px; height: 50px; border: 7px solid #443d3b; background: #add0cf; }
+.train-cabin span:first-child { left: 20px; }
+.train-cabin span:last-child { right: 20px; }
+.train-engine { position: absolute; left: 175px; right: 0; bottom: 38px; height: 105px; border: 9px solid #443d3b; border-radius: 20px 65px 10px 10px; background: #596a5e; }
+.train-engine::before { content: ''; position: absolute; right: 55px; top: -70px; width: 58px; height: 78px; border: 8px solid #443d3b; background: #596a5e; clip-path: polygon(12% 0, 88% 0, 75% 100%, 25% 100%); }
+.train-wheel { position: absolute; bottom: 0; width: 74px; height: 74px; border: 10px solid #443d3b; border-radius: 50%; background: #a86c55; box-shadow: inset 0 0 0 9px #d3a16f; }
+.wheel-one { left: 45px; }
+.wheel-two { left: 245px; }
+.wheel-three { right: 28px; }
+.station-platform { position: absolute; z-index: 2; left: 1250px; right: 170px; bottom: 29%; height: 24px; border: 7px solid #715044; background: #d5b384; }
+.cat-mailbox { position: absolute; z-index: 4; left: 800px; bottom: 31%; width: 145px; height: 190px; border: 8px solid #60483e; border-radius: 70px 70px 18px 18px; background: #9b5f50; box-shadow: 0 7px 0 #4d3b3530; }
+.mailbox-ears { position: absolute; left: 18px; right: 18px; top: -40px; height: 60px; background: #9b5f50; clip-path: polygon(0 65%, 8% 0, 35% 40%, 65% 40%, 92% 0, 100% 65%); }
+.mailbox-slot { position: absolute; left: 22px; right: 22px; top: 48px; padding: 7px 0; border: 5px solid #60483e; border-radius: 8px; background: #fff0c9; color: #60483e; text-align: center; font-size: 12px; font-weight: bold; }
+.mailbox-sign { position: absolute; left: -38px; top: 115px; width: 205px; padding: 8px; border: 5px solid #60483e; border-radius: 10px; background: #71806a; color: #fff0c9; text-align: center; font-weight: bold; }
+.scene.letter-sent .cat-mailbox::after { content: '✓'; position: absolute; right: -18px; top: -18px; display: grid; place-items: center; width: 42px; height: 42px; border: 5px solid #60483e; border-radius: 50%; background: #f3c969; color: #60483e; font-weight: bold; }
+.station-back { left: 35px; }
+.station-forward { left: 1950px; background: #9b5f50; }
+.station-blocker { position: absolute; z-index: 4; left: 1995px; bottom: 31%; width: 150px; padding: 9px; border: 4px dashed #6a4840; border-radius: 10px; background: #fff4d6; text-align: center; font-weight: bold; }
 .scene.museum .kuro { z-index: 8; bottom: calc(20% + var(--jump-y, 0px)); }
 .location-label { position: absolute; z-index: 7; top: 48px; left: 50%; translate: -50% 0; padding: 7px 16px; border-radius: 20px; background: #fff4d6d9; color: #6a4840; font-weight: bold; opacity: .9; }
 .kuro { position: absolute; z-index: 3; left: 22%; bottom: calc(31% + var(--jump-y, 0px)); width: 100px; height: 100px; background-image: url('assets/kuro-idle-sprite-sheet.png'); background-repeat: no-repeat; background-size: 400px 133px; background-position: 0 calc(100% + 36px); image-rendering: pixelated; transform: scaleX(var(--facing, 1)); transform-origin: center bottom; }

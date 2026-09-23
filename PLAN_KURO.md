@@ -88,10 +88,13 @@ Primero validar la sensación de jugar una zona pequeña. No construir todo Chil
 - La postal queda guardada aunque se recargue el juego y aparece como una página real dentro del álbum.
 - Primer rincón fotográfico en Quinta Normal, con destello, polaroid y recuerdo persistente.
 - El Álbum de Viaje permite cambiar entre la postal y la primera foto usando las flechas.
+- Quinta Normal conecta con una primera versión explorable de **Estación Mapocho**.
+- La estación incluye un tren antiguo, una ruta futura bloqueada y la primera **Estafeta Gatuna**.
+- Kuro puede enviarle su primera carta a la abuelita; el envío queda guardado y la Estafeta lo marca con un visto bueno.
 
 ### Siguiente paso sugerido
 
-Diseñar la salida de Quinta Normal hacia el próximo nodo y decidir si el recorrido continúa por **Estación Mapocho** o por **Barrio Brasil**. El ciclo explorar → descubrir → fotografiar → guardar ya está funcionando.
+Escribir y mostrar la **primera respuesta de la abuelita**. Después, conectar Estación Mapocho con el Centro de Santiago o regresar para construir el desvío de Barrio Brasil.
 
 ## Primer mapa: Santiago y conexión hacia Valparaíso
 

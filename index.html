@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Kuro — Primer prototipo</title>
-  <link rel="stylesheet" href="style.css?v=23" />
+  <link rel="stylesheet" href="style.css?v=25" />
 </head>
 <body>
   <main class="game" aria-label="Prototipo de Kuro">
@@ -62,9 +62,36 @@
           <div class="mirador-rail"></div>
           <div class="mirador-marker">✦</div>
         </div>
+        <div class="plaza-sign quinta-forward">Estación Mapocho →</div>
         <div class="plaza-sign quinta-back">← Plaza Yungay</div>
       </div>
       <div class="museum-layer" aria-label="Sala de la ballena">
+      </div>
+      <div class="station-layer" aria-label="Estación Mapocho">
+        <div class="station-skyline"></div>
+        <div class="station-ground"></div>
+        <div class="station-building">
+          <div class="station-name">ESTACIÓN MAPOCHO</div>
+          <div class="station-arch arch-one"></div>
+          <div class="station-arch arch-two"></div>
+          <div class="station-clock">✦</div>
+        </div>
+        <div class="old-train" aria-label="Antiguo tren de la estación">
+          <div class="train-cabin"><span></span><span></span></div>
+          <div class="train-engine"></div>
+          <div class="train-wheel wheel-one"></div>
+          <div class="train-wheel wheel-two"></div>
+          <div class="train-wheel wheel-three"></div>
+        </div>
+        <div class="station-platform"></div>
+        <div class="cat-mailbox" aria-label="Estafeta Gatuna">
+          <div class="mailbox-ears"></div>
+          <div class="mailbox-slot">CARTAS</div>
+          <div class="mailbox-sign">Estafeta Gatuna</div>
+        </div>
+        <div class="plaza-sign station-back">← Quinta Normal</div>
+        <div class="plaza-sign station-forward">Centro de Santiago →</div>
+        <div class="station-blocker">Próxima ruta</div>
       </div>
       <div id="kuro" class="kuro" aria-label="Kuro"></div>
       <div class="ground exterior-layer"></div>
@@ -135,6 +162,6 @@
     <div id="fade" class="fade"></div>
     <div id="shutter-flash" class="shutter-flash"></div>
   </main>
-  <script src="script.js?v=23"></script>
+  <script src="script.js?v=25"></script>
 </body>
 </html>

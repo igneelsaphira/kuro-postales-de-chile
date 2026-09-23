@@ -10,6 +10,9 @@ El standalone web incluye:
 - Plaza Yungay y conversación con Mota.
 - Quinta Normal.
 - Museo y postal de la ballena.
+- Mirador fotográfico y Álbum de Viaje con páginas.
+- Estación Mapocho, tren antiguo y primera Estafeta Gatuna.
+- Primera carta de Kuro para su abuelita.
 - Movimiento, salto, carrera, cámara e interacciones.
 
 ## Abrir localmente
