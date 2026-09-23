@@ -98,11 +98,11 @@ Primero validar la sensación de jugar una zona pequeña. No construir todo Chil
 - El sillón es interactivo: Kuro puede sentarse a leer con una animación tranquila y levantarse cuando quiera.
 - Barrio Yungay tiene un segundo tramo ilustrado que continúa la calle hasta Plaza Yungay.
 - La unión conserva la vereda, el skyline, las fachadas, faroles y jacarandás sin volver a los bloques provisionales.
-- Plaza Yungay fue reemplazada por dos fondos ilustrados: entrada con el Monumento al Roto Chileno y sendero sombreado hacia Quinta Normal.
+- Plaza Yungay usa una sola ilustración continua: el Monumento al Roto Chileno queda a la izquierda y el sendero sombreado hacia Quinta Normal a la derecha.
 - Mota permanece como sprite animable sobre un espacio diseñado especialmente para él; Kuro y Mota comparten correctamente la línea del suelo.
 - El letrero hacia Quinta cambia de color después de conversar con Mota y reemplaza el antiguo bloqueo visual provisional.
-- La unión entre ambos fondos de la plaza queda oculta tras un jacarandá de primer plano, sin franja ni lámparas duplicadas.
-- Mota fue reducido y suavizado; una sombra bajo su silla lo integra mejor con el suelo y mantiene su apariencia gordita sin verse gigante.
+- Al ser una escena unificada ya no necesita cortes, parches ni árboles añadidos para ocultar uniones.
+- Mota fue reducido y suavizado; una sombra bajo su silla lo integra con la línea del suelo y mantiene su apariencia gordita sin verse gigante.
 
 ### Siguiente paso sugerido
 
