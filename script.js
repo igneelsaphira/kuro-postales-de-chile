@@ -171,7 +171,7 @@ function currentInteraction() {
   if (!grounded || transitioning) return null;
   if (sittingInChair) return 'leave-chair';
   if (currentPlace === 'street' && x >= game.clientWidth * 0.27 && x <= game.clientWidth * 0.44) return 'enter-house';
-  if (currentPlace === 'street' && x >= worldWidth - 260) return 'go-plaza';
+  if (currentPlace === 'street' && x >= game.clientWidth * 2 - 170) return 'go-plaza';
   if (currentPlace === 'house' && x <= game.clientWidth * 0.25) return 'exit-house';
   if (currentPlace === 'house' && x >= game.clientWidth * 0.27 && x <= game.clientWidth * 0.39) return 'sit-chair';
   if (currentPlace === 'house' && x >= game.clientWidth * 0.40 && x <= game.clientWidth * 0.58) return 'look-window';
@@ -218,11 +218,14 @@ function changeLocation(nextLocation, entry = 'default') {
     else if (atQuinta) x = entry === 'from-museum' ? 1430 : entry === 'at-mirador' ? 1980 : 170;
     else if (atMuseum) x = 170;
     else if (atStation) x = entry === 'at-estafeta' ? 850 : entry === 'at-train' ? 1510 : entry === 'from-route' ? worldWidth - 360 : 170;
-    else x = entry === 'from-plaza' ? worldWidth - 360 : game.clientWidth * 0.36;
+    else x = entry === 'from-plaza' ? game.clientWidth * 2 - 280 : entry === 'at-neighborhood' ? game.clientWidth * 1.35 : entry === 'at-seam' ? game.clientWidth * 0.95 : game.clientWidth * 0.36;
     y = 0;
     velocityY = 0;
     grounded = true;
-    if (entry === 'from-plaza' || entry === 'from-quinta') cameraX = Math.max(0, worldWidth - game.clientWidth);
+    if (entry === 'from-plaza') cameraX = game.clientWidth;
+    else if (entry === 'at-neighborhood') cameraX = game.clientWidth;
+    else if (entry === 'at-seam') cameraX = game.clientWidth * 0.5;
+    else if (entry === 'from-quinta') cameraX = Math.max(0, worldWidth - game.clientWidth);
     else if (entry === 'from-museum') cameraX = Math.max(0, Math.min(worldWidth - game.clientWidth, 1430 - game.clientWidth * 0.45));
     else if (entry === 'at-mirador') cameraX = Math.max(0, worldWidth - game.clientWidth);
     else if (entry === 'at-estafeta' || entry === 'at-train') cameraX = Math.max(0, Math.min(worldWidth - game.clientWidth, x - game.clientWidth * 0.45));
@@ -356,7 +359,7 @@ function loop(time) {
   const sprinting = keys.has('shift');
   const speed = sprinting ? 370 : 240;
   if (controlsEnabled && (keys.has('arrowright') || keys.has('d'))) {
-    const activeWorldWidth = currentPlace === 'house' || currentPlace === 'museum' ? game.clientWidth : worldWidth;
+    const activeWorldWidth = currentPlace === 'house' || currentPlace === 'museum' ? game.clientWidth : currentPlace === 'street' ? game.clientWidth * 2 : worldWidth;
     x = Math.min(activeWorldWidth - 110, x + speed * dt);
     facing = 1;
     kuro.style.setProperty('--facing', facing);
@@ -413,7 +416,7 @@ function loop(time) {
   interactionPrompt.hidden = !interaction || !dialogue.hidden;
 
   const viewportWidth = game.clientWidth;
-  const activeWorldWidth = currentPlace === 'house' || currentPlace === 'museum' ? viewportWidth : worldWidth;
+  const activeWorldWidth = currentPlace === 'house' || currentPlace === 'museum' ? viewportWidth : currentPlace === 'street' ? viewportWidth * 2 : worldWidth;
   const maxCameraX = Math.max(0, activeWorldWidth - viewportWidth);
   const lookAhead = moving ? facing * 90 : 0;
   const desiredCameraX = Math.max(0, Math.min(maxCameraX, x - viewportWidth * 0.45 + lookAhead));
@@ -451,12 +454,14 @@ renderAlbum();
 // Vista directa para revisar escenas durante el desarrollo. No afecta el juego normal.
 const previewParams = new URLSearchParams(window.location.search);
 const previewPlace = previewParams.get('preview');
-if (['house', 'plaza', 'quinta', 'museum', 'station'].includes(previewPlace)) {
+if (['street', 'house', 'plaza', 'quinta', 'museum', 'station'].includes(previewPlace)) {
   const previewSpot = previewParams.get('at');
   const previewEntry = previewPlace === 'quinta' && previewSpot === 'mirador'
     ? 'at-mirador'
     : previewPlace === 'house' && previewParams.get('chair') === 'sit'
       ? 'at-chair'
+    : previewPlace === 'street' && ['neighborhood', 'seam'].includes(previewSpot)
+      ? `at-${previewSpot}`
     : previewPlace === 'station' && ['estafeta', 'train'].includes(previewSpot)
       ? `at-${previewSpot}`
       : 'default';

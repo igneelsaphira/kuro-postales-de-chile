@@ -96,6 +96,8 @@ Primero validar la sensación de jugar una zona pequeña. No construir todo Chil
 - Ambientación suave añadida: pétalos de jacarandá, luz interior, polvo dorado y brillo del álbum.
 - Kuro puede mirar por la ventana y comentar cómo Santiago se siente enorme desde su casa.
 - El sillón es interactivo: Kuro puede sentarse a leer con una animación tranquila y levantarse cuando quiera.
+- Barrio Yungay tiene un segundo tramo ilustrado que continúa la calle hasta Plaza Yungay.
+- La unión conserva la vereda, el skyline, las fachadas, faroles y jacarandás sin volver a los bloques provisionales.
 
 ### Siguiente paso sugerido
 
