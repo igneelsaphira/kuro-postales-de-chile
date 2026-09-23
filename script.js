@@ -19,7 +19,7 @@ const photoMoment = document.querySelector('#photo-moment');
 const shutterFlash = document.querySelector('#shutter-flash');
 const keys = new Set();
 const worldWidth = 2200;
-let x = 430;
+let x = Math.min(430, game.clientWidth * 0.36);
 let y = 0;
 let velocityY = 0;
 let grounded = true;
@@ -168,10 +168,10 @@ albumNext.addEventListener('click', () => changeAlbumPage(1));
 
 function currentInteraction() {
   if (!grounded || transitioning) return null;
-  if (currentPlace === 'street' && x >= 175 && x <= 300) return 'enter-house';
+  if (currentPlace === 'street' && x >= game.clientWidth * 0.27 && x <= game.clientWidth * 0.44) return 'enter-house';
   if (currentPlace === 'street' && x >= worldWidth - 260) return 'go-plaza';
-  if (currentPlace === 'house' && x <= 210) return 'exit-house';
-  if (currentPlace === 'house' && x >= 540 && x <= 770) return 'open-album';
+  if (currentPlace === 'house' && x <= game.clientWidth * 0.25) return 'exit-house';
+  if (currentPlace === 'house' && x >= game.clientWidth * 0.67) return 'open-album';
   if (currentPlace === 'plaza' && x <= 180) return 'return-street';
   if (currentPlace === 'plaza' && x >= 1010 && x <= 1270) return 'talk-mota';
   if (currentPlace === 'plaza' && x >= worldWidth - 280) return motaConversationComplete ? 'go-quinta' : 'route-blocked';
@@ -195,11 +195,13 @@ function changeLocation(nextLocation, entry = 'default') {
   setTimeout(() => {
     currentPlace = nextLocation;
     const inside = currentPlace === 'house';
+    const atStreet = currentPlace === 'street';
     const atPlaza = currentPlace === 'plaza';
     const atQuinta = currentPlace === 'quinta';
     const atMuseum = currentPlace === 'museum';
     const atStation = currentPlace === 'station';
     scene.classList.toggle('inside', inside);
+    scene.classList.toggle('street', atStreet);
     scene.classList.toggle('plaza', atPlaza);
     scene.classList.toggle('quinta', atQuinta);
     scene.classList.toggle('museum', atMuseum);
@@ -211,7 +213,7 @@ function changeLocation(nextLocation, entry = 'default') {
     else if (atQuinta) x = entry === 'from-museum' ? 1430 : entry === 'at-mirador' ? 1980 : 170;
     else if (atMuseum) x = 170;
     else if (atStation) x = entry === 'at-estafeta' ? 850 : entry === 'at-train' ? 1510 : entry === 'from-route' ? worldWidth - 360 : 170;
-    else x = entry === 'from-plaza' ? worldWidth - 360 : 315;
+    else x = entry === 'from-plaza' ? worldWidth - 360 : game.clientWidth * 0.36;
     y = 0;
     velocityY = 0;
     grounded = true;

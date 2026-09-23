@@ -7,6 +7,7 @@ Juego cozy de exploración y plataformas protagonizado por Kuro, un gatito viaje
 El standalone web incluye:
 
 - Casa de Kuro y Barrio Yungay.
+- Exterior e interior ilustrados de la casa, con escala corregida para Kuro.
 - Plaza Yungay y conversación con Mota.
 - Quinta Normal.
 - Museo y postal de la ballena.
