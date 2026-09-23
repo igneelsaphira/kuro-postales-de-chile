@@ -10,6 +10,7 @@ El standalone web incluye:
 - Exterior e interior ilustrados de la casa, con escala corregida para Kuro.
 - Continuación ilustrada de Barrio Yungay hasta la entrada de Plaza Yungay.
 - Plaza Yungay y conversación con Mota.
+- Plaza Yungay completamente ilustrada, con monumento, senderos y rincón propio para Mota.
 - Quinta Normal.
 - Museo y postal de la ballena.
 - Mirador fotográfico y Álbum de Viaje con páginas.

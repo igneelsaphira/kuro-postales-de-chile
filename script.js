@@ -177,8 +177,9 @@ function currentInteraction() {
   if (currentPlace === 'house' && x >= game.clientWidth * 0.40 && x <= game.clientWidth * 0.58) return 'look-window';
   if (currentPlace === 'house' && x >= game.clientWidth * 0.67) return 'open-album';
   if (currentPlace === 'plaza' && x <= 180) return 'return-street';
-  if (currentPlace === 'plaza' && x >= 1010 && x <= 1270) return 'talk-mota';
-  if (currentPlace === 'plaza' && x >= worldWidth - 280) return motaConversationComplete ? 'go-quinta' : 'route-blocked';
+  const motaX = game.clientWidth + 160;
+  if (currentPlace === 'plaza' && x >= motaX - 110 && x <= motaX + 190) return 'talk-mota';
+  if (currentPlace === 'plaza' && x >= game.clientWidth * 2 - 170) return motaConversationComplete ? 'go-quinta' : 'route-blocked';
   if (currentPlace === 'quinta' && x <= 180) return 'return-plaza';
   if (currentPlace === 'quinta' && x >= 1110 && x <= 1510) return 'enter-museum';
   if (currentPlace === 'quinta' && x >= 2050) return quintaPhotoCollected ? 'go-station' : 'station-locked';
@@ -214,7 +215,7 @@ function changeLocation(nextLocation, entry = 'default') {
     locationLabel.hidden = atMuseum;
     locationLabel.textContent = inside ? 'Casa de Kuro' : atPlaza ? 'Plaza Yungay' : atQuinta ? 'Quinta Normal' : atMuseum ? 'Museo · Sala de la Ballena' : atStation ? 'Estación Mapocho' : 'Barrio Yungay';
     if (inside) x = entry === 'at-chair' ? game.clientWidth * 0.305 : 175;
-    else if (atPlaza) x = entry === 'from-quinta' ? worldWidth - 360 : 170;
+    else if (atPlaza) x = entry === 'from-quinta' ? game.clientWidth * 2 - 280 : entry === 'at-mota' ? game.clientWidth + 80 : 170;
     else if (atQuinta) x = entry === 'from-museum' ? 1430 : entry === 'at-mirador' ? 1980 : 170;
     else if (atMuseum) x = 170;
     else if (atStation) x = entry === 'at-estafeta' ? 850 : entry === 'at-train' ? 1510 : entry === 'from-route' ? worldWidth - 360 : 170;
@@ -225,7 +226,8 @@ function changeLocation(nextLocation, entry = 'default') {
     if (entry === 'from-plaza') cameraX = game.clientWidth;
     else if (entry === 'at-neighborhood') cameraX = game.clientWidth;
     else if (entry === 'at-seam') cameraX = game.clientWidth * 0.5;
-    else if (entry === 'from-quinta') cameraX = Math.max(0, worldWidth - game.clientWidth);
+    else if (entry === 'at-mota') cameraX = game.clientWidth;
+    else if (entry === 'from-quinta') cameraX = atPlaza ? game.clientWidth : Math.max(0, worldWidth - game.clientWidth);
     else if (entry === 'from-museum') cameraX = Math.max(0, Math.min(worldWidth - game.clientWidth, 1430 - game.clientWidth * 0.45));
     else if (entry === 'at-mirador') cameraX = Math.max(0, worldWidth - game.clientWidth);
     else if (entry === 'at-estafeta' || entry === 'at-train') cameraX = Math.max(0, Math.min(worldWidth - game.clientWidth, x - game.clientWidth * 0.45));
@@ -359,7 +361,7 @@ function loop(time) {
   const sprinting = keys.has('shift');
   const speed = sprinting ? 370 : 240;
   if (controlsEnabled && (keys.has('arrowright') || keys.has('d'))) {
-    const activeWorldWidth = currentPlace === 'house' || currentPlace === 'museum' ? game.clientWidth : currentPlace === 'street' ? game.clientWidth * 2 : worldWidth;
+    const activeWorldWidth = currentPlace === 'house' || currentPlace === 'museum' ? game.clientWidth : currentPlace === 'street' || currentPlace === 'plaza' ? game.clientWidth * 2 : worldWidth;
     x = Math.min(activeWorldWidth - 110, x + speed * dt);
     facing = 1;
     kuro.style.setProperty('--facing', facing);
@@ -416,7 +418,7 @@ function loop(time) {
   interactionPrompt.hidden = !interaction || !dialogue.hidden;
 
   const viewportWidth = game.clientWidth;
-  const activeWorldWidth = currentPlace === 'house' || currentPlace === 'museum' ? viewportWidth : currentPlace === 'street' ? viewportWidth * 2 : worldWidth;
+  const activeWorldWidth = currentPlace === 'house' || currentPlace === 'museum' ? viewportWidth : currentPlace === 'street' || currentPlace === 'plaza' ? viewportWidth * 2 : worldWidth;
   const maxCameraX = Math.max(0, activeWorldWidth - viewportWidth);
   const lookAhead = moving ? facing * 90 : 0;
   const desiredCameraX = Math.max(0, Math.min(maxCameraX, x - viewportWidth * 0.45 + lookAhead));
@@ -462,6 +464,8 @@ if (['street', 'house', 'plaza', 'quinta', 'museum', 'station'].includes(preview
       ? 'at-chair'
     : previewPlace === 'street' && ['neighborhood', 'seam'].includes(previewSpot)
       ? `at-${previewSpot}`
+    : previewPlace === 'plaza' && previewSpot === 'mota'
+      ? 'at-mota'
     : previewPlace === 'station' && ['estafeta', 'train'].includes(previewSpot)
       ? `at-${previewSpot}`
       : 'default';
