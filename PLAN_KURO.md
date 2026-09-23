@@ -93,6 +93,8 @@ Primero validar la sensación de jugar una zona pequeña. No construir todo Chil
 - Kuro puede enviarle su primera carta a la abuelita; el envío queda guardado y la Estafeta lo marca con un visto bueno.
 - Primera pasada gráfica de la casa terminada: exterior ilustrado de Barrio Yungay e interior cozy coherente.
 - Escala de Kuro corregida en la casa y puntos interactivos alineados con la puerta y el estante del álbum.
+- Ambientación suave añadida: pétalos de jacarandá, luz interior, polvo dorado y brillo del álbum.
+- Kuro puede mirar por la ventana y comentar cómo Santiago se siente enorme desde su casa.
 
 ### Siguiente paso sugerido
 

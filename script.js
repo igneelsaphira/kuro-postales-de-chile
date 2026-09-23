@@ -171,6 +171,7 @@ function currentInteraction() {
   if (currentPlace === 'street' && x >= game.clientWidth * 0.27 && x <= game.clientWidth * 0.44) return 'enter-house';
   if (currentPlace === 'street' && x >= worldWidth - 260) return 'go-plaza';
   if (currentPlace === 'house' && x <= game.clientWidth * 0.25) return 'exit-house';
+  if (currentPlace === 'house' && x >= game.clientWidth * 0.37 && x <= game.clientWidth * 0.58) return 'look-window';
   if (currentPlace === 'house' && x >= game.clientWidth * 0.67) return 'open-album';
   if (currentPlace === 'plaza' && x <= 180) return 'return-street';
   if (currentPlace === 'plaza' && x >= 1010 && x <= 1270) return 'talk-mota';
@@ -264,6 +265,12 @@ addEventListener('keydown', (event) => {
     if (interaction === 'exit-museum') changeLocation('quinta', 'from-museum');
     if (interaction === 'open-album') {
       openAlbum();
+    }
+    if (interaction === 'look-window') {
+      startDialogue([
+        ['Kuro', 'Desde aquí Santiago se ve enorme.'],
+        ['Kuro', 'Pero mi casa todavía se siente cerquita de todo.']
+      ]);
     }
     if (interaction === 'go-plaza') changeLocation('plaza');
     if (interaction === 'go-quinta') changeLocation('quinta');
@@ -359,6 +366,7 @@ function loop(time) {
     'enter-house': 'Entrar a casa',
     'exit-house': 'Salir a Barrio Yungay',
     'open-album': 'Ver Álbum de Viaje',
+    'look-window': 'Mirar por la ventana',
     'go-plaza': 'Ir a Plaza Yungay',
     'return-street': 'Volver a Barrio Yungay',
     'return-plaza': 'Volver a Plaza Yungay',

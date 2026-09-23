@@ -4,13 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Kuro — Primer prototipo</title>
-  <link rel="stylesheet" href="style.css?v=26" />
+  <link rel="stylesheet" href="style.css?v=27" />
 </head>
 <body>
   <main class="game" aria-label="Prototipo de Kuro">
     <div class="sky"></div>
     <div id="scene" class="scene street">
       <div class="street-art exterior-layer" aria-label="Casa de Kuro en Barrio Yungay"></div>
+      <div class="street-atmosphere exterior-layer" aria-hidden="true">
+        <i></i><i></i><i></i><i></i><i></i><i></i>
+      </div>
       <div class="sun exterior-layer"></div>
       <div class="hill hill-back exterior-layer"></div>
       <div class="hill hill-front exterior-layer"></div>
@@ -28,12 +31,11 @@
       <div class="street-lamp exterior-layer"></div>
       <div class="road-sign exterior-layer"><span>Plaza Yungay</span><b>→</b></div>
       <div class="interior-layer" aria-label="Interior de la casa de Kuro">
-        <div class="interior-wall"></div>
-        <div class="interior-window"></div>
-        <div class="interior-door"></div>
-        <div class="album-shelf"><span class="album-object"></span></div>
-        <div class="interior-rug"></div>
-        <div class="interior-plant"></div>
+        <div class="window-sunbeam"></div>
+        <div class="dust-motes" aria-hidden="true">
+          <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+        </div>
+        <div class="album-sparkle" aria-hidden="true">✦</div>
       </div>
       <div class="plaza-layer" aria-label="Plaza Yungay">
         <div class="plaza-ground"></div>
@@ -163,6 +165,6 @@
     <div id="fade" class="fade"></div>
     <div id="shutter-flash" class="shutter-flash"></div>
   </main>
-  <script src="script.js?v=26"></script>
+  <script src="script.js?v=27"></script>
 </body>
 </html>
