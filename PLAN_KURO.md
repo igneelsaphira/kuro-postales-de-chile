@@ -108,7 +108,7 @@ Primero validar la sensación de jugar una zona pequeña. No construir todo Chil
 - Quinta Normal usa una escena completa de una pantalla para esta prueba: acceso desde Plaza Yungay, museo al centro y mirador floral a la derecha, con una única línea de suelo jugable.
 - El mirador de Quinta Normal no lleva un marcador físico: el jardín y la baranda comunican el lugar, y la indicación para fotografiar aparece solo al acercarse.
 - Estación Mapocho usa una escena completa de una pantalla: entrada desde Quinta a la izquierda, Estafeta Gatuna interactiva en el centro y tren antiguo a la derecha.
-- La Estafeta Gatuna es un buzón rojo con orejas, emblema de sobre y bandera de correo; debe conservar esta silueta reconocible cuando aparezca en otras zonas.
+- La Estafeta Gatuna es un buzón rojo visto de frente, con orejas, emblema de sobre y bandera de correo; en Mapocho queda instalada dentro del nicho de piedra y debe conservar esta silueta reconocible cuando aparezca en otras zonas.
 - Kuro usa una línea de suelo más baja dentro del museo para que sus patas descansen sobre las baldosas y no parezca flotar.
 
 ### Siguiente paso sugerido

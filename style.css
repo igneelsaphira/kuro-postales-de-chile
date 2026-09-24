@@ -153,7 +153,7 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .wheel-two { left: 245px; }
 .wheel-three { right: 28px; }
 .station-platform { position: absolute; z-index: 2; left: 1250px; right: 170px; bottom: 29%; height: 24px; border: 7px solid #715044; background: #d5b384; }
-.cat-mailbox { position: absolute; z-index: 4; left: min(36vw, 396px); bottom: 16.5%; width: 84px; height: 126px; background: url('assets/estafeta-gatuna-v1.png') center bottom / contain no-repeat; filter: saturate(.92) drop-shadow(0 3px 2px #49382d38); }
+.cat-mailbox { position: absolute; z-index: 4; left: min(34.5vw, 380px); bottom: 27.5%; width: 66px; height: 99px; background: url('assets/estafeta-gatuna-frontal-v2.png') center bottom / contain no-repeat; filter: saturate(.92) drop-shadow(0 2px 2px #49382d38); }
 .mailbox-ears { position: absolute; left: 18px; right: 18px; top: -40px; height: 60px; background: #9b5f50; clip-path: polygon(0 65%, 8% 0, 35% 40%, 65% 40%, 92% 0, 100% 65%); }
 .mailbox-slot { position: absolute; left: 22px; right: 22px; top: 48px; padding: 7px 0; border: 5px solid #60483e; border-radius: 8px; background: #fff0c9; color: #60483e; text-align: center; font-size: 12px; font-weight: bold; }
 .mailbox-sign { position: absolute; left: -38px; top: 115px; width: 205px; padding: 8px; border: 5px solid #60483e; border-radius: 10px; background: #71806a; color: #fff0c9; text-align: center; font-weight: bold; }
