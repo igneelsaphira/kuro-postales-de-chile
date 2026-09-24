@@ -186,10 +186,10 @@ function currentInteraction() {
   if (currentPlace === 'quinta' && x >= game.clientWidth - 110) return quintaPhotoCollected ? 'go-station' : 'station-locked';
   if (currentPlace === 'museum' && x <= 75) return 'exit-museum';
   if (currentPlace === 'museum' && !whalePostcardCollected && x >= game.clientWidth - 300) return 'collect-postcard';
-  if (currentPlace === 'station' && x <= 180) return 'return-quinta';
-  if (currentPlace === 'station' && x >= 720 && x <= 1010) return 'use-estafeta';
-  if (currentPlace === 'station' && x >= 1370 && x <= 1780) return 'inspect-train';
-  if (currentPlace === 'station' && x >= 2040) return 'station-route-blocked';
+  if (currentPlace === 'station' && x <= 145) return 'return-quinta';
+  if (currentPlace === 'station' && x >= game.clientWidth * 0.2 && x <= game.clientWidth * 0.5) return 'use-estafeta';
+  if (currentPlace === 'station' && x >= game.clientWidth * 0.58 && x <= game.clientWidth - 125) return 'inspect-train';
+  if (currentPlace === 'station' && x >= game.clientWidth - 110) return 'station-route-blocked';
   return null;
 }
 
@@ -218,7 +218,7 @@ function changeLocation(nextLocation, entry = 'default') {
     else if (atPlaza) x = entry === 'from-quinta' ? game.clientWidth - 150 : entry === 'at-mota' ? game.clientWidth * 0.35 : 120;
     else if (atQuinta) x = entry === 'from-museum' ? game.clientWidth * 0.5 : entry === 'at-mirador' ? game.clientWidth * 0.76 : 120;
     else if (atMuseum) x = 170;
-    else if (atStation) x = entry === 'at-estafeta' ? 850 : entry === 'at-train' ? 1510 : entry === 'from-route' ? worldWidth - 360 : 170;
+    else if (atStation) x = entry === 'at-estafeta' ? game.clientWidth * 0.23 : entry === 'at-train' ? game.clientWidth * 0.58 : entry === 'from-route' ? game.clientWidth - 150 : 120;
     else x = entry === 'from-plaza' ? game.clientWidth * 2 - 280 : entry === 'at-neighborhood' ? game.clientWidth * 1.35 : entry === 'at-seam' ? game.clientWidth * 0.95 : game.clientWidth * 0.36;
     y = 0;
     velocityY = 0;
@@ -230,7 +230,7 @@ function changeLocation(nextLocation, entry = 'default') {
     else if (entry === 'from-quinta') cameraX = atPlaza ? 0 : Math.max(0, worldWidth - game.clientWidth);
     else if (entry === 'from-museum') cameraX = atQuinta ? 0 : Math.max(0, Math.min(worldWidth - game.clientWidth, 1430 - game.clientWidth * 0.45));
     else if (entry === 'at-mirador') cameraX = atQuinta ? 0 : Math.max(0, worldWidth - game.clientWidth);
-    else if (entry === 'at-estafeta' || entry === 'at-train') cameraX = Math.max(0, Math.min(worldWidth - game.clientWidth, x - game.clientWidth * 0.45));
+    else if (entry === 'at-estafeta' || entry === 'at-train') cameraX = atStation ? 0 : Math.max(0, Math.min(worldWidth - game.clientWidth, x - game.clientWidth * 0.45));
     else cameraX = 0;
     dialogue.hidden = true;
     scene.style.transform = 'translateX(0)';
@@ -361,7 +361,7 @@ function loop(time) {
   const sprinting = keys.has('shift');
   const speed = sprinting ? 370 : 240;
   if (controlsEnabled && (keys.has('arrowright') || keys.has('d'))) {
-    const activeWorldWidth = currentPlace === 'house' || currentPlace === 'museum' || currentPlace === 'plaza' || currentPlace === 'quinta' ? game.clientWidth : currentPlace === 'street' ? game.clientWidth * 2 : worldWidth;
+    const activeWorldWidth = currentPlace === 'house' || currentPlace === 'museum' || currentPlace === 'plaza' || currentPlace === 'quinta' || currentPlace === 'station' ? game.clientWidth : currentPlace === 'street' ? game.clientWidth * 2 : worldWidth;
     x = Math.min(activeWorldWidth - 110, x + speed * dt);
     facing = 1;
     kuro.style.setProperty('--facing', facing);
@@ -418,10 +418,12 @@ function loop(time) {
   interactionPrompt.classList.toggle('talk-mota', interaction === 'talk-mota');
   interactionPrompt.classList.toggle('quinta-action', ['enter-museum', 'take-photo', 'view-mirador', 'go-station', 'station-locked'].includes(interaction));
   interactionPrompt.classList.toggle('mirador-action', ['take-photo', 'view-mirador', 'go-station', 'station-locked'].includes(interaction));
+  interactionPrompt.classList.toggle('station-action', ['use-estafeta', 'inspect-train', 'station-route-blocked'].includes(interaction));
+  interactionPrompt.classList.toggle('train-action', ['inspect-train', 'station-route-blocked'].includes(interaction));
   interactionPrompt.hidden = !interaction || !dialogue.hidden;
 
   const viewportWidth = game.clientWidth;
-  const activeWorldWidth = currentPlace === 'house' || currentPlace === 'museum' || currentPlace === 'plaza' || currentPlace === 'quinta' ? viewportWidth : currentPlace === 'street' ? viewportWidth * 2 : worldWidth;
+  const activeWorldWidth = currentPlace === 'house' || currentPlace === 'museum' || currentPlace === 'plaza' || currentPlace === 'quinta' || currentPlace === 'station' ? viewportWidth : currentPlace === 'street' ? viewportWidth * 2 : worldWidth;
   const maxCameraX = Math.max(0, activeWorldWidth - viewportWidth);
   const lookAhead = moving ? facing * 90 : 0;
   const desiredCameraX = Math.max(0, Math.min(maxCameraX, x - viewportWidth * 0.45 + lookAhead));

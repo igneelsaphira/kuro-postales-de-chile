@@ -131,6 +131,7 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .station-layer { display: none; position: absolute; inset: 0; z-index: 1; overflow: hidden; background: linear-gradient(#b9d8d5 0 58%, #9d826e 58% 63%, #b58c68 63%); }
 .scene.station .exterior-layer, .scene.station .interior-layer, .scene.station .plaza-layer, .scene.station .quinta-layer, .scene.station .museum-layer { display: none; }
 .scene.station .station-layer { display: block; }
+.station-art { position: absolute; z-index: 2; inset: 0 auto 0 0; width: min(100vw, 1100px); background: url('assets/estacion-mapocho-unificada-v1.png') center / cover no-repeat; }
 .station-skyline { position: absolute; left: 0; right: 0; bottom: 42%; height: 120px; opacity: .45; background: linear-gradient(90deg, #8c8177 0 8%, transparent 8% 11%, #8c8177 11% 19%, transparent 19% 23%, #8c8177 23% 31%, transparent 31% 36%, #8c8177 36% 45%, transparent 45% 100%); }
 .station-ground { position: absolute; inset: 63% 0 0; border-top: 10px solid #775c4d; background: repeating-linear-gradient(90deg, #b78f6d 0 110px, #c19b78 111px 220px); }
 .station-building { position: absolute; left: 390px; bottom: 36%; width: 820px; height: 330px; border: 10px solid #715044; background: #d9aa79; box-shadow: inset 0 0 0 9px #efc995; }
@@ -152,15 +153,16 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .wheel-two { left: 245px; }
 .wheel-three { right: 28px; }
 .station-platform { position: absolute; z-index: 2; left: 1250px; right: 170px; bottom: 29%; height: 24px; border: 7px solid #715044; background: #d5b384; }
-.cat-mailbox { position: absolute; z-index: 4; left: 800px; bottom: 31%; width: 145px; height: 190px; border: 8px solid #60483e; border-radius: 70px 70px 18px 18px; background: #9b5f50; box-shadow: 0 7px 0 #4d3b3530; }
+.cat-mailbox { position: absolute; z-index: 4; left: min(38vw, 418px); bottom: 12.5%; width: 105px; height: 158px; background: url('assets/estafeta-gatuna-v1.png') center bottom / contain no-repeat; filter: saturate(.92) drop-shadow(0 4px 3px #49382d38); }
 .mailbox-ears { position: absolute; left: 18px; right: 18px; top: -40px; height: 60px; background: #9b5f50; clip-path: polygon(0 65%, 8% 0, 35% 40%, 65% 40%, 92% 0, 100% 65%); }
 .mailbox-slot { position: absolute; left: 22px; right: 22px; top: 48px; padding: 7px 0; border: 5px solid #60483e; border-radius: 8px; background: #fff0c9; color: #60483e; text-align: center; font-size: 12px; font-weight: bold; }
 .mailbox-sign { position: absolute; left: -38px; top: 115px; width: 205px; padding: 8px; border: 5px solid #60483e; border-radius: 10px; background: #71806a; color: #fff0c9; text-align: center; font-weight: bold; }
-.scene.letter-sent .cat-mailbox::after { content: '✓'; position: absolute; right: -18px; top: -18px; display: grid; place-items: center; width: 42px; height: 42px; border: 5px solid #60483e; border-radius: 50%; background: #f3c969; color: #60483e; font-weight: bold; }
 .station-back { left: 35px; }
-.station-forward { left: 1950px; background: #9b5f50; }
+.station-forward { left: calc(min(100vw, 1100px) - 205px); bottom: 66%; background: #9b5f50; }
 .station-blocker { position: absolute; z-index: 4; left: 1995px; bottom: 31%; width: 150px; padding: 9px; border: 4px dashed #6a4840; border-radius: 10px; background: #fff4d6; text-align: center; font-weight: bold; }
-.scene.museum .kuro { z-index: 8; bottom: calc(20% + var(--jump-y, 0px)); }
+.station-skyline, .station-ground, .station-building, .old-train, .station-platform, .station-blocker { display: none; }
+.scene.museum .kuro { z-index: 8; bottom: calc(14.5% + var(--jump-y, 0px)); }
+.scene.station .kuro { --kuro-scale: .76; bottom: calc(15.5% + var(--jump-y, 0px)); }
 .location-label { position: absolute; z-index: 7; top: 48px; left: 50%; translate: -50% 0; padding: 7px 16px; border-radius: 20px; background: #fff4d6d9; color: #6a4840; font-weight: bold; opacity: .9; }
 .kuro { position: absolute; z-index: 5; left: 22%; bottom: calc(31% + var(--jump-y, 0px)); width: 100px; height: 133px; background-image: url('assets/kuro-idle-sprite-sheet.png'); background-repeat: no-repeat; background-size: 400px 133px; background-position: 0 0; image-rendering: pixelated; transform: scaleX(var(--facing, 1)) scale(var(--kuro-scale, 1)); transform-origin: center bottom; }
 .scene.street .kuro, .scene.inside .kuro { --kuro-scale: .76; bottom: calc(14% + var(--jump-y, 0px)); }
@@ -233,6 +235,8 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .interaction-prompt.talk-mota { bottom: 53%; }
 .interaction-prompt.quinta-action { bottom: 52%; }
 .interaction-prompt.mirador-action { left: 68%; }
+.interaction-prompt.station-action { bottom: 52%; }
+.interaction-prompt.train-action { left: 68%; }
 .interaction-prompt kbd { display: inline-grid; place-items: center; min-width: 23px; height: 23px; margin-right: 4px; border: 2px solid #6a4840; border-radius: 6px; background: white; font: inherit; }
 .hint { position: absolute; z-index: 6; left: 18px; top: 12px; margin: 0; padding: 6px 10px; border-radius: 10px; background: #fff4d6bb; font-size: 13px; }
 .fade { position: absolute; z-index: 20; inset: 0; pointer-events: none; background: #4d3b35; opacity: 0; transition: opacity .18s ease; }
