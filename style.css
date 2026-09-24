@@ -180,6 +180,43 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .dialogue-help { position: absolute; left: 24px; bottom: 10px; color: #7d6b61; font-size: 12px; }
 .dialogue-next { position: absolute; right: 24px; bottom: 12px; color: #c98262; animation: dialogue-bob .8s ease-in-out infinite alternate; }
 @keyframes dialogue-bob { to { transform: translateY(4px); } }
+.world-map { position: absolute; z-index: 18; inset: 3%; display: flex; flex-direction: column; padding: 12px 16px 8px; border: 7px solid #765044; border-radius: 24px; background: #ead9b7; box-shadow: 0 18px 45px #33241f88, inset 0 0 0 4px #f8ebcc; }
+.world-map[hidden] { display: none; }
+.world-map-header { display: flex; align-items: center; justify-content: space-between; height: 42px; border-bottom: 2px solid #b98a67; }
+.world-map-header strong { display: block; color: #60483e; font-size: clamp(18px, 2.6vw, 28px); line-height: 1; }
+.world-map-header small { display: block; color: #8a6c5b; font-size: 11px; }
+#world-map-close { width: 31px; height: 31px; border: 2px solid #765044; border-radius: 50%; background: #fff1cc; color: #765044; font: bold 21px/1 Georgia, serif; cursor: pointer; }
+.world-map-body { flex: 1; min-height: 0; display: grid; grid-template-columns: 44% 56%; gap: 12px; padding: 8px 0 3px; }
+.chile-map { position: relative; overflow: hidden; border: 3px solid #9b705c; border-radius: 17px; background: radial-gradient(circle at 25% 20%, #fff2c7 0 2px, transparent 3px), linear-gradient(145deg, #b6d7cf 0 36%, #88b8b1 100%); }
+.chile-map::after { content: ''; position: absolute; inset: auto -5% -25% 22%; height: 48%; border-radius: 50%; background: #d5c38e55; transform: rotate(-8deg); }
+.chile-spine { position: absolute; z-index: 1; left: 53%; top: 7%; bottom: 8%; width: 15px; border: 3px solid #71554b; border-radius: 55% 45% 60% 40%; background: linear-gradient(#d9aa68, #7f9a69 52%, #9ab4b6); transform: rotate(4deg); box-shadow: 3px 0 0 #f4dfaa66; }
+.zone-node { position: absolute; z-index: 2; display: grid; grid-template-columns: 25px auto; grid-template-rows: auto auto; align-items: center; column-gap: 4px; color: #554139; font-size: 10px; line-height: 1.05; white-space: nowrap; }
+.zone-node > span { grid-row: 1 / 3; display: grid; place-items: center; width: 24px; height: 24px; border: 2px solid #624b42; border-radius: 50%; background: #fff0c9; font-size: 12px; }
+.zone-node b { font-size: 11px; }
+.zone-node small { font-size: 9px; opacity: .75; }
+.zone-node.locked { filter: saturate(.45); opacity: .74; }
+.zone-node.complete > span { background: #f3c969; color: #654a3d; box-shadow: 0 0 0 4px #fff0c980; }
+.zone-node.next > span { background: #c98262; color: white; animation: map-node-pulse 1.2s ease-in-out infinite alternate; }
+@keyframes map-node-pulse { to { scale: 1.08; box-shadow: 0 0 0 5px #fff0c970; } }
+.node-north { left: 49%; top: 5%; }
+.node-rapa { left: 3%; top: 22%; }
+.node-valpo { left: 10%; top: 39%; }
+.node-santiago { left: 49%; top: 34%; }
+.node-cordillera { left: 67%; top: 49%; }
+.node-south { left: 49%; top: 58%; }
+.node-patagonia { left: 38%; top: 75%; }
+.node-antarctica { left: 62%; top: 86%; }
+.santiago-route { min-width: 0; padding: 8px 12px; border: 3px solid #b47b64; border-radius: 17px; background: #fff2d4e8; }
+.route-stamp { display: inline-block; padding: 3px 8px; border-radius: 12px; background: #71806a; color: #fff2d4; font-size: 10px; text-transform: uppercase; letter-spacing: .08em; }
+.santiago-route h2 { margin: 4px 0 0; color: #704d43; font-size: clamp(20px, 3vw, 30px); }
+.santiago-route > p { margin: 0 0 7px; color: #7c685d; font-size: 11px; }
+.local-map-nodes { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.local-map-nodes button { min-height: 39px; padding: 5px 7px; border: 3px solid #765044; border-radius: 11px; background: #f9dfaa; color: #584039; font: bold 11px Georgia, serif; cursor: pointer; box-shadow: 0 3px 0 #76504433; }
+.local-map-nodes button:hover, .local-map-nodes button:focus-visible { background: #f3c969; translate: 0 -1px; outline: none; }
+.local-map-nodes button[data-travel='station'] { border-color: #71806a; background: #dbe2c5; }
+.next-destination { display: flex; justify-content: space-between; gap: 8px; margin-top: 7px; padding: 6px 9px; border: 2px dashed #9b5f50; border-radius: 10px; color: #765044; font-size: 10px; }
+.next-destination span { opacity: .7; }
+.world-map-help { color: #7b665b; font-size: 10px; text-align: center; }
 .travel-album { position: absolute; z-index: 15; inset: 6% 8%; padding: 18px 24px 36px 42px; border: 9px solid #765044; border-radius: 18px 28px 28px 18px; background: #9b5f50; box-shadow: 0 18px 40px #33241f66; }
 .travel-album[hidden] { display: none; }
 .album-cover-edge { position: absolute; left: 14px; top: 3%; bottom: 3%; width: 15px; border-radius: 8px; background: #65443c; box-shadow: 5px 0 0 #d89972; }
@@ -242,6 +279,12 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .fade { position: absolute; z-index: 20; inset: 0; pointer-events: none; background: #4d3b35; opacity: 0; transition: opacity .18s ease; }
 .fade.active { opacity: 1; }
 @media (max-width: 760px) {
+  .world-map { inset: 2%; padding: 8px 10px 6px; border-width: 5px; }
+  .world-map-body { grid-template-columns: 43% 57%; gap: 7px; padding-top: 5px; }
+  .santiago-route { padding: 6px 8px; }
+  .local-map-nodes { gap: 4px; }
+  .local-map-nodes button { min-height: 34px; padding: 4px; font-size: 10px; }
+  .next-destination { margin-top: 5px; padding: 4px 6px; }
   .travel-album { inset: 4%; padding: 12px 14px 30px 32px; }
   .album-pages { padding: 16px 18px 26px; }
   .album-memory { inset: 70px 14px 26px; grid-template-columns: minmax(140px, 180px) 1fr; gap: 12px; padding: 2px; }

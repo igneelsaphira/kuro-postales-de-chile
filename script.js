@@ -17,6 +17,9 @@ const albumPrev = document.querySelector('#album-prev');
 const albumNext = document.querySelector('#album-next');
 const photoMoment = document.querySelector('#photo-moment');
 const shutterFlash = document.querySelector('#shutter-flash');
+const worldMap = document.querySelector('#world-map');
+const worldMapClose = document.querySelector('#world-map-close');
+const santiagoMapStatus = document.querySelector('#santiago-map-status');
 const keys = new Set();
 const worldWidth = 2200;
 let x = Math.min(430, game.clientWidth * 0.36);
@@ -164,8 +167,31 @@ function closePhotoMoment() {
   photoMoment.hidden = true;
 }
 
+function openWorldMap() {
+  keys.clear();
+  santiagoMapStatus.textContent = firstLetterSent
+    ? 'Recorrido completado · carta enviada'
+    : 'Recorrido completado · carta pendiente';
+  worldMap.hidden = false;
+}
+
+function closeWorldMap() {
+  worldMap.hidden = true;
+}
+
 albumPrev.addEventListener('click', () => changeAlbumPage(-1));
 albumNext.addEventListener('click', () => changeAlbumPage(1));
+worldMapClose.addEventListener('click', closeWorldMap);
+worldMap.querySelectorAll('[data-travel]').forEach((button) => {
+  button.addEventListener('click', () => {
+    const destination = button.dataset.travel;
+    closeWorldMap();
+    if (destination === 'street') changeLocation('street');
+    else if (destination === 'plaza') changeLocation('plaza');
+    else if (destination === 'quinta') changeLocation('quinta');
+    else if (destination === 'station') changeLocation('station', 'at-train');
+  });
+});
 
 function currentInteraction() {
   if (!grounded || transitioning) return null;
@@ -188,7 +214,7 @@ function currentInteraction() {
   if (currentPlace === 'museum' && !whalePostcardCollected && x >= game.clientWidth - 300) return 'collect-postcard';
   if (currentPlace === 'station' && x <= 145) return 'return-quinta';
   if (currentPlace === 'station' && x >= game.clientWidth * 0.2 && x <= game.clientWidth * 0.5) return 'use-estafeta';
-  if (currentPlace === 'station' && x >= game.clientWidth * 0.58 && x <= game.clientWidth - 125) return 'inspect-train';
+  if (currentPlace === 'station' && x >= game.clientWidth * 0.58 && x <= game.clientWidth - 125) return 'take-train';
   if (currentPlace === 'station' && x >= game.clientWidth - 110) return 'station-route-blocked';
   return null;
 }
@@ -243,6 +269,10 @@ function changeLocation(nextLocation, entry = 'default') {
 
 addEventListener('keydown', (event) => {
   const pressedKey = event.key.toLowerCase();
+  if (!worldMap.hidden) {
+    if (pressedKey === 'escape') closeWorldMap();
+    return;
+  }
   if (sittingInChair) {
     if ((pressedKey === 'escape' || pressedKey === 'e' || pressedKey === 'enter') && !event.repeat) {
       sittingInChair = false;
@@ -317,9 +347,7 @@ addEventListener('keydown', (event) => {
     if (interaction === 'view-mirador') {
       startDialogue([['Kuro', 'Desde aquí todo se ve distinto. Me alegra haber guardado este momento.']]);
     }
-    if (interaction === 'inspect-train') {
-      startDialogue([['Kuro', 'Mota tenía razón. Las estaciones sí dan ganas de conocer lugares nuevos.']]);
-    }
+    if (interaction === 'take-train') openWorldMap();
     if (interaction === 'station-route-blocked') {
       startDialogue([['Kuro', 'El camino hacia el centro todavía no está listo. Volveré después.']]);
     }
@@ -356,7 +384,7 @@ addEventListener('keyup', (event) => {
 function loop(time) {
   const dt = Math.min((time - lastTime) / 1000, 0.033);
   lastTime = time;
-  const controlsEnabled = dialogue.hidden && travelAlbum.hidden && photoMoment.hidden && !sittingInChair;
+  const controlsEnabled = dialogue.hidden && travelAlbum.hidden && photoMoment.hidden && worldMap.hidden && !sittingInChair;
   const moving = controlsEnabled && (keys.has('arrowright') || keys.has('d') || keys.has('arrowleft') || keys.has('a'));
   const sprinting = keys.has('shift');
   const speed = sprinting ? 370 : 240;
@@ -406,7 +434,7 @@ function loop(time) {
     'take-photo': 'Sacar una foto',
     'view-mirador': 'Mirar el paisaje',
     'use-estafeta': firstLetterSent ? 'Revisar Estafeta' : 'Enviar carta a la abuelita',
-    'inspect-train': 'Mirar el tren',
+    'take-train': 'Tomar el tren',
     'station-route-blocked': 'Revisar próxima ruta',
     'exit-museum': 'Salir a Quinta Normal',
     'collect-postcard': 'Revisar vitrina'
@@ -418,8 +446,8 @@ function loop(time) {
   interactionPrompt.classList.toggle('talk-mota', interaction === 'talk-mota');
   interactionPrompt.classList.toggle('quinta-action', ['enter-museum', 'take-photo', 'view-mirador', 'go-station', 'station-locked'].includes(interaction));
   interactionPrompt.classList.toggle('mirador-action', ['take-photo', 'view-mirador', 'go-station', 'station-locked'].includes(interaction));
-  interactionPrompt.classList.toggle('station-action', ['use-estafeta', 'inspect-train', 'station-route-blocked'].includes(interaction));
-  interactionPrompt.classList.toggle('train-action', ['inspect-train', 'station-route-blocked'].includes(interaction));
+  interactionPrompt.classList.toggle('station-action', ['use-estafeta', 'take-train', 'station-route-blocked'].includes(interaction));
+  interactionPrompt.classList.toggle('train-action', ['take-train', 'station-route-blocked'].includes(interaction));
   interactionPrompt.hidden = !interaction || !dialogue.hidden;
 
   const viewportWidth = game.clientWidth;
@@ -483,4 +511,7 @@ if (previewParams.get('album') === 'open') {
 }
 if (previewParams.get('photoView') === 'open') {
   setTimeout(() => { photoMoment.hidden = false; }, 240);
+}
+if (previewParams.get('map') === 'open') {
+  setTimeout(openWorldMap, 260);
 }

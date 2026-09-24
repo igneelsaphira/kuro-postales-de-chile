@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Kuro — Primer prototipo</title>
-  <link rel="stylesheet" href="style.css?v=53" />
+  <link rel="stylesheet" href="style.css?v=54" />
 </head>
 <body>
   <main class="game" aria-label="Prototipo de Kuro">
@@ -110,6 +110,38 @@
       <div class="dialogue-help">E / Enter continuar · Esc cerrar</div>
       <div class="dialogue-next">▼</div>
     </section>
+    <section id="world-map" class="world-map" hidden aria-label="Mapa de viaje de Kuro">
+      <header class="world-map-header">
+        <div><strong>Mapa de viaje</strong><small>Chile, de norte a sur</small></div>
+        <button id="world-map-close" type="button" aria-label="Cerrar mapa">×</button>
+      </header>
+      <div class="world-map-body">
+        <div class="chile-map" aria-label="Zonas futuras de Chile">
+          <div class="chile-spine" aria-hidden="true"></div>
+          <div class="zone-node node-north locked"><span>🔒</span><b>Norte</b><small>Desierto</small></div>
+          <div class="zone-node node-rapa locked"><span>🔒</span><b>Rapa Nui</b><small>Especial</small></div>
+          <div class="zone-node node-valpo next"><span>🚂</span><b>Valparaíso</b><small>Próxima ruta</small></div>
+          <div class="zone-node node-santiago complete"><span>★</span><b>Santiago</b><small>Completado</small></div>
+          <div class="zone-node node-cordillera locked"><span>🔒</span><b>Cordillera</b><small>Final</small></div>
+          <div class="zone-node node-south locked"><span>🔒</span><b>Sur verde</b><small>Isla Mocha</small></div>
+          <div class="zone-node node-patagonia locked"><span>🔒</span><b>Chiloé</b><small>Patagonia</small></div>
+          <div class="zone-node node-antarctica locked"><span>🔒</span><b>Antártida</b><small>Especial</small></div>
+        </div>
+        <aside class="santiago-route">
+          <span class="route-stamp">Zona central</span>
+          <h2>Santiago</h2>
+          <p id="santiago-map-status">Recorrido completado · carta enviada</p>
+          <div class="local-map-nodes" aria-label="Lugares disponibles">
+            <button type="button" data-travel="street">Casa · Barrio Yungay</button>
+            <button type="button" data-travel="plaza">Plaza Yungay</button>
+            <button type="button" data-travel="quinta">Quinta Normal</button>
+            <button type="button" data-travel="station">Estación Mapocho</button>
+          </div>
+          <div class="next-destination"><b>Valparaíso</b><span>Ruta en preparación</span></div>
+        </aside>
+      </div>
+      <div class="world-map-help">Selecciona un lugar construido · Esc cerrar</div>
+    </section>
     <section class="travel-album" id="travel-album" hidden aria-label="Álbum de Viaje">
       <div class="album-cover-edge"></div>
       <div class="album-pages">
@@ -166,6 +198,6 @@
     <div id="fade" class="fade"></div>
     <div id="shutter-flash" class="shutter-flash"></div>
   </main>
-  <script src="script.js?v=53"></script>
+  <script src="script.js?v=54"></script>
 </body>
 </html>

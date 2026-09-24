@@ -110,10 +110,12 @@ Primero validar la sensación de jugar una zona pequeña. No construir todo Chil
 - Estación Mapocho usa una escena completa de una pantalla: entrada desde Quinta a la izquierda, Estafeta Gatuna interactiva en el centro y tren antiguo a la derecha.
 - La Estafeta Gatuna es un buzón rojo visto de frente, con orejas, emblema de sobre y bandera de correo; en Mapocho queda instalada dentro del nicho de piedra y debe conservar esta silueta reconocible cuando aparezca en otras zonas.
 - Kuro usa una línea de suelo más baja dentro del museo para que sus patas descansen sobre las baldosas y no parezca flotar.
+- El tren de Estación Mapocho abre un primer mapa funcional de Chile. Santiago aparece completado; Valparaíso figura como próxima ruta y las zonas futuras permanecen bloqueadas.
+- Desde el mapa solo se puede viajar a escenarios ya construidos: Barrio Yungay, Plaza Yungay, Quinta Normal y Estación Mapocho.
 
 ### Siguiente paso sugerido
 
-Convertir la interacción del tren en **Tomar el tren** y abrir la primera versión del mapa de nodos. El mapa debe mostrar el recorrido completado de Santiago, las rutas disponibles y los destinos futuros bloqueados.
+Probar el mapa de nodos y luego construir la primera ruta nueva: **Valparaíso**. Hasta que exista su escenario, el nodo permanece visible pero bloqueado.
 
 ## Primer mapa: Santiago y conexión hacia Valparaíso
 
