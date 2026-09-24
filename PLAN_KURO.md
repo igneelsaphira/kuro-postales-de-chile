@@ -90,7 +90,7 @@ Primero validar la sensación de jugar una zona pequeña. No construir todo Chil
 - El Álbum de Viaje permite cambiar entre la postal y la primera foto usando las flechas.
 - Quinta Normal conecta con una primera versión explorable de **Estación Mapocho**.
 - La estación incluye un tren antiguo, una ruta futura bloqueada y la primera **Estafeta Gatuna**.
-- Kuro puede enviarle su primera carta a la abuelita; el envío queda guardado y la Estafeta lo marca con un visto bueno.
+- Kuro puede enviarle su primera carta a la abuelita; el envío queda guardado y la Estafeta permite revisar su estado sin marcadores flotantes.
 - Primera pasada gráfica de la casa terminada: exterior ilustrado de Barrio Yungay e interior cozy coherente.
 - Escala de Kuro corregida en la casa y puntos interactivos alineados con la puerta y el estante del álbum.
 - Ambientación suave añadida: pétalos de jacarandá, luz interior, polvo dorado y brillo del álbum.
@@ -113,7 +113,7 @@ Primero validar la sensación de jugar una zona pequeña. No construir todo Chil
 
 ### Siguiente paso sugerido
 
-Pulir la casa como escenario visual de referencia: revisar detalles, interacciones y posibles animaciones ambientales. Luego aplicar la misma dirección gráfica a Plaza Yungay antes de continuar con nuevos nodos.
+Convertir la interacción del tren en **Tomar el tren** y abrir la primera versión del mapa de nodos. El mapa debe mostrar el recorrido completado de Santiago, las rutas disponibles y los destinos futuros bloqueados.
 
 ## Primer mapa: Santiago y conexión hacia Valparaíso
 
