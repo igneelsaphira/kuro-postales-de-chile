@@ -124,13 +124,7 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .museum-door { position: absolute; left: 275px; bottom: 0; width: 82px; height: 145px; border: 8px solid #76594d; background: #71806a; }
 .quinta-back { left: 35px; }
 .quinta-forward { left: calc(min(100vw, 1100px) - 190px); bottom: 66%; }
-.quinta-mirador { position: absolute; z-index: 3; left: min(82vw, 902px); bottom: 30%; width: 70px; height: 90px; }
-.mirador-rail { position: absolute; left: 5px; right: 5px; bottom: 16px; height: 72px; border: 8px solid #76594d; border-top-width: 12px; background: repeating-linear-gradient(90deg, transparent 0 34px, #76594d 35px 43px); }
-.mirador-marker { position: absolute; left: 0; top: 0; display: grid; place-items: center; width: 54px; height: 62px; border: 5px solid #76594d; border-radius: 28px 28px 10px 10px; background: #fff0c9; color: #c98262; font-size: 24px; box-shadow: 0 5px 0 #4d3b3530; animation: marker-bob 1.2s ease-in-out infinite alternate; }
-.mirador-flowers { position: absolute; left: -15px; right: -15px; bottom: 0; height: 35px; border-radius: 50%; background: radial-gradient(circle at 10% 40%, #f5d36f 0 5px, transparent 6px), radial-gradient(circle at 28% 65%, #e79786 0 6px, transparent 7px), radial-gradient(circle at 76% 55%, #f5d36f 0 5px, transparent 6px), radial-gradient(circle at 92% 35%, #e79786 0 6px, transparent 7px), #718c66; }
-.quinta-ground, .quinta-tree, .museum-building, .mirador-rail, .mirador-flowers { display: none; }
-.scene.quinta-photo-collected .mirador-marker { animation: none; color: #71806a; }
-@keyframes marker-bob { to { transform: translateY(-7px); } }
+.quinta-ground, .quinta-tree, .museum-building { display: none; }
 .museum-layer { display: none; position: absolute; left: 0; top: 0; bottom: 0; width: min(100vw, 1100px); z-index: 1; background: #c9b28f url('assets/museum-whale-hall.png') center center / cover no-repeat; }
 .scene.museum .exterior-layer, .scene.museum .interior-layer, .scene.museum .plaza-layer, .scene.museum .quinta-layer { display: none; }
 .scene.museum .museum-layer { display: block; }
