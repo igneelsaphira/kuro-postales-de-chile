@@ -853,7 +853,7 @@ function loop(time) {
       groundPercent = 17.94 + seamProgress * 0.06;
     } else {
       const hillProgress = Math.max(0, Math.min(1, (x - hillsStart) / panoramaWidth));
-      groundPercent = 18 + hillProgress * 12;
+      groundPercent = 18 + hillProgress * 18;
     }
     kuro.style.setProperty('--valpo-ground', `${groundPercent}%`);
   }
