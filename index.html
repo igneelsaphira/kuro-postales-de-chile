@@ -4,14 +4,19 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Kuro — Primer prototipo</title>
-  <link rel="stylesheet" href="style.css?v=54" />
+  <link rel="stylesheet" href="style.css?v=106" />
 </head>
 <body>
   <main class="game" aria-label="Prototipo de Kuro">
     <div class="sky"></div>
     <div id="scene" class="scene street">
-      <div class="street-art exterior-layer" aria-label="Casa de Kuro en Barrio Yungay"></div>
-      <div class="street-continuation-art exterior-layer" aria-label="Continuación de Barrio Yungay hacia la plaza"></div>
+      <div class="yungay-panorama-art exterior-layer" aria-label="Recorrido continuo desde la casa de Kuro hasta Plaza Yungay">
+        <div class="mota-corner" aria-label="Rincón de lectura de Mota">
+          <div class="mota-ground-shadow" aria-hidden="true"></div>
+          <img class="mota-table" src="assets/mesita-once-mota-v1.png" alt="Mesita de Mota con una taza de once, un pancito y diarios" />
+          <img id="mota" class="mota" src="assets/mota-reading.png" alt="Mota leyendo el diario" />
+        </div>
+      </div>
       <div class="street-atmosphere exterior-layer" aria-hidden="true">
         <i></i><i></i><i></i><i></i><i></i><i></i>
         <i></i><i></i><i></i><i></i><i></i><i></i>
@@ -34,10 +39,13 @@
       <div class="road-sign exterior-layer"><span>Plaza Yungay</span><b>→</b></div>
       <div class="interior-layer" aria-label="Interior de la casa de Kuro">
         <div class="window-sunbeam"></div>
+        <div class="window-petals" aria-hidden="true">
+          <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+        </div>
         <div class="dust-motes" aria-hidden="true">
           <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
         </div>
-        <div class="album-sparkle" aria-hidden="true">✦</div>
+        <div class="album-sparkle" aria-hidden="true"></div>
       </div>
       <div class="plaza-layer" aria-label="Plaza Yungay">
         <div class="plaza-art plaza-art-entrance"></div>
@@ -48,9 +56,6 @@
         <div class="plaza-tree plaza-tree-left"></div>
         <div class="plaza-tree plaza-tree-right"></div>
         <div class="plaza-monument"><span></span></div>
-        <div class="mota-ground-shadow" aria-hidden="true"></div>
-        <img class="mota-table" src="assets/mesita-once-mota-v1.png" alt="Mesita de Mota con una taza de once, un pancito y diarios" />
-        <img id="mota" class="mota" src="assets/mota-reading.png" alt="Mota leyendo el diario" />
         <div class="plaza-sign sign-back">← Barrio Yungay</div>
         <div class="plaza-sign sign-forward">Quinta Normal →</div>
         <div class="route-blocker">Camino en preparación</div>
@@ -97,9 +102,23 @@
         <div class="plaza-sign station-forward">Centro de Santiago →</div>
         <div class="station-blocker">Próxima ruta</div>
       </div>
+      <div class="valparaiso-layer" aria-label="Recorrido continuo desde Estación Puerto hasta la Cueva del Chivato">
+        <div class="valparaiso-panorama-art">
+          <div id="tizne" class="tizne" aria-label="Tizne, un gato callejero de Valparaíso"></div>
+        </div>
+        <div class="valparaiso-hills-art" aria-label="Camino por los cerros hasta la entrada de la Cueva del Chivato"></div>
+      </div>
+      <div class="cave-layer" aria-label="Interior de la Cueva del Chivato">
+        <div class="cave-panorama-art"></div>
+        <div id="cave-bell" class="cave-bell" aria-label="Cascabel cubierto de hollín"></div>
+        <div id="soot-sea-lion" class="soot-creature soot-sea-lion" aria-label="Sombra de un lobo marino hecha de hollín"></div>
+        <div id="soot-projectile" class="soot-projectile" aria-label="Pelota de hollín" hidden></div>
+      </div>
       <div id="kuro" class="kuro" aria-label="Kuro"></div>
       <div class="ground exterior-layer"></div>
     </div>
+    <div id="cave-darkness" class="cave-darkness" aria-hidden="true"></div>
+    <button id="cave-claw" class="cave-claw" type="button" aria-label="Dar un zarpazo" hidden>🐾 Zarpazo</button>
     <div id="location-label" class="location-label">Barrio Yungay</div>
     <div id="interaction-prompt" class="interaction-prompt" hidden>
       <kbd>E</kbd> <span id="prompt-action">Entrar a casa</span>
@@ -118,18 +137,18 @@
       <div class="world-map-body">
         <div class="chile-map" aria-label="Zonas futuras de Chile">
           <div class="chile-spine" aria-hidden="true"></div>
-          <div class="zone-node node-north locked"><span>🔒</span><b>Norte</b><small>Desierto</small></div>
-          <div class="zone-node node-rapa locked"><span>🔒</span><b>Rapa Nui</b><small>Especial</small></div>
-          <div class="zone-node node-valpo next"><span>🚂</span><b>Valparaíso</b><small>Próxima ruta</small></div>
-          <div class="zone-node node-santiago complete"><span>★</span><b>Santiago</b><small>Completado</small></div>
-          <div class="zone-node node-cordillera locked"><span>🔒</span><b>Cordillera</b><small>Final</small></div>
-          <div class="zone-node node-south locked"><span>🔒</span><b>Sur verde</b><small>Isla Mocha</small></div>
-          <div class="zone-node node-patagonia locked"><span>🔒</span><b>Chiloé</b><small>Patagonia</small></div>
-          <div class="zone-node node-antarctica locked"><span>🔒</span><b>Antártida</b><small>Especial</small></div>
+          <button type="button" class="zone-node node-north locked" data-map-zone="north" data-map-x="53" data-map-y="8" aria-pressed="false"><span>🔒</span><b>Norte</b><small>Desierto</small></button>
+          <button type="button" class="zone-node node-rapa locked" data-map-zone="rapa" data-map-x="8" data-map-y="26" aria-pressed="false"><span>🔒</span><b>Rapa Nui</b><small>Especial</small></button>
+          <button type="button" class="zone-node node-valpo available" data-map-zone="valparaiso" data-map-x="16" data-map-y="43" aria-pressed="false"><span>🚂</span><b>Valparaíso</b><small>Disponible</small></button>
+          <button type="button" class="zone-node node-santiago complete selected" data-map-zone="santiago" data-map-x="53" data-map-y="38" aria-pressed="true"><span>★</span><b>Santiago</b><small>Completado</small></button>
+          <button type="button" class="zone-node node-cordillera locked" data-map-zone="cordillera" data-map-x="72" data-map-y="53" aria-pressed="false"><span>🔒</span><b>Cordillera</b><small>Final</small></button>
+          <button type="button" class="zone-node node-south locked" data-map-zone="south" data-map-x="53" data-map-y="63" aria-pressed="false"><span>🔒</span><b>Sur verde</b><small>Isla Mocha</small></button>
+          <button type="button" class="zone-node node-patagonia locked" data-map-zone="chiloe" data-map-x="42" data-map-y="79" aria-pressed="false"><span>🔒</span><b>Chiloé</b><small>Patagonia</small></button>
+          <button type="button" class="zone-node node-antarctica locked" data-map-zone="antarctica" data-map-x="66" data-map-y="90" aria-pressed="false"><span>🔒</span><b>Antártida</b><small>Especial</small></button>
         </div>
         <aside class="santiago-route">
-          <span class="route-stamp">Zona central</span>
-          <h2>Santiago</h2>
+          <span id="map-zone-stamp" class="route-stamp">Zona central</span>
+          <h2 id="map-zone-title">Santiago</h2>
           <p id="santiago-map-status">Recorrido completado · carta enviada</p>
           <div class="local-map-nodes" aria-label="Lugares disponibles">
             <button type="button" data-travel="street">Casa · Barrio Yungay</button>
@@ -137,10 +156,15 @@
             <button type="button" data-travel="quinta">Quinta Normal</button>
             <button type="button" data-travel="station">Estación Mapocho</button>
           </div>
-          <div class="next-destination"><b>Valparaíso</b><span>Ruta en preparación</span></div>
+          <div id="map-zone-message" class="map-zone-message" hidden>
+            <span id="map-zone-icon">🔒</span>
+            <p id="map-zone-description"></p>
+            <button id="map-zone-travel" type="button" hidden>Viajar a Estación Puerto</button>
+          </div>
+          <div id="next-destination" class="next-destination"><b>Valparaíso</b><span>Ruta disponible</span></div>
         </aside>
       </div>
-      <div class="world-map-help">Selecciona un lugar construido · Esc cerrar</div>
+      <div class="world-map-help">WASD / flechas mover · E / Enter confirmar · toca un nodo · Esc cerrar</div>
     </section>
     <section class="travel-album" id="travel-album" hidden aria-label="Álbum de Viaje">
       <div class="album-cover-edge"></div>
@@ -198,6 +222,6 @@
     <div id="fade" class="fade"></div>
     <div id="shutter-flash" class="shutter-flash"></div>
   </main>
-  <script src="script.js?v=54"></script>
+  <script src="script.js?v=108"></script>
 </body>
 </html>
