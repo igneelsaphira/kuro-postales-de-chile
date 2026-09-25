@@ -268,9 +268,35 @@ const tizneConversation = [
   ['Tizne', 'Si quieres conocer el verdadero Valparaíso, podría mostrarte el camino.']
 ];
 
+const portraitKuro = document.querySelector('#portrait-kuro');
+const portraitNpc = document.querySelector('#portrait-npc');
+const npcPortraits = {
+  Mota: 'assets/mota-dialogue-frames-v1.png',
+  Tizne: 'assets/tizne-dialogue-frames-v1.png'
+};
+
+function updateDialoguePortraits(speaker) {
+  const npc = npcPortraits[speaker] ? speaker : dialogueLines.find(([name]) => npcPortraits[name])?.[0];
+  const hasCharacter = speaker === 'Kuro' || Boolean(npcPortraits[speaker]);
+  portraitKuro.hidden = !hasCharacter;
+  portraitNpc.hidden = !hasCharacter || !npc;
+  if (npc) {
+    const frames = portraitNpc.querySelector('.portrait-frames');
+    if (portraitNpc.dataset.character !== npc) {
+      frames.style.backgroundImage = `url('${npcPortraits[npc]}')`;
+      portraitNpc.dataset.character = npc;
+    }
+  }
+  portraitKuro.classList.toggle('is-speaking', speaker === 'Kuro');
+  portraitNpc.classList.toggle('is-speaking', speaker === npc);
+  dialogue.dataset.speakerSide = !hasCharacter ? 'none' : speaker === 'Kuro' ? 'left' : 'right';
+}
+
 function typeDialogueLine(speaker, text) {
   clearInterval(typingTimer);
   dialogue.hidden = false;
+  updateDialoguePortraits(speaker);
+  dialogue.classList.add('is-typing');
   dialogueName.textContent = speaker;
   dialogueName.className = 'dialogue-name';
   if (speaker === 'Kuro') dialogueName.classList.add('kuro-speaker');
@@ -287,6 +313,7 @@ function typeDialogueLine(speaker, text) {
     if (character >= text.length) {
       clearInterval(typingTimer);
       typingComplete = true;
+      dialogue.classList.remove('is-typing');
     }
   }, 24);
 }
@@ -302,6 +329,7 @@ function advanceDialogue() {
     clearInterval(typingTimer);
     dialogueText.textContent = fullDialogueText;
     typingComplete = true;
+    dialogue.classList.remove('is-typing');
     return;
   }
   dialogueIndex += 1;
