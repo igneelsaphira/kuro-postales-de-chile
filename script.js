@@ -48,14 +48,14 @@ const localTravelButtons = [...worldMap.querySelectorAll('[data-travel]')];
 const keys = new Set();
 const worldWidth = 2200;
 const valparaisoHillGroundProfile = [
-  [0, 13.2],
-  [0.1, 13.8],
-  [0.2, 18.3],
-  [0.3, 22.5],
-  [0.5, 28.5],
-  [0.7, 29.2],
-  [0.82, 29],
-  [1, 28.2],
+  [0, 15.8],
+  [0.1, 16.6],
+  [0.2, 21],
+  [0.3, 25],
+  [0.5, 30.5],
+  [0.7, 32.4],
+  [0.82, 33],
+  [1, 32.2],
 ];
 let x = Math.min(430, game.clientWidth * 0.36);
 let y = 0;
