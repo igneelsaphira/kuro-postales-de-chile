@@ -227,7 +227,7 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .game.cave-return .soot-goat { left: 20.2%; width: 198px; height: 132px; background-image: url('assets/chivato-cabrito-revelado-asustado-4frames-v1.png'); background-size: 200% 200%; filter: saturate(.88) brightness(1.02) drop-shadow(0 4px 3px #05060844); }
 .game.cave-return .soot-sea-lion {
   left: calc(34% - 160px);
-  bottom: 13.7%;
+  bottom: 18%;
   width: 175px;
   height: 121px;
   background: url('assets/lobo-marino-temeroso-roca-v1.png') center bottom / contain no-repeat;
