@@ -248,7 +248,8 @@ function updateGoatChase(time, dt) {
     sootGoat.classList.add('active');
     sootGoat.style.left = `${goatX}px`;
     sootGoat.style.setProperty('--goat-y', '0px');
-    setGridFrame(sootGoat, 0, 3, 2);
+    const cautiousFrames = [0, 0, 1, 1, 0, 2, 0, 3];
+    setGridFrame(sootGoat, cautiousFrames[Math.floor(time / 520) % cautiousFrames.length], 2, 2);
     return;
   }
 
@@ -676,7 +677,7 @@ const tizneConversation = [
 ];
 
 const tizneReturnConversation = [
-  ['Tizne', 'Volviste… y tienes el cascabel.', 'remorseful'],
+  ['Tizne', 'Volviste… y tienes el cascabel.', 'neutral'],
   ['Kuro', 'La cueva no era como la contaste. Las sombras dejaron de atacar cuando lo hice sonar.', 'annoyed'],
   ['Tizne', 'Pensé que si te decía la verdad, no ibas a ayudarme.', 'remorseful'],
   ['Kuro', 'Entonces no era de tu familia.', 'annoyed'],
@@ -726,9 +727,17 @@ const npcPortraits = {
   Tizne: portraitSheets.Tizne.neutral
 };
 
+const portraitEmotionState = {
+  Kuro: 'neutral',
+  Mota: 'neutral',
+  Tizne: 'neutral'
+};
+
 function portraitEmotion(character, speaker, speakerEmotion) {
-  if (character === speaker) return speakerEmotion;
-  return dialogueLines.find(([name, , emotion]) => name === character && emotion)?.[2] || 'neutral';
+  if (character === speaker && portraitEmotionState[character] !== undefined) {
+    portraitEmotionState[character] = speakerEmotion || 'neutral';
+  }
+  return portraitEmotionState[character] || 'neutral';
 }
 
 function setPortraitSheet(portrait, character, emotion) {
@@ -787,8 +796,13 @@ function hideDialogueChoices() {
   dialogueHelp.textContent = 'E / Enter continuar · Esc cerrar';
 }
 
-function startDialogue(lines, onComplete = null) {
+function startDialogue(lines, onComplete = null, initialPortraitEmotions = null) {
   hideDialogueChoices();
+  Object.assign(portraitEmotionState, {
+    Kuro: 'neutral',
+    Mota: 'neutral',
+    Tizne: 'neutral'
+  }, initialPortraitEmotions || {});
   dialogueLines = lines;
   dialogueIndex = 0;
   dialogueOnComplete = onComplete;
@@ -849,6 +863,8 @@ function showTizneChoice() {
   dialogue.hidden = false;
   dialogueLines = [['Tizne', '', 'remorseful'], ['Kuro', '', 'annoyed']];
   dialogueOnComplete = null;
+  portraitEmotionState.Kuro = 'annoyed';
+  portraitEmotionState.Tizne = 'remorseful';
   updateDialoguePortraits('Kuro', 'annoyed');
   dialogueName.textContent = 'Kuro';
   dialogueName.className = 'dialogue-name kuro-speaker';
@@ -876,7 +892,7 @@ function confirmTizneChoice(choiceId = dialogueChoiceButtons[selectedTizneChoice
     ['Tizne', 'El cascabel perteneció a Doña Bruma. Guiaba a los gatitos del barrio cuando bajaba la neblina.', 'remorseful'],
     ['Kuro', 'Entonces debería devolvérselo.', 'annoyed'],
     ['Álbum de Viaje', 'Nueva postal: Al volver de la Cueva del Chivato.']
-  ]);
+  ], null, { Kuro: 'annoyed', Tizne: 'remorseful' });
 }
 
 function startTizneReturnConversation() {
@@ -1142,7 +1158,7 @@ function changeLocation(nextLocation, entry = 'default') {
     else if (atMuseum) x = 170;
     else if (atStation) x = entry === 'at-estafeta' ? game.clientWidth * 0.23 : entry === 'at-train' ? game.clientWidth * 0.58 : entry === 'from-route' ? game.clientWidth - 150 : 120;
     else if (atValparaiso) x = entry === 'from-map' ? game.clientWidth * 0.24 : entry === 'at-tizne' ? game.clientWidth * 1.34 : entry === 'at-hills' ? game.clientWidth * 1.60 : entry === 'at-mid-hills' ? game.clientWidth * 2.44 : entry === 'at-cave' ? game.clientWidth * 3.12 : entry === 'at-connector' ? game.clientWidth * 0.82 : entry === 'at-station-seam' ? game.clientWidth * 0.56 : entry === 'at-plaza-seam' ? game.clientWidth * 1.12 : 160;
-    else if (atCave) x = entry === 'at-goat' ? game.clientWidth * .82 : entry === 'at-sea-lion' ? game.clientWidth * 1.99 : entry === 'at-dog' ? game.clientWidth * 3.42 : entry === 'at-middle' ? game.clientWidth * 3 : entry === 'at-bird' ? game.clientWidth * 3.62 : entry === 'at-bell' ? game.clientWidth * 5.76 : 185;
+    else if (atCave) x = entry === 'at-goat' ? game.clientWidth * (caveBellCollected ? 1.08 : .82) : entry === 'at-sea-lion' ? game.clientWidth * 1.99 : entry === 'at-dog' ? game.clientWidth * 3.42 : entry === 'at-middle' ? game.clientWidth * 3 : entry === 'at-bird' ? game.clientWidth * 3.62 : entry === 'at-bell' ? game.clientWidth * 5.76 : 185;
     else x = entry === 'from-quinta' ? game.clientWidth * 1.6875 - 150 : entry === 'from-museum' ? game.clientWidth * 1.29 : entry === 'at-museum' ? game.clientWidth * 1.40 : entry === 'at-quinta' ? game.clientWidth * 1.20 : entry === 'at-mota' ? game.clientWidth * 0.36 : entry === 'at-plaza' ? game.clientWidth * 0.86 : entry === 'at-neighborhood' ? game.clientWidth * 0.46 : entry === 'at-seam' ? game.clientWidth * 0.90 : game.clientWidth * 0.14;
     y = 0;
     velocityY = 0;

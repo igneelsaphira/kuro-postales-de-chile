@@ -307,7 +307,7 @@ La respuesta cambia la posdata del Álbum y la relación posterior con Tizne, pe
 
 La confesión y las tres respuestas ya son jugables al volver con el cascabel. La elección se guarda entre sesiones, desbloquea la postal de Valparaíso y modifica su posdata sin convertir ninguna opción en una respuesta “correcta”. Tizne revela además que el cascabel pertenecía a Doña Bruma, preparando el siguiente encuentro.
 
-La confesión usa retratos emocionales propios: Kuro mantiene una molestia contenida y decepcionada, mientras Tizne baja las orejas y evita la mirada con arrepentimiento. Las variantes conservan la misma cuadrícula animada 2×2 de los retratos neutrales.
+La confesión usa retratos emocionales propios y progresa en escena: Tizne recibe a Kuro con su expresión neutral y sólo baja las orejas y evita la mirada cuando admite que mintió; Kuro pasa entonces a una molestia contenida y decepcionada. Las variantes conservan la misma cuadrícula animada 2×2 de los retratos neutrales.
 
 ### Posdata provisional
 
@@ -353,6 +353,7 @@ El tema de fondo no tendrá una única respuesta: prevenir el peligro y atrevers
 - El reparto inicial queda compuesto por cabrito, perro encorvado, ave tiznada y lobo marino. Todos comparten hollín y ojos verde mar, pero conservan siluetas y movimientos reconocibles.
 - Los cuatro animales ya cuentan con lectura propia: el cabrito usa seis cuadros de carrera y salto para perseguir a Kuro desde la entrada; más adelante, el quiltro y el ave forman una segunda persecución coordinada, uno corriendo y saltando por el suelo mientras la otra desciende en vuelos rasantes. Cabrito, perro y ave también tienen hojas reveladas para el regreso, con cuerpo gris visible, pupilas verde mar y sin un halo brillante alrededor.
 - Durante la segunda persecución, el quiltro se detiene un instante, abre la boca y dispara una pelota de hollín de 44 px —aproximadamente el tamaño de su cabeza—. La pelota rebota una vez y Kuro puede devolverla con el zarpazo.
+- En el regreso, el cabrito deja de usar sus poses de persecución: aparece como un espíritu gris de ojos verde mar, con las orejas caídas, y se asoma con miedo detrás de una roca integrada al suelo de la cueva.
 - Cada acción tendrá su propia tira de sprites —reposo, aviso, ataque y retirada— y el proyectil será una entidad separada para poder esquivarlo o devolverlo con el zarpazo.
 - Si Kuro vuelve a la entrada antes de conseguir el cascabel, dice «¡Ay, no! ¡Qué miedooo!» y sale corriendo; retirarse no castiga al jugador.
 

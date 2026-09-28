@@ -224,7 +224,7 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .cave-darkness { display: none; position: absolute; z-index: 5; inset: 0; pointer-events: none; background: radial-gradient(circle at var(--cave-light-x, 50%) 65%, transparent 0 55px, #01020470 95px, #010204ed 165px, #010204 235px); opacity: 1; transition: opacity .8s ease; }
 .game.cave-active .cave-darkness { display: block; }
 .game.cave-active.cave-return .cave-darkness { opacity: .28; }
-.game.cave-return .soot-goat { left: 20.2%; background-image: url('assets/chivato-cabrito-revelado-run-v1.png'); background-position: 0 0 !important; filter: saturate(.82) brightness(1.04) drop-shadow(0 4px 3px #05060855); }
+.game.cave-return .soot-goat { left: 20.2%; width: 198px; height: 132px; background-image: url('assets/chivato-cabrito-revelado-asustado-4frames-v1.png'); background-size: 200% 200%; filter: saturate(.88) brightness(1.02) drop-shadow(0 4px 3px #05060844); }
 .game.cave-return .soot-sea-lion {
   background-image: url('assets/chivato-lobo-marino-revelado-4frames-v2.png');
   background-size: 400% 100%;
