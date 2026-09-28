@@ -248,8 +248,7 @@ function updateGoatChase(time, dt) {
     sootGoat.classList.add('active');
     sootGoat.style.left = `${goatX}px`;
     sootGoat.style.setProperty('--goat-y', '0px');
-    const cautiousFrames = [0, 0, 1, 1, 0, 2, 0, 3];
-    setGridFrame(sootGoat, cautiousFrames[Math.floor(time / 520) % cautiousFrames.length], 2, 2);
+    setGridFrame(sootGoat, 0, 2, 2);
     return;
   }
 
