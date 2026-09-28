@@ -239,18 +239,19 @@ function resetGoatChase() {
 
 function updateGoatChase(time, dt) {
   if (currentPlace !== 'cave') {
-    sootGoat.classList.remove('active');
+    sootGoat.classList.remove('active', 'looking-left');
     return;
   }
   if (caveBellCollected) {
     goatActive = false;
     goatX = game.clientWidth * 1.21;
     sootGoat.classList.add('active');
+    sootGoat.classList.toggle('looking-left', x + 50 < goatX + 99);
     sootGoat.style.left = `${goatX}px`;
     sootGoat.style.setProperty('--goat-y', '0px');
-    setGridFrame(sootGoat, 0, 2, 2);
     return;
   }
+  sootGoat.classList.remove('looking-left');
 
   const chaseStart = game.clientWidth * .62;
   const chaseEnd = game.clientWidth * 1.72;
@@ -288,7 +289,7 @@ function updateGoatChase(time, dt) {
 
 function resetPackChase() {
   dogX = game.clientWidth * 3.42;
-  birdX = game.clientWidth * 3.54;
+  birdX = game.clientWidth * 3.20;
   packActive = false;
   packChaseComplete = false;
   packStartedAt = 0;
@@ -414,7 +415,7 @@ function updatePackChase(time, dt) {
     packStartedAt = time;
     nextDogShotAt = time + 1300;
     dogX = game.clientWidth * 3.42;
-    birdX = game.clientWidth * 3.54;
+    birdX = game.clientWidth * 3.20;
     sootDog.classList.add('chasing');
     sootBird.classList.add('chasing');
   }
@@ -434,7 +435,7 @@ function updatePackChase(time, dt) {
 
     const diveProgress = ((time - packStartedAt) % 2300) / 2300;
     const diveAmount = diveProgress < .48 ? 0 : Math.sin(Math.min(1, (diveProgress - .48) / .52) * Math.PI);
-    const birdTargetX = x - 64 + diveAmount * 82;
+    const birdTargetX = x - 280 + diveAmount * 45;
     if (birdIsRecoiling) birdX -= 205 * dt;
     else {
       const birdSpeed = birdTargetX > birdX ? 292 : 235;
