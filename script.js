@@ -115,8 +115,10 @@ let packChaseComplete = false;
 let packStartedAt = 0;
 let dogX = 0;
 let dogLastHitAt = 0;
+let dogRecoilUntil = 0;
 let birdX = 0;
 let birdLastHitAt = 0;
+let birdRecoilUntil = 0;
 let nextDogShotAt = 0;
 let dogSpittingUntil = 0;
 let dogProjectileActive = false;
@@ -291,7 +293,9 @@ function resetPackChase() {
   packChaseComplete = false;
   packStartedAt = 0;
   dogLastHitAt = 0;
+  dogRecoilUntil = 0;
   birdLastHitAt = 0;
+  birdRecoilUntil = 0;
   nextDogShotAt = 0;
   dogSpittingUntil = 0;
   resetDogProjectile();
@@ -367,7 +371,7 @@ function updateDogProjectile(time, dt) {
   const touchesDog = dogProjectileDeflected && Math.abs(projectileCenterX - (dogX + 83)) <= 56 && projectileCenterY <= caveFloor + 128;
   if (touchesDog) {
     resetDogProjectile();
-    dogX -= 125;
+    dogRecoilUntil = time + 520;
     return;
   }
 
@@ -403,12 +407,12 @@ function updatePackChase(time, dt) {
     return;
   }
 
-  const chaseStart = game.clientWidth * 3.46;
+  const chaseStart = game.clientWidth * 3.56;
   const chaseEnd = game.clientWidth * 4.86;
   if (!packActive && !packChaseComplete && x >= chaseStart && x < chaseEnd) {
     packActive = true;
     packStartedAt = time;
-    nextDogShotAt = time + 900;
+    nextDogShotAt = time + 1300;
     dogX = game.clientWidth * 3.42;
     birdX = game.clientWidth * 3.54;
     sootDog.classList.add('chasing');
@@ -418,16 +422,24 @@ function updatePackChase(time, dt) {
 
   const controlsEnabled = dialogue.hidden && travelAlbum.hidden && photoMoment.hidden && worldMap.hidden && !autoEscapingCave;
   const dogIsSpitting = time < dogSpittingUntil;
-  if (controlsEnabled && !dogIsSpitting) {
-    const dogTargetX = x - 48;
-    const dogSpeed = dogTargetX > dogX ? 315 : 235;
-    dogX += Math.max(-dogSpeed * dt, Math.min(dogSpeed * dt, dogTargetX - dogX));
+  const dogIsRecoiling = time < dogRecoilUntil;
+  const birdIsRecoiling = time < birdRecoilUntil;
+  if (controlsEnabled) {
+    if (dogIsRecoiling) dogX -= 185 * dt;
+    else if (!dogIsSpitting) {
+      const dogTargetX = x - 48;
+      const dogSpeed = dogTargetX > dogX ? 270 : 205;
+      dogX += Math.max(-dogSpeed * dt, Math.min(dogSpeed * dt, dogTargetX - dogX));
+    }
 
-    const diveProgress = ((time - packStartedAt) % 1800) / 1800;
+    const diveProgress = ((time - packStartedAt) % 2300) / 2300;
     const diveAmount = diveProgress < .48 ? 0 : Math.sin(Math.min(1, (diveProgress - .48) / .52) * Math.PI);
     const birdTargetX = x - 64 + diveAmount * 82;
-    const birdSpeed = birdTargetX > birdX ? 338 : 275;
-    birdX += Math.max(-birdSpeed * dt, Math.min(birdSpeed * dt, birdTargetX - birdX));
+    if (birdIsRecoiling) birdX -= 205 * dt;
+    else {
+      const birdSpeed = birdTargetX > birdX ? 292 : 235;
+      birdX += Math.max(-birdSpeed * dt, Math.min(birdSpeed * dt, birdTargetX - birdX));
+    }
   }
 
   const dogDistance = Math.abs(x + 50 - (dogX + 83));
@@ -440,7 +452,7 @@ function updatePackChase(time, dt) {
 
   const currentlySpitting = time < dogSpittingUntil;
   sootDog.classList.toggle('spitting', currentlySpitting);
-  const dogFrame = Math.floor(time / 92) % 6;
+  const dogFrame = Math.floor(time / 110) % 6;
   const dogLift = dogFrame === 3 ? 24 : dogFrame === 4 ? 38 : dogFrame === 5 ? 10 : 0;
   if (currentlySpitting) setGridFrame(sootDog, 2, 2, 2);
   else setGridFrame(sootDog, dogFrame, 3, 2);
@@ -449,26 +461,26 @@ function updatePackChase(time, dt) {
   sootDog.style.setProperty('--dog-facing', x >= dogX ? '1' : '-1');
 
   const caveFloor = game.clientHeight * .14;
-  const diveProgress = ((time - packStartedAt) % 1800) / 1800;
+  const diveProgress = ((time - packStartedAt) % 2300) / 2300;
   const diveAmount = diveProgress < .48 ? 0 : Math.sin(Math.min(1, (diveProgress - .48) / .52) * Math.PI);
-  const birdBottom = caveFloor + 142 - diveAmount * 94 + Math.sin(time / 170) * 5;
-  setGridFrame(sootBird, Math.floor(time / 118) % 4, 2, 2);
+  const birdBottom = caveFloor + 142 - diveAmount * 94 + Math.sin(time / 190) * 5 + (birdIsRecoiling ? 34 : 0);
+  setGridFrame(sootBird, Math.floor(time / 145) % 4, 2, 2);
   sootBird.style.left = `${birdX}px`;
   sootBird.style.bottom = `${birdBottom}px`;
   sootBird.style.setProperty('--bird-facing', x >= birdX ? '1' : '-1');
 
-  const dogTouchesKuro = Math.abs(x + 50 - (dogX + 83)) < 52 && y < 48;
+  const dogTouchesKuro = Math.abs(x + 50 - (dogX + 83)) < 76 && y < 52;
   if (dogTouchesKuro && time - dogLastHitAt > 1200) {
     dogLastHitAt = time;
-    dogX -= 150;
+    dogRecoilUntil = time + 460;
     registerSootHit(time);
   }
   const birdCenterY = birdBottom + 50;
   const kuroFeetY = caveFloor + y;
-  const birdTouchesKuro = Math.abs(x + 50 - (birdX + 75)) < 55 && birdCenterY >= kuroFeetY + 24 && birdCenterY <= kuroFeetY + 112;
+  const birdTouchesKuro = Math.abs(x + 50 - (birdX + 75)) < 70 && birdCenterY >= kuroFeetY + 24 && birdCenterY <= kuroFeetY + 112;
   if (birdTouchesKuro && time - birdLastHitAt > 1200) {
     birdLastHitAt = time;
-    birdX -= 130;
+    birdRecoilUntil = time + 520;
     registerSootHit(time);
   }
 
