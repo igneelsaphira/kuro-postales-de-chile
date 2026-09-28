@@ -31,6 +31,9 @@ const mapZoneTravel = document.querySelector('#map-zone-travel');
 const localMapNodes = document.querySelector('.local-map-nodes');
 const nextDestination = document.querySelector('#next-destination');
 const sootSeaLion = document.querySelector('#soot-sea-lion');
+const sootGoat = document.querySelector('#soot-goat');
+const sootDog = document.querySelector('#soot-dog');
+const sootBird = document.querySelector('#soot-bird');
 const sootProjectile = document.querySelector('#soot-projectile');
 const caveBell = document.querySelector('#cave-bell');
 const bellAwakening = document.querySelector('#bell-awakening');
@@ -102,6 +105,10 @@ let nextClawAt = 0;
 let sootHitCount = 0;
 let sootInvulnerableUntil = 0;
 let seaLionFacing = -1;
+let goatX = 0;
+let goatActive = false;
+let goatChaseComplete = false;
+let goatLastHitAt = 0;
 let audioContext = null;
 
 function movementHintText() {
@@ -189,6 +196,74 @@ function resetSootProjectile() {
   sootProjectile.hidden = true;
   sootProjectileBounces = 0;
   sootProjectileDeflected = false;
+}
+
+function setGridFrame(element, frameIndex, columns, rows) {
+  const column = frameIndex % columns;
+  const row = Math.floor(frameIndex / columns);
+  const positionX = columns === 1 ? 0 : column / (columns - 1) * 100;
+  const positionY = rows === 1 ? 0 : row / (rows - 1) * 100;
+  element.style.backgroundPosition = `${positionX}% ${positionY}%`;
+}
+
+function resetGoatChase() {
+  goatX = Math.max(40, game.clientWidth * .24);
+  goatActive = false;
+  goatChaseComplete = false;
+  goatLastHitAt = 0;
+  sootGoat.classList.remove('active');
+  sootGoat.style.left = `${goatX}px`;
+  sootGoat.style.setProperty('--goat-y', '0px');
+  setGridFrame(sootGoat, 0, 3, 2);
+}
+
+function updateGoatChase(time, dt) {
+  if (currentPlace !== 'cave') {
+    sootGoat.classList.remove('active');
+    return;
+  }
+  if (caveBellCollected) {
+    goatActive = false;
+    goatX = game.clientWidth * 1.21;
+    sootGoat.classList.add('active');
+    sootGoat.style.left = `${goatX}px`;
+    sootGoat.style.setProperty('--goat-y', '0px');
+    setGridFrame(sootGoat, 0, 3, 2);
+    return;
+  }
+
+  const chaseStart = game.clientWidth * .62;
+  const chaseEnd = game.clientWidth * 1.72;
+  if (!goatActive && !goatChaseComplete && x >= chaseStart && x < chaseEnd) {
+    goatActive = true;
+    goatX = Math.max(35, x - game.clientWidth * .34);
+    sootGoat.classList.add('active');
+  }
+  if (!goatActive) return;
+
+  const controlsEnabled = dialogue.hidden && travelAlbum.hidden && photoMoment.hidden && worldMap.hidden && !autoEscapingCave;
+  if (controlsEnabled) {
+    const targetX = x - 46;
+    const chaseSpeed = x > goatX ? 302 : 220;
+    goatX += Math.max(-chaseSpeed * dt, Math.min(chaseSpeed * dt, targetX - goatX));
+  }
+  const frameIndex = Math.floor(time / 105) % 6;
+  const goatLift = frameIndex === 4 ? 35 : frameIndex === 5 ? 18 : 0;
+  setGridFrame(sootGoat, frameIndex, 3, 2);
+  sootGoat.style.left = `${goatX}px`;
+  sootGoat.style.setProperty('--goat-y', `${goatLift}px`);
+
+  const touchesKuro = Math.abs(x + 45 - (goatX + 66)) < 58 && y < 54;
+  if (touchesKuro && time - goatLastHitAt > 1200) {
+    goatLastHitAt = time;
+    goatX -= 145;
+    registerSootHit(time);
+  }
+  if (x >= chaseEnd) {
+    goatActive = false;
+    goatChaseComplete = true;
+    sootGoat.classList.remove('active');
+  }
 }
 
 function launchSootProjectile() {
@@ -826,6 +901,7 @@ function changeLocation(nextLocation, entry = 'default') {
       updateSootLevel();
       resetSootProjectile();
     }
+    if (atCave) resetGoatChase();
     locationLabel.hidden = atMuseum;
     locationLabel.textContent = inside ? 'Casa de Kuro' : atPlaza ? 'Plaza Yungay' : atQuinta ? 'Quinta Normal' : atMuseum ? 'Museo · Sala de la Ballena' : atStation ? 'Estación Mapocho' : atValparaiso ? 'Valparaíso' : atCave ? 'Cueva del Chivato' : 'Barrio Yungay · Plaza Yungay · Quinta Normal';
     if (inside) x = entry === 'at-chair' ? game.clientWidth * 0.34 : 175;
@@ -834,7 +910,7 @@ function changeLocation(nextLocation, entry = 'default') {
     else if (atMuseum) x = 170;
     else if (atStation) x = entry === 'at-estafeta' ? game.clientWidth * 0.23 : entry === 'at-train' ? game.clientWidth * 0.58 : entry === 'from-route' ? game.clientWidth - 150 : 120;
     else if (atValparaiso) x = entry === 'from-map' ? game.clientWidth * 0.24 : entry === 'at-tizne' ? game.clientWidth * 1.34 : entry === 'at-hills' ? game.clientWidth * 1.60 : entry === 'at-mid-hills' ? game.clientWidth * 2.44 : entry === 'at-cave' ? game.clientWidth * 3.12 : entry === 'at-connector' ? game.clientWidth * 0.82 : entry === 'at-station-seam' ? game.clientWidth * 0.56 : entry === 'at-plaza-seam' ? game.clientWidth * 1.12 : 160;
-    else if (atCave) x = entry === 'at-sea-lion' ? game.clientWidth * 1.99 : entry === 'at-middle' ? game.clientWidth * 3 : entry === 'at-bell' ? game.clientWidth * 5.76 : 185;
+    else if (atCave) x = entry === 'at-goat' ? game.clientWidth * .82 : entry === 'at-sea-lion' ? game.clientWidth * 1.99 : entry === 'at-dog' ? game.clientWidth * 3.42 : entry === 'at-middle' ? game.clientWidth * 3 : entry === 'at-bird' ? game.clientWidth * 4.52 : entry === 'at-bell' ? game.clientWidth * 5.76 : 185;
     else x = entry === 'from-quinta' ? game.clientWidth * 1.6875 - 150 : entry === 'from-museum' ? game.clientWidth * 1.29 : entry === 'at-museum' ? game.clientWidth * 1.40 : entry === 'at-quinta' ? game.clientWidth * 1.20 : entry === 'at-mota' ? game.clientWidth * 0.36 : entry === 'at-plaza' ? game.clientWidth * 0.86 : entry === 'at-neighborhood' ? game.clientWidth * 0.46 : entry === 'at-seam' ? game.clientWidth * 0.90 : game.clientWidth * 0.14;
     y = 0;
     velocityY = 0;
@@ -847,7 +923,7 @@ function changeLocation(nextLocation, entry = 'default') {
     else if (entry === 'at-mirador') cameraX = atQuinta ? 0 : Math.max(0, worldWidth - game.clientWidth);
     else if (entry === 'at-estafeta' || entry === 'at-train') cameraX = atStation ? 0 : Math.max(0, Math.min(worldWidth - game.clientWidth, x - game.clientWidth * 0.45));
     else if (['at-tizne', 'at-hills', 'at-mid-hills', 'at-cave', 'at-connector', 'at-station-seam', 'at-plaza-seam'].includes(entry)) cameraX = Math.max(0, Math.min(game.clientWidth * 2.2875, x - game.clientWidth * 0.45));
-    else if (atCave && ['at-sea-lion', 'at-middle', 'at-bell'].includes(entry)) cameraX = Math.max(0, Math.min(game.clientWidth * 5, x - game.clientWidth * 0.45));
+    else if (atCave && ['at-goat', 'at-sea-lion', 'at-dog', 'at-middle', 'at-bird', 'at-bell'].includes(entry)) cameraX = Math.max(0, Math.min(game.clientWidth * 5, x - game.clientWidth * 0.45));
     else cameraX = 0;
     cameraLookAhead = 0;
     dialogue.hidden = true;
@@ -1085,6 +1161,7 @@ function loop(time) {
     }
     kuro.style.setProperty('--valpo-ground', `${groundPercent}%`);
   }
+  updateGoatChase(time, dt);
   updateSeaLionAttack(time, dt);
   kuro.classList.toggle('swiping', time < clawUntil);
   kuro.style.left = `${x}px`;
@@ -1191,7 +1268,7 @@ if (['street', 'house', 'plaza', 'quinta', 'museum', 'station', 'valparaiso', 'c
       ? `at-${previewSpot}`
     : previewPlace === 'valparaiso' && ['tizne', 'hills', 'mid-hills', 'cave', 'connector', 'station-seam', 'plaza-seam'].includes(previewSpot)
       ? `at-${previewSpot}`
-    : previewPlace === 'cave' && ['sea-lion', 'middle', 'bell'].includes(previewSpot)
+    : previewPlace === 'cave' && ['goat', 'sea-lion', 'dog', 'middle', 'bird', 'bell'].includes(previewSpot)
       ? `at-${previewSpot}`
       : 'default';
   requestAnimationFrame(() => changeLocation(previewPlace, previewEntry));
