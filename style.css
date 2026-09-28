@@ -309,6 +309,14 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
   .dialogue-choices button { min-height: 31px; padding: 4px 6px; font-size: 10px; }
   .dialogue-choices button kbd { width: 21px; height: 21px; font-size: 11px; }
 }
+@media (max-width: 760px) {
+  .dialogue.has-choices { min-height: 0; padding: 9px 14px 28px; }
+  .dialogue.has-choices .dialogue-portrait { width: 108px; height: 108px; }
+  .dialogue.has-choices #dialogue-text { min-height: 1.35em; font-size: 14px; }
+  .dialogue.has-choices .dialogue-choices { gap: 4px; margin-top: 5px; }
+  .dialogue.has-choices .dialogue-choices button { min-height: 32px; padding: 4px 7px; font-size: 10px; }
+  .dialogue.has-choices .dialogue-help { font-size: 9px; }
+}
 @media (prefers-reduced-motion: reduce) {
   .dialogue .dialogue-portrait { transition: none; }
   .dialogue .portrait-frames, .dialogue-next { animation: none !important; }

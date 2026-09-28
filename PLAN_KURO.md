@@ -307,6 +307,8 @@ La respuesta cambia la posdata del Álbum y la relación posterior con Tizne, pe
 
 La confesión y las tres respuestas ya son jugables al volver con el cascabel. La elección se guarda entre sesiones, desbloquea la postal de Valparaíso y modifica su posdata sin convertir ninguna opción en una respuesta “correcta”. Tizne revela además que el cascabel pertenecía a Doña Bruma, preparando el siguiente encuentro.
 
+La confesión usa retratos emocionales propios: Kuro mantiene una molestia contenida y decepcionada, mientras Tizne baja las orejas y evita la mirada con arrepentimiento. Las variantes conservan la misma cuadrícula animada 2×2 de los retratos neutrales.
+
 ### Posdata provisional
 
 > Al entrar parecían monstruos. Al volver, pensé que quizás ellas también tenían miedo.

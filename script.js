@@ -372,11 +372,11 @@ const tizneConversation = [
 ];
 
 const tizneReturnConversation = [
-  ['Tizne', 'Volviste… y tienes el cascabel.'],
-  ['Kuro', 'La cueva no era como la contaste. Las sombras dejaron de atacar cuando lo hice sonar.'],
-  ['Tizne', 'Pensé que si te decía la verdad, no ibas a ayudarme.'],
-  ['Kuro', 'Entonces no era de tu familia.'],
-  ['Tizne', 'No. Un coleccionista paga bien por cosas antiguas. Yo… necesitaba una salida.']
+  ['Tizne', 'Volviste… y tienes el cascabel.', 'remorseful'],
+  ['Kuro', 'La cueva no era como la contaste. Las sombras dejaron de atacar cuando lo hice sonar.', 'annoyed'],
+  ['Tizne', 'Pensé que si te decía la verdad, no ibas a ayudarme.', 'remorseful'],
+  ['Kuro', 'Entonces no era de tu familia.', 'annoyed'],
+  ['Tizne', 'No. Un coleccionista paga bien por cosas antiguas. Yo… necesitaba una salida.', 'remorseful']
 ];
 
 const tizneResponses = {
@@ -404,32 +404,55 @@ if (!tizneResponses[tizneResponse]) tizneResponse = null;
 
 const portraitKuro = document.querySelector('#portrait-kuro');
 const portraitNpc = document.querySelector('#portrait-npc');
+const portraitSheets = {
+  Kuro: {
+    neutral: 'assets/kuro-dialogue-frames-v1.png',
+    annoyed: 'assets/kuro-dialogue-annoyed-frames-v1.png'
+  },
+  Mota: {
+    neutral: 'assets/mota-dialogue-frames-v1.png'
+  },
+  Tizne: {
+    neutral: 'assets/tizne-dialogue-frames-v1.png',
+    remorseful: 'assets/tizne-dialogue-remorseful-frames-v1.png'
+  }
+};
 const npcPortraits = {
-  Mota: 'assets/mota-dialogue-frames-v1.png',
-  Tizne: 'assets/tizne-dialogue-frames-v1.png'
+  Mota: portraitSheets.Mota.neutral,
+  Tizne: portraitSheets.Tizne.neutral
 };
 
-function updateDialoguePortraits(speaker) {
+function portraitEmotion(character, speaker, speakerEmotion) {
+  if (character === speaker) return speakerEmotion;
+  return dialogueLines.find(([name, , emotion]) => name === character && emotion)?.[2] || 'neutral';
+}
+
+function setPortraitSheet(portrait, character, emotion) {
+  const sheet = portraitSheets[character]?.[emotion] || portraitSheets[character]?.neutral;
+  if (!sheet || portrait.dataset.sheet === sheet) return;
+  portrait.querySelector('.portrait-frames').style.backgroundImage = `url('${sheet}')`;
+  portrait.dataset.sheet = sheet;
+}
+
+function updateDialoguePortraits(speaker, speakerEmotion = 'neutral') {
   const npc = npcPortraits[speaker] ? speaker : dialogueLines.find(([name]) => npcPortraits[name])?.[0];
   const hasCharacter = speaker === 'Kuro' || Boolean(npcPortraits[speaker]);
   portraitKuro.hidden = !hasCharacter;
   portraitNpc.hidden = !hasCharacter || !npc;
+  if (hasCharacter) setPortraitSheet(portraitKuro, 'Kuro', portraitEmotion('Kuro', speaker, speakerEmotion));
   if (npc) {
-    const frames = portraitNpc.querySelector('.portrait-frames');
-    if (portraitNpc.dataset.character !== npc) {
-      frames.style.backgroundImage = `url('${npcPortraits[npc]}')`;
-      portraitNpc.dataset.character = npc;
-    }
+    setPortraitSheet(portraitNpc, npc, portraitEmotion(npc, speaker, speakerEmotion));
+    portraitNpc.dataset.character = npc;
   }
   portraitKuro.classList.toggle('is-speaking', speaker === 'Kuro');
   portraitNpc.classList.toggle('is-speaking', speaker === npc);
   dialogue.dataset.speakerSide = !hasCharacter ? 'none' : speaker === 'Kuro' ? 'left' : 'right';
 }
 
-function typeDialogueLine(speaker, text) {
+function typeDialogueLine(speaker, text, emotion = 'neutral') {
   clearInterval(typingTimer);
   dialogue.hidden = false;
-  updateDialoguePortraits(speaker);
+  updateDialoguePortraits(speaker, emotion);
   dialogue.classList.add('is-typing');
   dialogueName.textContent = speaker;
   dialogueName.className = 'dialogue-name';
@@ -520,9 +543,9 @@ function selectTizneChoice(index, focus = false) {
 function showTizneChoice() {
   clearInterval(typingTimer);
   dialogue.hidden = false;
-  dialogueLines = [['Tizne', ''], ['Kuro', '']];
+  dialogueLines = [['Tizne', '', 'remorseful'], ['Kuro', '', 'annoyed']];
   dialogueOnComplete = null;
-  updateDialoguePortraits('Kuro');
+  updateDialoguePortraits('Kuro', 'annoyed');
   dialogueName.textContent = 'Kuro';
   dialogueName.className = 'dialogue-name kuro-speaker';
   dialogueText.textContent = '¿Qué quieres responderle?';
@@ -544,10 +567,10 @@ function confirmTizneChoice(choiceId = dialogueChoiceButtons[selectedTizneChoice
   scene.classList.add('valparaiso-complete');
   renderAlbum();
   startDialogue([
-    ['Kuro', response.line],
-    ['Tizne', response.reply],
-    ['Tizne', 'El cascabel perteneció a Doña Bruma. Guiaba a los gatitos del barrio cuando bajaba la neblina.'],
-    ['Kuro', 'Entonces debería devolvérselo.'],
+    ['Kuro', response.line, 'annoyed'],
+    ['Tizne', response.reply, 'remorseful'],
+    ['Tizne', 'El cascabel perteneció a Doña Bruma. Guiaba a los gatitos del barrio cuando bajaba la neblina.', 'remorseful'],
+    ['Kuro', 'Entonces debería devolvérselo.', 'annoyed'],
     ['Álbum de Viaje', 'Nueva postal: Al volver de la Cueva del Chivato.']
   ]);
 }
@@ -942,7 +965,7 @@ addEventListener('keydown', (event) => {
     if (interaction === 'take-return-train') openWorldMap();
     if (interaction === 'talk-tizne') {
       if (caveBellCollected && !tizneResponse) startTizneReturnConversation();
-      else if (tizneResponse) startDialogue([['Tizne', tizneResponses[tizneResponse].followUp]]);
+      else if (tizneResponse) startDialogue([['Tizne', tizneResponses[tizneResponse].followUp, 'remorseful']]);
       else if (tizneConversationComplete) startDialogue([['Tizne', 'No tienes que decidir ahora. Los cerros no se irán a ninguna parte.']]);
       else startDialogue(tizneConversation);
     }
@@ -1189,6 +1212,11 @@ if (previewParams.get('jump') === 'double') {
     attemptJump();
     setTimeout(attemptJump, 230);
   }, 620);
+}
+if (previewParams.get('story') === 'tizne-confession') {
+  caveBellCollected = true;
+  tizneResponse = null;
+  setTimeout(startTizneReturnConversation, 620);
 }
 if (previewParams.get('story') === 'tizne-choice') {
   caveBellCollected = true;
