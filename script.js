@@ -109,6 +109,13 @@ let goatX = 0;
 let goatActive = false;
 let goatChaseComplete = false;
 let goatLastHitAt = 0;
+let packActive = false;
+let packChaseComplete = false;
+let packStartedAt = 0;
+let dogX = 0;
+let dogLastHitAt = 0;
+let birdX = 0;
+let birdLastHitAt = 0;
 let audioContext = null;
 
 function movementHintText() {
@@ -263,6 +270,104 @@ function updateGoatChase(time, dt) {
     goatActive = false;
     goatChaseComplete = true;
     sootGoat.classList.remove('active');
+  }
+}
+
+function resetPackChase() {
+  dogX = game.clientWidth * 3.42;
+  birdX = game.clientWidth * 3.54;
+  packActive = false;
+  packChaseComplete = false;
+  packStartedAt = 0;
+  dogLastHitAt = 0;
+  birdLastHitAt = 0;
+  sootDog.classList.remove('chasing', 'passed');
+  sootBird.classList.remove('chasing', 'passed');
+  sootDog.style.left = `${dogX}px`;
+  sootDog.style.removeProperty('bottom');
+  sootDog.style.setProperty('--dog-y', '0px');
+  sootDog.style.setProperty('--dog-facing', '1');
+  sootBird.style.left = `${birdX}px`;
+  sootBird.style.removeProperty('bottom');
+  sootBird.style.setProperty('--bird-facing', '1');
+  setGridFrame(sootDog, 0, 2, 2);
+  setGridFrame(sootBird, 0, 2, 2);
+}
+
+function updatePackChase(time, dt) {
+  if (currentPlace !== 'cave') {
+    sootDog.classList.remove('chasing');
+    sootBird.classList.remove('chasing');
+    return;
+  }
+  if (caveBellCollected) {
+    if (packActive || packChaseComplete) resetPackChase();
+    return;
+  }
+
+  const chaseStart = game.clientWidth * 3.46;
+  const chaseEnd = game.clientWidth * 4.86;
+  if (!packActive && !packChaseComplete && x >= chaseStart && x < chaseEnd) {
+    packActive = true;
+    packStartedAt = time;
+    dogX = game.clientWidth * 3.42;
+    birdX = game.clientWidth * 3.54;
+    sootDog.classList.add('chasing');
+    sootBird.classList.add('chasing');
+  }
+  if (!packActive) return;
+
+  const controlsEnabled = dialogue.hidden && travelAlbum.hidden && photoMoment.hidden && worldMap.hidden && !autoEscapingCave;
+  if (controlsEnabled) {
+    const dogTargetX = x - 48;
+    const dogSpeed = dogTargetX > dogX ? 315 : 235;
+    dogX += Math.max(-dogSpeed * dt, Math.min(dogSpeed * dt, dogTargetX - dogX));
+
+    const diveProgress = ((time - packStartedAt) % 1800) / 1800;
+    const diveAmount = diveProgress < .48 ? 0 : Math.sin(Math.min(1, (diveProgress - .48) / .52) * Math.PI);
+    const birdTargetX = x - 64 + diveAmount * 82;
+    const birdSpeed = birdTargetX > birdX ? 338 : 275;
+    birdX += Math.max(-birdSpeed * dt, Math.min(birdSpeed * dt, birdTargetX - birdX));
+  }
+
+  const dogFrame = Math.floor(time / 92) % 6;
+  const dogLift = dogFrame === 3 ? 24 : dogFrame === 4 ? 38 : dogFrame === 5 ? 10 : 0;
+  setGridFrame(sootDog, dogFrame, 3, 2);
+  sootDog.style.left = `${dogX}px`;
+  sootDog.style.setProperty('--dog-y', `${dogLift}px`);
+  sootDog.style.setProperty('--dog-facing', x >= dogX ? '1' : '-1');
+
+  const caveFloor = game.clientHeight * .14;
+  const diveProgress = ((time - packStartedAt) % 1800) / 1800;
+  const diveAmount = diveProgress < .48 ? 0 : Math.sin(Math.min(1, (diveProgress - .48) / .52) * Math.PI);
+  const birdBottom = caveFloor + 142 - diveAmount * 94 + Math.sin(time / 170) * 5;
+  setGridFrame(sootBird, Math.floor(time / 118) % 4, 2, 2);
+  sootBird.style.left = `${birdX}px`;
+  sootBird.style.bottom = `${birdBottom}px`;
+  sootBird.style.setProperty('--bird-facing', x >= birdX ? '1' : '-1');
+
+  const dogTouchesKuro = Math.abs(x + 50 - (dogX + 83)) < 52 && y < 48;
+  if (dogTouchesKuro && time - dogLastHitAt > 1200) {
+    dogLastHitAt = time;
+    dogX -= 150;
+    registerSootHit(time);
+  }
+  const birdCenterY = birdBottom + 50;
+  const kuroFeetY = caveFloor + y;
+  const birdTouchesKuro = Math.abs(x + 50 - (birdX + 75)) < 55 && birdCenterY >= kuroFeetY + 24 && birdCenterY <= kuroFeetY + 112;
+  if (birdTouchesKuro && time - birdLastHitAt > 1200) {
+    birdLastHitAt = time;
+    birdX -= 130;
+    registerSootHit(time);
+  }
+
+  if (x >= chaseEnd) {
+    packActive = false;
+    packChaseComplete = true;
+    sootDog.classList.remove('chasing');
+    sootBird.classList.remove('chasing');
+    sootDog.classList.add('passed');
+    sootBird.classList.add('passed');
   }
 }
 
@@ -901,7 +1006,10 @@ function changeLocation(nextLocation, entry = 'default') {
       updateSootLevel();
       resetSootProjectile();
     }
-    if (atCave) resetGoatChase();
+    if (atCave) {
+      resetGoatChase();
+      resetPackChase();
+    }
     locationLabel.hidden = atMuseum;
     locationLabel.textContent = inside ? 'Casa de Kuro' : atPlaza ? 'Plaza Yungay' : atQuinta ? 'Quinta Normal' : atMuseum ? 'Museo · Sala de la Ballena' : atStation ? 'Estación Mapocho' : atValparaiso ? 'Valparaíso' : atCave ? 'Cueva del Chivato' : 'Barrio Yungay · Plaza Yungay · Quinta Normal';
     if (inside) x = entry === 'at-chair' ? game.clientWidth * 0.34 : 175;
@@ -910,7 +1018,7 @@ function changeLocation(nextLocation, entry = 'default') {
     else if (atMuseum) x = 170;
     else if (atStation) x = entry === 'at-estafeta' ? game.clientWidth * 0.23 : entry === 'at-train' ? game.clientWidth * 0.58 : entry === 'from-route' ? game.clientWidth - 150 : 120;
     else if (atValparaiso) x = entry === 'from-map' ? game.clientWidth * 0.24 : entry === 'at-tizne' ? game.clientWidth * 1.34 : entry === 'at-hills' ? game.clientWidth * 1.60 : entry === 'at-mid-hills' ? game.clientWidth * 2.44 : entry === 'at-cave' ? game.clientWidth * 3.12 : entry === 'at-connector' ? game.clientWidth * 0.82 : entry === 'at-station-seam' ? game.clientWidth * 0.56 : entry === 'at-plaza-seam' ? game.clientWidth * 1.12 : 160;
-    else if (atCave) x = entry === 'at-goat' ? game.clientWidth * .82 : entry === 'at-sea-lion' ? game.clientWidth * 1.99 : entry === 'at-dog' ? game.clientWidth * 3.42 : entry === 'at-middle' ? game.clientWidth * 3 : entry === 'at-bird' ? game.clientWidth * 4.52 : entry === 'at-bell' ? game.clientWidth * 5.76 : 185;
+    else if (atCave) x = entry === 'at-goat' ? game.clientWidth * .82 : entry === 'at-sea-lion' ? game.clientWidth * 1.99 : entry === 'at-dog' ? game.clientWidth * 3.42 : entry === 'at-middle' ? game.clientWidth * 3 : entry === 'at-bird' ? game.clientWidth * 3.62 : entry === 'at-bell' ? game.clientWidth * 5.76 : 185;
     else x = entry === 'from-quinta' ? game.clientWidth * 1.6875 - 150 : entry === 'from-museum' ? game.clientWidth * 1.29 : entry === 'at-museum' ? game.clientWidth * 1.40 : entry === 'at-quinta' ? game.clientWidth * 1.20 : entry === 'at-mota' ? game.clientWidth * 0.36 : entry === 'at-plaza' ? game.clientWidth * 0.86 : entry === 'at-neighborhood' ? game.clientWidth * 0.46 : entry === 'at-seam' ? game.clientWidth * 0.90 : game.clientWidth * 0.14;
     y = 0;
     velocityY = 0;
@@ -1162,6 +1270,7 @@ function loop(time) {
     kuro.style.setProperty('--valpo-ground', `${groundPercent}%`);
   }
   updateGoatChase(time, dt);
+  updatePackChase(time, dt);
   updateSeaLionAttack(time, dt);
   kuro.classList.toggle('swiping', time < clawUntil);
   kuro.style.left = `${x}px`;
