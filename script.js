@@ -12,6 +12,8 @@ const travelAlbum = document.querySelector('#travel-album');
 const albumEmpty = document.querySelector('#album-empty');
 const whaleAlbumPage = document.querySelector('#whale-album-page');
 const quintaPhotoPage = document.querySelector('#quinta-photo-page');
+const valparaisoAlbumPage = document.querySelector('#valparaiso-album-page');
+const valparaisoPostscript = document.querySelector('#valparaiso-postscript');
 const albumPageNumber = document.querySelector('#album-page-number');
 const albumPrev = document.querySelector('#album-prev');
 const albumNext = document.querySelector('#album-next');
@@ -34,6 +36,9 @@ const caveBell = document.querySelector('#cave-bell');
 const bellAwakening = document.querySelector('#bell-awakening');
 const caveClaw = document.querySelector('#cave-claw');
 const movementHint = document.querySelector('.hint');
+const dialogueChoices = document.querySelector('#dialogue-choices');
+const dialogueChoiceButtons = [...dialogueChoices.querySelectorAll('[data-tizne-choice]')];
+const dialogueHelp = dialogue.querySelector('.dialogue-help');
 const mapZoneNodes = [...worldMap.querySelectorAll('[data-map-zone]')];
 const localTravelButtons = [...worldMap.querySelectorAll('[data-travel]')];
 const keys = new Set();
@@ -66,12 +71,16 @@ let dialogueIndex = 0;
 let typingTimer = null;
 let fullDialogueText = '';
 let typingComplete = true;
+let dialogueOnComplete = null;
+let dialogueChoiceActive = false;
+let selectedTizneChoice = 0;
 let motaConversationComplete = false;
 let tizneConversationComplete = false;
 let whalePostcardCollected = localStorage.getItem('kuro-whale-postcard') === 'collected';
 let quintaPhotoCollected = localStorage.getItem('kuro-quinta-photo') === 'collected';
 let firstLetterSent = localStorage.getItem('kuro-first-letter') === 'sent';
 let caveBellCollected = localStorage.getItem('kuro-cave-bell') === 'collected';
+let tizneResponse = localStorage.getItem('kuro-tizne-response');
 let sittingInChair = false;
 let autoEscapingCave = false;
 let albumPageIndex = 0;
@@ -362,6 +371,37 @@ const tizneConversation = [
   ['Tizne', 'Si quieres conocer el verdadero Valparaíso, podría mostrarte el camino.']
 ];
 
+const tizneReturnConversation = [
+  ['Tizne', 'Volviste… y tienes el cascabel.'],
+  ['Kuro', 'La cueva no era como la contaste. Las sombras dejaron de atacar cuando lo hice sonar.'],
+  ['Tizne', 'Pensé que si te decía la verdad, no ibas a ayudarme.'],
+  ['Kuro', 'Entonces no era de tu familia.'],
+  ['Tizne', 'No. Un coleccionista paga bien por cosas antiguas. Yo… necesitaba una salida.']
+];
+
+const tizneResponses = {
+  precavido: {
+    line: 'Quizás te habría ayudado. Pero ahora no sé si puedo creerte.',
+    reply: 'Lo entiendo. Si vuelvo a pedirte algo, empezaré por la verdad.',
+    followUp: 'No espero que confíes enseguida. Doña Bruma vive más arriba; puedes comprobarlo tú mismo.',
+    postscript: 'P. D. Tener cuidado no cerró el camino; me ayudó a mirar mejor antes de seguir.'
+  },
+  comprensivo: {
+    line: 'Podías pedírmelo. No necesitabas inventar una historia.',
+    reply: 'No se me da bien pedir ayuda. Pero… gracias por volver.',
+    followUp: 'Doña Bruma vive más arriba. Gracias por escucharme, incluso después de lo que hice.',
+    postscript: 'P. D. A veces quien engaña también tiene miedo de pedir ayuda.'
+  },
+  aventurero: {
+    line: 'La próxima vez dime la verdad. Probablemente habría venido igual.',
+    reply: 'Hecho. Contigo ya veo que no hace falta adornar tanto las historias.',
+    followUp: 'Doña Bruma vive más arriba. La próxima aventura te la cuento sin adornos… o con menos adornos.',
+    postscript: 'P. D. Entré por curiosidad y volví con más preguntas. Quizás eso también sea una respuesta.'
+  }
+};
+
+if (!tizneResponses[tizneResponse]) tizneResponse = null;
+
 const portraitKuro = document.querySelector('#portrait-kuro');
 const portraitNpc = document.querySelector('#portrait-npc');
 const npcPortraits = {
@@ -412,9 +452,19 @@ function typeDialogueLine(speaker, text) {
   }, 24);
 }
 
-function startDialogue(lines) {
+function hideDialogueChoices() {
+  dialogueChoiceActive = false;
+  dialogueChoices.hidden = true;
+  dialogue.classList.remove('has-choices');
+  dialogueChoiceButtons.forEach((button) => button.classList.remove('selected'));
+  dialogueHelp.textContent = 'E / Enter continuar · Esc cerrar';
+}
+
+function startDialogue(lines, onComplete = null) {
+  hideDialogueChoices();
   dialogueLines = lines;
   dialogueIndex = 0;
+  dialogueOnComplete = onComplete;
   typeDialogueLine(...dialogueLines[0]);
 }
 
@@ -428,14 +478,20 @@ function advanceDialogue() {
   }
   dialogueIndex += 1;
   if (dialogueIndex >= dialogueLines.length) {
+    const onComplete = dialogueOnComplete;
     if (dialogueLines === motaConversation) {
       motaConversationComplete = true;
       scene.classList.add('mota-complete');
     }
     if (dialogueLines === tizneConversation) tizneConversationComplete = true;
     dialogueLines = [];
-    dialogue.hidden = true;
+    dialogueOnComplete = null;
     scene.classList.remove('window-gazing');
+    if (onComplete) {
+      onComplete();
+      return;
+    }
+    dialogue.hidden = true;
     return;
   }
   typeDialogueLine(...dialogueLines[dialogueIndex]);
@@ -443,21 +499,74 @@ function advanceDialogue() {
 
 function closeDialogue() {
   clearInterval(typingTimer);
+  hideDialogueChoices();
   dialogueLines = [];
   dialogueIndex = 0;
+  dialogueOnComplete = null;
   typingComplete = true;
   dialogue.hidden = true;
   scene.classList.remove('window-gazing');
+}
+
+function selectTizneChoice(index, focus = false) {
+  selectedTizneChoice = (index + dialogueChoiceButtons.length) % dialogueChoiceButtons.length;
+  dialogueChoiceButtons.forEach((button, buttonIndex) => {
+    const selected = buttonIndex === selectedTizneChoice;
+    button.classList.toggle('selected', selected);
+    if (selected && focus) button.focus({ preventScroll: true });
+  });
+}
+
+function showTizneChoice() {
+  clearInterval(typingTimer);
+  dialogue.hidden = false;
+  dialogueLines = [['Tizne', ''], ['Kuro', '']];
+  dialogueOnComplete = null;
+  updateDialoguePortraits('Kuro');
+  dialogueName.textContent = 'Kuro';
+  dialogueName.className = 'dialogue-name kuro-speaker';
+  dialogueText.textContent = '¿Qué quieres responderle?';
+  fullDialogueText = dialogueText.textContent;
+  typingComplete = true;
+  dialogue.classList.remove('is-typing');
+  dialogue.classList.add('has-choices');
+  dialogueChoices.hidden = false;
+  dialogueChoiceActive = true;
+  dialogueHelp.textContent = '↑ ↓ elegir · E / Enter confirmar · también puedes usar 1, 2 o 3';
+  selectTizneChoice(0);
+}
+
+function confirmTizneChoice(choiceId = dialogueChoiceButtons[selectedTizneChoice]?.dataset.tizneChoice) {
+  const response = tizneResponses[choiceId];
+  if (!response) return;
+  tizneResponse = choiceId;
+  localStorage.setItem('kuro-tizne-response', choiceId);
+  scene.classList.add('valparaiso-complete');
+  renderAlbum();
+  startDialogue([
+    ['Kuro', response.line],
+    ['Tizne', response.reply],
+    ['Tizne', 'El cascabel perteneció a Doña Bruma. Guiaba a los gatitos del barrio cuando bajaba la neblina.'],
+    ['Kuro', 'Entonces debería devolvérselo.'],
+    ['Álbum de Viaje', 'Nueva postal: Al volver de la Cueva del Chivato.']
+  ]);
+}
+
+function startTizneReturnConversation() {
+  startDialogue(tizneReturnConversation, showTizneChoice);
 }
 
 function renderAlbum() {
   const pages = [];
   if (whalePostcardCollected) pages.push({ element: whaleAlbumPage, number: 'Santiago · 01' });
   if (quintaPhotoCollected) pages.push({ element: quintaPhotoPage, number: 'Santiago · 02' });
+  if (tizneResponse) pages.push({ element: valparaisoAlbumPage, number: 'Valparaíso · 01' });
   albumPageIndex = Math.max(0, Math.min(albumPageIndex, pages.length - 1));
   albumEmpty.hidden = pages.length > 0;
   whaleAlbumPage.hidden = true;
   quintaPhotoPage.hidden = true;
+  valparaisoAlbumPage.hidden = true;
+  if (tizneResponse) valparaisoPostscript.textContent = tizneResponses[tizneResponse].postscript;
   albumPrev.hidden = pages.length < 2;
   albumNext.hidden = pages.length < 2;
   if (pages.length) {
@@ -469,7 +578,7 @@ function renderAlbum() {
 }
 
 function changeAlbumPage(direction) {
-  const pageCount = Number(whalePostcardCollected) + Number(quintaPhotoCollected);
+  const pageCount = Number(whalePostcardCollected) + Number(quintaPhotoCollected) + Number(Boolean(tizneResponse));
   if (pageCount < 2) return;
   albumPageIndex = (albumPageIndex + direction + pageCount) % pageCount;
   renderAlbum();
@@ -770,6 +879,15 @@ addEventListener('keydown', (event) => {
     return;
   }
   if (!dialogue.hidden) {
+    if (dialogueChoiceActive) {
+      if ((pressedKey === 'arrowup' || pressedKey === 'w') && !event.repeat) selectTizneChoice(selectedTizneChoice - 1, true);
+      else if ((pressedKey === 'arrowdown' || pressedKey === 's') && !event.repeat) selectTizneChoice(selectedTizneChoice + 1, true);
+      else if (['1', '2', '3'].includes(pressedKey) && !event.repeat) confirmTizneChoice(dialogueChoiceButtons[Number(pressedKey) - 1]?.dataset.tizneChoice);
+      else if ((pressedKey === 'e' || pressedKey === 'enter' || event.code === 'Space') && !event.repeat) confirmTizneChoice();
+      else if (pressedKey === 'escape') closeDialogue();
+      event.preventDefault();
+      return;
+    }
     if (pressedKey === 'escape') closeDialogue();
     else if ((pressedKey === 'e' || pressedKey === 'enter') && !event.repeat) advanceDialogue();
     return;
@@ -823,7 +941,9 @@ addEventListener('keydown', (event) => {
     if (interaction === 'take-train') openWorldMap();
     if (interaction === 'take-return-train') openWorldMap();
     if (interaction === 'talk-tizne') {
-      if (tizneConversationComplete) startDialogue([['Tizne', 'No tienes que decidir ahora. Los cerros no se irán a ninguna parte.']]);
+      if (caveBellCollected && !tizneResponse) startTizneReturnConversation();
+      else if (tizneResponse) startDialogue([['Tizne', tizneResponses[tizneResponse].followUp]]);
+      else if (tizneConversationComplete) startDialogue([['Tizne', 'No tienes que decidir ahora. Los cerros no se irán a ninguna parte.']]);
       else startDialogue(tizneConversation);
     }
     if (interaction === 'enter-cave') {
@@ -869,6 +989,10 @@ addEventListener('keydown', (event) => {
 caveClaw.addEventListener('pointerdown', (event) => {
   event.preventDefault();
   triggerClaw();
+});
+dialogueChoiceButtons.forEach((button, index) => {
+  button.addEventListener('pointerenter', () => selectTizneChoice(index));
+  button.addEventListener('click', () => confirmTizneChoice(button.dataset.tizneChoice));
 });
 addEventListener('keyup', (event) => {
   keys.delete(event.key.toLowerCase());
@@ -1025,6 +1149,7 @@ requestAnimationFrame(loop);
 if (whalePostcardCollected) scene.classList.add('postcard-collected');
 if (quintaPhotoCollected) scene.classList.add('quinta-photo-collected');
 if (firstLetterSent) scene.classList.add('letter-sent');
+if (tizneResponse) scene.classList.add('valparaiso-complete');
 renderAlbum();
 
 // Vista directa para revisar escenas durante el desarrollo. No afecta el juego normal.
@@ -1065,8 +1190,20 @@ if (previewParams.get('jump') === 'double') {
     setTimeout(attemptJump, 230);
   }, 620);
 }
-if (previewParams.get('album') === 'open') {
-  setTimeout(openAlbum, 240);
+if (previewParams.get('story') === 'tizne-choice') {
+  caveBellCollected = true;
+  tizneResponse = null;
+  setTimeout(showTizneChoice, 620);
+}
+if (tizneResponses[previewParams.get('tizne')]) {
+  tizneResponse = previewParams.get('tizne');
+  renderAlbum();
+}
+if (['open', 'valparaiso'].includes(previewParams.get('album'))) {
+  setTimeout(() => {
+    if (previewParams.get('album') === 'valparaiso') albumPageIndex = 99;
+    openAlbum();
+  }, 240);
 }
 if (previewParams.get('photoView') === 'open') {
   setTimeout(() => { photoMoment.hidden = false; }, 240);

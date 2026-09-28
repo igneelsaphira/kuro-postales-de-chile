@@ -305,6 +305,8 @@ Cuando Tizne confiesa «Pensé que si te decía la verdad, no ibas a ayudarme»,
 
 La respuesta cambia la posdata del Álbum y la relación posterior con Tizne, pero no bloquea el progreso.
 
+La confesión y las tres respuestas ya son jugables al volver con el cascabel. La elección se guarda entre sesiones, desbloquea la postal de Valparaíso y modifica su posdata sin convertir ninguna opción en una respuesta “correcta”. Tizne revela además que el cascabel pertenecía a Doña Bruma, preparando el siguiente encuentro.
+
 ### Posdata provisional
 
 > Al entrar parecían monstruos. Al volver, pensé que quizás ellas también tenían miedo.

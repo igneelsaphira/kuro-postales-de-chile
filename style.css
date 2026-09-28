@@ -283,6 +283,13 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .dialogue-name { display: inline-block; padding: 4px 13px; margin: -4px 0 10px; border-radius: 10px; background: #ecd9bd80; font-size: .8em; letter-spacing: .035em; }
 .dialogue[data-speaker-side="right"] .dialogue-name { float: right; }
 #dialogue-text { clear: both; line-height: 1.4; min-height: 2.8em; }
+.dialogue.has-choices { min-height: 38%; padding-bottom: 38px; }
+.dialogue.has-choices .dialogue-next { display: none; }
+.dialogue-choices { clear: both; display: grid; gap: 7px; margin-top: 9px; }
+.dialogue-choices[hidden] { display: none; }
+.dialogue-choices button { display: grid; grid-template-columns: 29px 1fr; gap: 8px; align-items: center; min-height: 38px; padding: 7px 10px; border: 2px solid #b9896e; border-radius: 10px; background: #f4dfbde8; color: #513f39; font: 600 clamp(11px, 1.35vw, 15px) Georgia, serif; line-height: 1.2; text-align: left; cursor: pointer; }
+.dialogue-choices button kbd { display: grid; place-items: center; width: 25px; height: 25px; border: 2px solid #8c6658; border-radius: 50%; background: #fff3d4; color: #765044; font: bold 13px Georgia, serif; }
+.dialogue-choices button:hover, .dialogue-choices button:focus-visible, .dialogue-choices button.selected { border-color: #426f70; outline: none; background: #dce8d4; box-shadow: inset 4px 0 0 #426f70, 0 2px 0 #6a4d4233; }
 /* 2 x 2 atlas: rest, blink / small mouth, open mouth. Discrete frames only. */
 @keyframes portrait-blink { 0%, 43%, 48%, 100% { background-position: 0 0; } 45% { background-position: 100% 0; } }
 @keyframes portrait-speak {
@@ -297,6 +304,10 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
   .dialogue-help { left: 14px; bottom: 8px; font-size: 9px; }
   .dialogue-next { right: 14px; bottom: 8px; }
   .dialogue-portrait { width: 23vw; height: 23vw; }
+  .dialogue.has-choices { min-height: 46%; padding-bottom: 29px; }
+  .dialogue-choices { gap: 4px; margin-top: 5px; }
+  .dialogue-choices button { min-height: 31px; padding: 4px 6px; font-size: 10px; }
+  .dialogue-choices button kbd { width: 21px; height: 21px; font-size: 11px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .dialogue .dialogue-portrait { transition: none; }
@@ -389,6 +400,8 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .album-page-number { position: absolute; right: 30px; bottom: 14px; color: #9a7b6e; font-size: 13px; }
 .album-close-help { position: absolute; left: 50%; bottom: 10px; translate: -50% 0; color: #fff2cf; font-size: 12px; }
 .quinta-photo-art { overflow: hidden; background: url('assets/quinta-normal-unificada-v1.png') center / cover no-repeat; image-rendering: pixelated; }
+.valparaiso-photo { background-image: url('assets/valparaiso-continuo-pixel-v1.png'); background-position: 68% 48%; image-rendering: pixelated; }
+.valparaiso-photo::after { content: 'Valparaíso'; }
 .quinta-photo-art > span { display: none; }
 .photo-tree { position: absolute; bottom: 23%; width: 12%; height: 38%; border-radius: 8px 8px 0 0; background: #6d5044; }
 .photo-tree::before { content: ''; position: absolute; left: -80%; top: -72%; width: 260%; aspect-ratio: 1; border-radius: 50%; background: #789264; box-shadow: inset -10px -8px 0 #687f59; }

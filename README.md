@@ -20,6 +20,7 @@ El standalone web incluye:
 - Cueva oscura de seis pantallas, cascabel recuperable y lobo marino de hollín.
 - Ataque con pelota de hollín, un rebote y zarpazo para devolverla.
 - Cascabel persistente que desbloquea el doble salto y transforma el regreso por la cueva.
+- Reencuentro con Tizne, tres respuestas de personalidad y postal de Valparaíso con posdata variable.
 - Movimiento, salto, carrera, cámara e interacciones.
 
 ## Abrir localmente
