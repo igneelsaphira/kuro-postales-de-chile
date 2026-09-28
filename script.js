@@ -268,7 +268,7 @@ function updateGoatChase(time, dt) {
     goatX += Math.max(-chaseSpeed * dt, Math.min(chaseSpeed * dt, targetX - goatX));
   }
   const frameIndex = Math.floor(time / 105) % 6;
-  const goatLift = frameIndex === 4 ? 35 : frameIndex === 5 ? 18 : 0;
+  const goatLift = frameIndex === 3 ? 18 : frameIndex === 4 ? 38 : frameIndex === 5 ? 14 : 0;
   setGridFrame(sootGoat, frameIndex, 3, 2);
   sootGoat.style.left = `${goatX}px`;
   sootGoat.style.setProperty('--goat-y', `${goatLift}px`);
