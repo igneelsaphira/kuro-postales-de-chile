@@ -19,6 +19,7 @@ El standalone web incluye:
 - Primer recorrido continuo por Valparaíso, desde Estación Puerto hasta la entrada de la Cueva del Chivato.
 - Cueva oscura de seis pantallas, cascabel recuperable y lobo marino de hollín.
 - Ataque con pelota de hollín, un rebote y zarpazo para devolverla.
+- Cascabel persistente que desbloquea el doble salto y transforma el regreso por la cueva.
 - Movimiento, salto, carrera, cámara e interacciones.
 
 ## Abrir localmente

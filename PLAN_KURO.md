@@ -293,6 +293,7 @@ La misión se inspira libremente en la leyenda porteña de la **Cueva del Chivat
 - El cascabel no suena con cada salto para evitar que el efecto resulte agotador.
 - Solo volverá a sonar en momentos narrativos importantes.
 - El regreso por la cueva funciona como tutorial seguro del doble salto y puede abrir una ruta superior opcional.
+- El desbloqueo ya es jugable: el cascabel suena una sola vez, emite un pulso dorado y permite volver a pulsar salto en el aire; el segundo impulso muestra un destello breve bajo las patas de Kuro.
 
 ### Primera decisión de personalidad
 

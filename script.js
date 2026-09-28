@@ -30,6 +30,8 @@ const localMapNodes = document.querySelector('.local-map-nodes');
 const nextDestination = document.querySelector('#next-destination');
 const sootSeaLion = document.querySelector('#soot-sea-lion');
 const sootProjectile = document.querySelector('#soot-projectile');
+const caveBell = document.querySelector('#cave-bell');
+const bellAwakening = document.querySelector('#bell-awakening');
 const caveClaw = document.querySelector('#cave-claw');
 const movementHint = document.querySelector('.hint');
 const mapZoneNodes = [...worldMap.querySelectorAll('[data-map-zone]')];
@@ -50,6 +52,7 @@ let x = Math.min(430, game.clientWidth * 0.36);
 let y = 0;
 let velocityY = 0;
 let grounded = true;
+let jumpsUsed = 0;
 let frame = 0;
 let timer = 0;
 let lastTime = performance.now();
@@ -90,6 +93,87 @@ let nextClawAt = 0;
 let sootHitCount = 0;
 let sootInvulnerableUntil = 0;
 let seaLionFacing = -1;
+let audioContext = null;
+
+function movementHintText() {
+  if (currentPlace === 'cave' && !caveBellCollected) return '← → moverse · Shift correr · Espacio saltar · F zarpazo';
+  if (caveBellCollected) return '← → moverse · Shift correr · Espacio ×2 doble salto';
+  return '← → moverse · Shift correr · Espacio saltar';
+}
+
+function playBellChime() {
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextClass) return;
+  audioContext ||= new AudioContextClass();
+  if (audioContext.state === 'suspended') audioContext.resume();
+  const now = audioContext.currentTime;
+  [880, 1174.66, 1567.98].forEach((frequency, index) => {
+    const oscillator = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+    oscillator.type = index === 0 ? 'sine' : 'triangle';
+    oscillator.frequency.setValueAtTime(frequency, now + index * .11);
+    gain.gain.setValueAtTime(.0001, now + index * .11);
+    gain.gain.exponentialRampToValueAtTime(index === 0 ? .12 : .07, now + index * .11 + .018);
+    gain.gain.exponentialRampToValueAtTime(.0001, now + index * .11 + .72);
+    oscillator.connect(gain);
+    gain.connect(audioContext.destination);
+    oscillator.start(now + index * .11);
+    oscillator.stop(now + index * .11 + .75);
+  });
+}
+
+function awakenBell() {
+  const bellRect = caveBell.getBoundingClientRect();
+  const gameRect = game.getBoundingClientRect();
+  bellAwakening.style.left = `${bellRect.left - gameRect.left + bellRect.width / 2}px`;
+  bellAwakening.style.top = `${bellRect.top - gameRect.top + bellRect.height / 2}px`;
+  bellAwakening.classList.remove('active');
+  void bellAwakening.offsetWidth;
+  bellAwakening.classList.add('active');
+  setTimeout(() => bellAwakening.classList.remove('active'), 1100);
+  playBellChime();
+}
+
+function triggerDoubleJumpSpark() {
+  kuro.classList.remove('double-jump');
+  void kuro.offsetWidth;
+  kuro.classList.add('double-jump');
+  setTimeout(() => kuro.classList.remove('double-jump'), 320);
+}
+
+function attemptJump() {
+  if (grounded) {
+    grounded = false;
+    jumpsUsed = 1;
+    velocityY = 620;
+    frame = 0;
+    return;
+  }
+  if (caveBellCollected && jumpsUsed === 1) {
+    jumpsUsed = 2;
+    velocityY = 585;
+    frame = 0;
+    triggerDoubleJumpSpark();
+  }
+}
+
+function collectCaveBell() {
+  if (caveBellCollected) return;
+  awakenBell();
+  caveBellCollected = true;
+  localStorage.setItem('kuro-cave-bell', 'collected');
+  scene.classList.add('cave-bell-collected');
+  game.classList.add('cave-return');
+  caveClaw.hidden = true;
+  movementHint.textContent = movementHintText();
+  sootHitCount = 0;
+  updateSootLevel();
+  startDialogue([
+    ['Kuro', 'Está cubierto de hollín… pero todavía es un cascabel.'],
+    ['Kuro', '¡Sonó! Siento las patas mucho más ligeras…'],
+    ['Nuevo movimiento', 'Doble salto desbloqueado · Pulsa Espacio otra vez mientras estás en el aire.']
+  ]);
+}
 
 function resetSootProjectile() {
   sootProjectileActive = false;
@@ -604,7 +688,7 @@ function changeLocation(nextLocation, entry = 'default') {
     game.classList.toggle('cave-active', atCave);
     game.classList.toggle('cave-return', atCave && caveBellCollected);
     caveClaw.hidden = !atCave || caveBellCollected;
-    movementHint.textContent = atCave && !caveBellCollected ? '← → moverse · Shift correr · Espacio saltar · F zarpazo' : '← → moverse · Shift correr · Espacio saltar';
+    movementHint.textContent = movementHintText();
     if (!atCave) {
       sootHitCount = 0;
       updateSootLevel();
@@ -623,6 +707,7 @@ function changeLocation(nextLocation, entry = 'default') {
     y = 0;
     velocityY = 0;
     grounded = true;
+    jumpsUsed = 0;
     autoEscapingCave = false;
     if (['at-neighborhood', 'at-seam', 'at-plaza', 'at-mota', 'at-quinta', 'at-museum', 'from-museum'].includes(entry) && atStreet) cameraX = Math.max(0, Math.min(game.clientWidth * 0.6875, x - game.clientWidth * 0.45));
     else if (entry === 'from-quinta') cameraX = atStreet ? game.clientWidth * 0.6875 : atPlaza ? 0 : Math.max(0, worldWidth - game.clientWidth);
@@ -694,10 +779,8 @@ addEventListener('keydown', (event) => {
     event.preventDefault();
   }
   keys.add(pressedKey);
-  if (event.code === 'Space' && grounded && dialogue.hidden) {
-    grounded = false;
-    velocityY = 620;
-    frame = 0;
+  if (event.code === 'Space' && !event.repeat) {
+    attemptJump();
     event.preventDefault();
   }
   if ((pressedKey === 'e' || pressedKey === 'enter') && !event.repeat) {
@@ -757,20 +840,7 @@ addEventListener('keydown', (event) => {
       }, 720);
     }
     if (interaction === 'exit-cave') changeLocation('valparaiso', 'at-cave');
-    if (interaction === 'collect-bell') {
-      caveBellCollected = true;
-      localStorage.setItem('kuro-cave-bell', 'collected');
-      scene.classList.add('cave-bell-collected');
-      game.classList.add('cave-return');
-      caveClaw.hidden = true;
-      movementHint.textContent = '← → moverse · Shift correr · Espacio saltar';
-      sootHitCount = 0;
-      updateSootLevel();
-      startDialogue([
-        ['Kuro', 'Está cubierto de hollín… pero todavía es un cascabel.'],
-        ['Kuro', 'Ahora puedo ver un poco mejor.']
-      ]);
-    }
+    if (interaction === 'collect-bell') collectCaveBell();
     if (interaction === 'use-estafeta') {
       if (firstLetterSent) {
         startDialogue([['Estafeta Gatuna', 'Tu carta ya va en camino. El viaje de hoy está guardado.']]);
@@ -841,6 +911,7 @@ function loop(time) {
       y = 0;
       velocityY = 0;
       grounded = true;
+      jumpsUsed = 0;
       frame = 0;
     }
   }
@@ -981,6 +1052,19 @@ if (previewParams.get('postcard') === 'collected') whalePostcardCollected = true
 if (previewParams.get('photo') === 'collected') quintaPhotoCollected = true;
 if (previewParams.get('bell') === 'collected') caveBellCollected = true;
 if (previewParams.get('bell') === 'missing') caveBellCollected = false;
+if (previewParams.get('bell') === 'unlock') {
+  caveBellCollected = false;
+  setTimeout(() => {
+    if (currentPlace === 'cave') collectCaveBell();
+  }, 620);
+}
+if (previewParams.get('jump') === 'double') {
+  setTimeout(() => {
+    closeDialogue();
+    attemptJump();
+    setTimeout(attemptJump, 230);
+  }, 620);
+}
 if (previewParams.get('album') === 'open') {
   setTimeout(openAlbum, 240);
 }
