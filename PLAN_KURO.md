@@ -352,6 +352,7 @@ El tema de fondo no tendrá una única respuesta: prevenir el peligro y atrevers
 - La pelota es una entidad independiente con gravedad: toca el suelo, rebota una sola vez con menor velocidad y se desarma en el segundo contacto. Esto permitirá añadir después colisión y devolución mediante el zarpazo sin rehacer la animación del animal.
 - El reparto inicial queda compuesto por cabrito, perro encorvado, ave tiznada y lobo marino. Todos comparten hollín y ojos verde mar, pero conservan siluetas y movimientos reconocibles.
 - Los cuatro animales ya cuentan con lectura propia: el cabrito usa seis cuadros de carrera y salto para perseguir a Kuro desde la entrada; más adelante, el quiltro y el ave forman una segunda persecución coordinada, uno corriendo y saltando por el suelo mientras la otra desciende en vuelos rasantes. Cabrito, perro y ave también tienen hojas reveladas para el regreso, con cuerpo gris visible, pupilas verde mar y sin un halo brillante alrededor.
+- Durante la segunda persecución, el quiltro se detiene un instante, abre la boca y dispara una pelota de hollín de 44 px —aproximadamente el tamaño de su cabeza—. La pelota rebota una vez y Kuro puede devolverla con el zarpazo.
 - Cada acción tendrá su propia tira de sprites —reposo, aviso, ataque y retirada— y el proyectil será una entidad separada para poder esquivarlo o devolverlo con el zarpazo.
 - Si Kuro vuelve a la entrada antes de conseguir el cascabel, dice «¡Ay, no! ¡Qué miedooo!» y sale corriendo; retirarse no castiga al jugador.
 

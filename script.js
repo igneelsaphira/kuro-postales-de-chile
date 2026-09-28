@@ -35,6 +35,7 @@ const sootGoat = document.querySelector('#soot-goat');
 const sootDog = document.querySelector('#soot-dog');
 const sootBird = document.querySelector('#soot-bird');
 const sootProjectile = document.querySelector('#soot-projectile');
+const dogProjectile = document.querySelector('#dog-projectile');
 const caveBell = document.querySelector('#cave-bell');
 const bellAwakening = document.querySelector('#bell-awakening');
 const caveClaw = document.querySelector('#cave-claw');
@@ -116,6 +117,16 @@ let dogX = 0;
 let dogLastHitAt = 0;
 let birdX = 0;
 let birdLastHitAt = 0;
+let nextDogShotAt = 0;
+let dogSpittingUntil = 0;
+let dogProjectileActive = false;
+let dogProjectileX = 0;
+let dogProjectileY = 0;
+let dogProjectileVelocityX = 0;
+let dogProjectileVelocityY = 0;
+let dogProjectileBounces = 0;
+let dogProjectileSpin = 0;
+let dogProjectileDeflected = false;
 let audioContext = null;
 
 function movementHintText() {
@@ -281,7 +292,10 @@ function resetPackChase() {
   packStartedAt = 0;
   dogLastHitAt = 0;
   birdLastHitAt = 0;
-  sootDog.classList.remove('chasing', 'passed');
+  nextDogShotAt = 0;
+  dogSpittingUntil = 0;
+  resetDogProjectile();
+  sootDog.classList.remove('chasing', 'spitting', 'passed');
   sootBird.classList.remove('chasing', 'passed');
   sootDog.style.left = `${dogX}px`;
   sootDog.style.removeProperty('bottom');
@@ -292,6 +306,90 @@ function resetPackChase() {
   sootBird.style.setProperty('--bird-facing', '1');
   setGridFrame(sootDog, 0, 2, 2);
   setGridFrame(sootBird, 0, 2, 2);
+}
+
+function resetDogProjectile() {
+  dogProjectileActive = false;
+  dogProjectile.hidden = true;
+  dogProjectileBounces = 0;
+  dogProjectileDeflected = false;
+}
+
+function launchDogProjectile() {
+  const caveFloor = game.clientHeight * .14;
+  const dogFacing = x + 50 >= dogX + 83 ? 1 : -1;
+  dogProjectileActive = true;
+  dogProjectileX = dogX + (dogFacing > 0 ? 112 : 8);
+  dogProjectileY = caveFloor + 68;
+  dogProjectileVelocityX = dogFacing * 420;
+  dogProjectileVelocityY = 95;
+  dogProjectileBounces = 0;
+  dogProjectileSpin = 0;
+  dogProjectileDeflected = false;
+  dogProjectile.hidden = false;
+}
+
+function updateDogProjectile(time, dt) {
+  if (!dogProjectileActive) return;
+  if (currentPlace !== 'cave' || caveBellCollected || autoEscapingCave) {
+    resetDogProjectile();
+    return;
+  }
+
+  const caveFloor = game.clientHeight * .14;
+  dogProjectileVelocityY -= 650 * dt;
+  dogProjectileX += dogProjectileVelocityX * dt;
+  dogProjectileY += dogProjectileVelocityY * dt;
+  dogProjectileSpin += 610 * dt * Math.sign(dogProjectileVelocityX || 1);
+
+  const projectileCenterX = dogProjectileX + 22;
+  const projectileCenterY = dogProjectileY + 22;
+  const kuroCenterX = x + 50;
+  const kuroFeetY = caveFloor + y;
+  const deltaX = projectileCenterX - kuroCenterX;
+  const withinSwipeHeight = projectileCenterY >= kuroFeetY + 4 && projectileCenterY <= kuroFeetY + 120;
+  const inFrontOfKuro = facing > 0 ? deltaX >= -12 && deltaX <= 132 : deltaX <= 12 && deltaX >= -132;
+
+  if (!dogProjectileDeflected && time < clawUntil && withinSwipeHeight && inFrontOfKuro) {
+    dogProjectileDeflected = true;
+    dogProjectileVelocityX = facing * 470;
+    dogProjectileVelocityY = Math.max(270, Math.abs(dogProjectileVelocityY) * .55);
+    dogProjectileBounces = 0;
+  }
+
+  const touchesKuro = Math.abs(deltaX) <= 48 && projectileCenterY >= kuroFeetY + 4 && projectileCenterY <= kuroFeetY + 108;
+  if (!dogProjectileDeflected && touchesKuro) {
+    resetDogProjectile();
+    registerSootHit(time);
+    return;
+  }
+
+  const touchesDog = dogProjectileDeflected && Math.abs(projectileCenterX - (dogX + 83)) <= 56 && projectileCenterY <= caveFloor + 128;
+  if (touchesDog) {
+    resetDogProjectile();
+    dogX -= 125;
+    return;
+  }
+
+  if (dogProjectileY <= caveFloor) {
+    if (dogProjectileBounces === 0) {
+      dogProjectileY = caveFloor;
+      dogProjectileVelocityY = 310;
+      dogProjectileVelocityX *= .84;
+      dogProjectileBounces = 1;
+    } else {
+      resetDogProjectile();
+      return;
+    }
+  }
+
+  if (dogProjectileX < -60 || dogProjectileX > game.clientWidth * 6 + 60) {
+    resetDogProjectile();
+    return;
+  }
+  dogProjectile.style.left = `${dogProjectileX}px`;
+  dogProjectile.style.bottom = `${dogProjectileY}px`;
+  dogProjectile.style.setProperty('--dog-soot-spin', `${dogProjectileSpin}deg`);
 }
 
 function updatePackChase(time, dt) {
@@ -310,6 +408,7 @@ function updatePackChase(time, dt) {
   if (!packActive && !packChaseComplete && x >= chaseStart && x < chaseEnd) {
     packActive = true;
     packStartedAt = time;
+    nextDogShotAt = time + 900;
     dogX = game.clientWidth * 3.42;
     birdX = game.clientWidth * 3.54;
     sootDog.classList.add('chasing');
@@ -318,7 +417,8 @@ function updatePackChase(time, dt) {
   if (!packActive) return;
 
   const controlsEnabled = dialogue.hidden && travelAlbum.hidden && photoMoment.hidden && worldMap.hidden && !autoEscapingCave;
-  if (controlsEnabled) {
+  const dogIsSpitting = time < dogSpittingUntil;
+  if (controlsEnabled && !dogIsSpitting) {
     const dogTargetX = x - 48;
     const dogSpeed = dogTargetX > dogX ? 315 : 235;
     dogX += Math.max(-dogSpeed * dt, Math.min(dogSpeed * dt, dogTargetX - dogX));
@@ -330,9 +430,20 @@ function updatePackChase(time, dt) {
     birdX += Math.max(-birdSpeed * dt, Math.min(birdSpeed * dt, birdTargetX - birdX));
   }
 
+  const dogDistance = Math.abs(x + 50 - (dogX + 83));
+  if (controlsEnabled && !dogProjectileActive && !dogIsSpitting && time >= nextDogShotAt && dogDistance >= 135 && dogDistance <= 560) {
+    dogSpittingUntil = time + 270;
+    nextDogShotAt = time + 2350;
+    sootDog.classList.add('spitting');
+    launchDogProjectile();
+  }
+
+  const currentlySpitting = time < dogSpittingUntil;
+  sootDog.classList.toggle('spitting', currentlySpitting);
   const dogFrame = Math.floor(time / 92) % 6;
   const dogLift = dogFrame === 3 ? 24 : dogFrame === 4 ? 38 : dogFrame === 5 ? 10 : 0;
-  setGridFrame(sootDog, dogFrame, 3, 2);
+  if (currentlySpitting) setGridFrame(sootDog, 2, 2, 2);
+  else setGridFrame(sootDog, dogFrame, 3, 2);
   sootDog.style.left = `${dogX}px`;
   sootDog.style.setProperty('--dog-y', `${dogLift}px`);
   sootDog.style.setProperty('--dog-facing', x >= dogX ? '1' : '-1');
@@ -364,10 +475,11 @@ function updatePackChase(time, dt) {
   if (x >= chaseEnd) {
     packActive = false;
     packChaseComplete = true;
-    sootDog.classList.remove('chasing');
+    sootDog.classList.remove('chasing', 'spitting');
     sootBird.classList.remove('chasing');
     sootDog.classList.add('passed');
     sootBird.classList.add('passed');
+    resetDogProjectile();
   }
 }
 
@@ -1271,6 +1383,7 @@ function loop(time) {
   }
   updateGoatChase(time, dt);
   updatePackChase(time, dt);
+  updateDogProjectile(time, dt);
   updateSeaLionAttack(time, dt);
   kuro.classList.toggle('swiping', time < clawUntil);
   kuro.style.left = `${x}px`;

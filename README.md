@@ -19,6 +19,7 @@ El standalone web incluye:
 - Primer recorrido continuo por Valparaíso, desde Estación Puerto hasta la entrada de la Cueva del Chivato.
 - Cueva oscura de seis pantallas, cascabel recuperable y lobo marino de hollín.
 - Cabrito perseguidor y una emboscada coordinada del quiltro con el ave tiznada, cada uno con forma oscura y forma revelada para el regreso.
+- Disparo del quiltro del tamaño de su cabeza, con un rebote y posibilidad de devolverlo mediante el zarpazo.
 - Ataque con pelota de hollín, un rebote y zarpazo para devolverla.
 - Cascabel persistente que desbloquea el doble salto y transforma el regreso por la cueva.
 - Reencuentro con Tizne, tres respuestas de personalidad y postal de Valparaíso con posdata variable.

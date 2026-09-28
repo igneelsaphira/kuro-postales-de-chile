@@ -198,6 +198,7 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .soot-dog { left: 57%; bottom: calc(14.8% + var(--dog-y, 0px)); width: 166px; height: 131px; background: url('assets/chivato-perro-sombra-4frames-v2.png') 0 0 / 200% 200% no-repeat; transform: scaleX(var(--dog-facing, 1)); transition: opacity .18s ease; animation: soot-dog-watch 2.8s steps(1, end) infinite; }
 .soot-bird { left: 59%; bottom: 46%; width: 150px; height: 100px; background: url('assets/chivato-ave-sombra-4frames-v1.png') 0 0 / 200% 200% no-repeat; transform: scaleX(var(--bird-facing, 1)); transform-origin: center; transition: opacity .18s ease; animation: soot-bird-swoop 3.2s steps(1, end) infinite; }
 .soot-dog.chasing { background-image: url('assets/chivato-perro-sombra-run-v1.png'); background-size: 300% 200%; animation: none; }
+.soot-dog.chasing.spitting { background-image: url('assets/chivato-perro-sombra-4frames-v2.png'); background-size: 200% 200%; }
 .soot-bird.chasing { animation: none; }
 .soot-dog.passed, .soot-bird.passed { opacity: 0; }
 .soot-sea-lion.warning { animation: sea-lion-warning .55s steps(1, end) infinite; }
@@ -205,6 +206,8 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .soot-sea-lion.startled { animation: sea-lion-startled .36s steps(2, end) 1; }
 .soot-projectile { position: absolute; z-index: 5; width: 24px; height: 24px; border: 3px solid #6f768b; border-radius: 45%; background: #202330; box-shadow: inset 5px 4px 0 #555b72, 0 0 6px #bbc4dc66, -6px 2px 0 -2px #171a26, 6px -3px 0 -3px #737a91; image-rendering: pixelated; transform: rotate(var(--soot-spin, 0deg)); }
 .soot-projectile::after { content: ''; position: absolute; right: -8px; top: 3px; width: 4px; height: 4px; background: #1b1e2b; box-shadow: 5px 5px 0 #10121a, -2px 10px 0 #292c3d; }
+.dog-projectile { box-sizing: border-box; position: absolute; z-index: 6; width: 44px; height: 44px; border: 4px solid #717991; border-radius: 44%; background: #202330; box-shadow: inset 8px 7px 0 #555d76, 0 0 7px #bbc4dc55, -8px 4px 0 -3px #11141e, 8px -5px 0 -4px #788198; image-rendering: pixelated; transform: rotate(var(--dog-soot-spin, 0deg)); }
+.dog-projectile::after { content: ''; position: absolute; right: -11px; top: 5px; width: 6px; height: 6px; background: #1b1e2b; box-shadow: 7px 7px 0 #10121a, -3px 16px 0 #303448; }
 @keyframes sea-lion-warning {
   0%, 100% { background-position: 25% 0; transform: scaleX(var(--sea-lion-facing)); }
   50% { background-position: 25% 0; transform: scaleX(var(--sea-lion-facing)) translateY(-3px); }
