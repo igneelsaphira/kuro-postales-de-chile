@@ -554,6 +554,8 @@ function updateSeaLionAttack(time, dt) {
   const canAttack = currentPlace === 'cave' && !caveBellCollected && dialogue.hidden && !autoEscapingCave;
   const seaLionX = game.clientWidth * 6 * 0.34;
   const seaLionCenterX = seaLionX + 68;
+  const revealedSeaLionCenterX = seaLionX - 160 + 87.5;
+  sootSeaLion.classList.toggle('looking-left', currentPlace === 'cave' && caveBellCollected && x + 50 < revealedSeaLionCenterX);
   seaLionFacing = x + 50 < seaLionCenterX ? -1 : 1;
   sootSeaLion.style.setProperty('--sea-lion-facing', seaLionFacing);
   const kuroIsClose = Math.abs(x + 50 - seaLionCenterX) <= game.clientWidth * 0.82;

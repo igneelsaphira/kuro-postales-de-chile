@@ -235,6 +235,7 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
   transform: none;
   animation: none;
 }
+.game.cave-return .soot-sea-lion.looking-left { background-image: url('assets/lobo-marino-temeroso-roca-mira-izquierda-v1.png'); }
 .game.cave-return .soot-dog { background-image: url('assets/chivato-perro-revelado-4frames-v2.png'); filter: saturate(.82) brightness(1.04) drop-shadow(0 4px 3px #05060855); animation: soot-dog-calm 3.4s steps(1, end) infinite; }
 .game.cave-return .soot-bird { left: 64%; bottom: 14.8%; background-image: url('assets/chivato-ave-revelada-4frames-v1.png'); filter: saturate(.82) brightness(1.04) drop-shadow(0 4px 3px #05060855); animation: soot-bird-calm 3.8s steps(1, end) infinite; }
 @keyframes soot-dog-watch { 0%, 58% { background-position: 0 0; } 59%, 76% { background-position: 100% 0; } 77%, 88% { background-position: 0 100%; } 89%, 100% { background-position: 100% 100%; } }
