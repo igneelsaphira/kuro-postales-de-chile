@@ -371,6 +371,7 @@ El tema de fondo no tendrá una única respuesta: prevenir el peligro y atrevers
 - Los lugares exteriores cercanos se conectarán mediante calles, senderos o paisajes intermedios dentro de un mismo escenario desplazable.
 - No habrá fundido entre hitos de una misma ciudad o zona cuando Kuro pueda llegar caminando.
 - En el tramo ascendente de Valparaíso, la altura de Kuro sigue la pendiente hasta la boca de la cueva para mantener sus patas apoyadas sobre la vereda, también durante la huida automática.
+- La puerta de la casa conserva la misma gatera por dentro y por fuera; al sentarse, Kuro usa un anclaje proporcional al cojín para mantener la postura correcta al cambiar el tamaño de la ventana.
 - Las transiciones de pantalla se reservarán para interiores, cuevas, trenes y viajes entre regiones.
 - Los NPCs opcionales podrán llamar la atención de Kuro, pero no bloquearán físicamente las rutas principales.
 

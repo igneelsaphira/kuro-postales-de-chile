@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Kuro — Primer prototipo</title>
-  <link rel="stylesheet" href="style.css?v=111" />
+  <link rel="stylesheet" href="style.css?v=122" />
 </head>
 <body>
   <main class="game" aria-label="Prototipo de Kuro">
@@ -38,6 +38,7 @@
       <div class="street-lamp exterior-layer"></div>
       <div class="road-sign exterior-layer"><span>Plaza Yungay</span><b>→</b></div>
       <div class="interior-layer" aria-label="Interior de la casa de Kuro">
+        <div class="interior-cat-flap" aria-label="Gatera de la puerta de Kuro"></div>
         <div class="window-sunbeam"></div>
         <div class="window-petals" aria-hidden="true">
           <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
@@ -143,6 +144,7 @@
       <div class="world-map-body">
         <div class="chile-map" aria-label="Zonas futuras de Chile">
           <div class="chile-spine" aria-hidden="true"></div>
+          <div class="map-route-link" aria-hidden="true"></div>
           <button type="button" class="zone-node node-north locked" data-map-zone="north" data-map-x="53" data-map-y="8" aria-pressed="false"><span>🔒</span><b>Norte</b><small>Desierto</small></button>
           <button type="button" class="zone-node node-rapa locked" data-map-zone="rapa" data-map-x="8" data-map-y="26" aria-pressed="false"><span>🔒</span><b>Rapa Nui</b><small>Especial</small></button>
           <button type="button" class="zone-node node-valpo available" data-map-zone="valparaiso" data-map-x="16" data-map-y="43" aria-pressed="false"><span>🚂</span><b>Valparaíso</b><small>Disponible</small></button>
@@ -153,21 +155,25 @@
           <button type="button" class="zone-node node-antarctica locked" data-map-zone="antarctica" data-map-x="66" data-map-y="90" aria-pressed="false"><span>🔒</span><b>Antártida</b><small>Especial</small></button>
         </div>
         <aside class="santiago-route">
+          <div class="map-postcard" aria-hidden="true"></div>
           <span id="map-zone-stamp" class="route-stamp">Zona central</span>
           <h2 id="map-zone-title">Santiago</h2>
           <p id="santiago-map-status">Recorrido completado · carta enviada</p>
-          <div class="local-map-nodes" aria-label="Lugares disponibles">
-            <button type="button" data-travel="street">Casa · Barrio Yungay</button>
-            <button type="button" data-travel="plaza">Plaza Yungay</button>
-            <button type="button" data-travel="quinta">Quinta Normal</button>
-            <button type="button" data-travel="station">Estación Mapocho</button>
+          <div class="local-map-nodes" aria-label="Destino disponible">
+            <button type="button" data-travel="santiago"><span>★</span><span><b>Santiago</b><small>Volver al punto de partida</small></span></button>
           </div>
           <div id="map-zone-message" class="map-zone-message" hidden>
             <span id="map-zone-icon">🔒</span>
             <p id="map-zone-description"></p>
             <button id="map-zone-travel" type="button" hidden>Viajar a Estación Puerto</button>
           </div>
-          <div id="next-destination" class="next-destination"><b>Valparaíso</b><span>Ruta disponible</span></div>
+          <button id="next-destination" class="next-destination" type="button">
+            <span class="next-destination-icon">🚂</span>
+            <span class="next-destination-kicker">Próximo viaje</span>
+            <strong>Valparaíso</strong>
+            <small>El tren ya está listo</small>
+            <b>Ver ruta →</b>
+          </button>
         </aside>
       </div>
       <div class="world-map-help">WASD / flechas mover · E / Enter confirmar · toca un nodo · Esc cerrar</div>
@@ -228,6 +234,6 @@
     <div id="fade" class="fade"></div>
     <div id="shutter-flash" class="shutter-flash"></div>
   </main>
-  <script src="script.js?v=111"></script>
+  <script src="script.js?v=119"></script>
 </body>
 </html>
