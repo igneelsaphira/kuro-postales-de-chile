@@ -48,14 +48,27 @@ const localTravelButtons = [...worldMap.querySelectorAll('[data-travel]')];
 const keys = new Set();
 const worldWidth = 2200;
 const valparaisoHillGroundProfile = [
-  [0, 15.8],
-  [0.1, 16.6],
-  [0.2, 21],
-  [0.3, 25],
-  [0.5, 30.5],
-  [0.7, 32.4],
-  [0.82, 33],
-  [1, 32.2],
+  [0, 14.7],
+  [0.05, 14.7],
+  [0.1, 14.4],
+  [0.15, 14.1],
+  [0.2, 14.3],
+  [0.25, 14.6],
+  [0.3, 15.7],
+  [0.35, 18.2],
+  [0.4, 20.6],
+  [0.45, 23],
+  [0.5, 25.3],
+  [0.55, 27.8],
+  [0.6, 29.6],
+  [0.65, 31.4],
+  [0.7, 32.8],
+  [0.75, 33.6],
+  [0.8, 33.9],
+  [0.85, 34],
+  [0.9, 33.9],
+  [0.95, 33.7],
+  [1, 33.6],
 ];
 let x = Math.min(430, game.clientWidth * 0.36);
 let y = 0;
@@ -405,6 +418,7 @@ function updatePackChase(time, dt) {
   }
   if (caveBellCollected) {
     if (packActive || packChaseComplete) resetPackChase();
+    sootDog.style.setProperty('--dog-facing', x + 50 >= dogX + 95 ? '1' : '-1');
     return;
   }
 
