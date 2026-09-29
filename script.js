@@ -1391,6 +1391,9 @@ function loop(time) {
     facing = -1;
     kuro.style.setProperty('--facing', facing);
   }
+  if (controlsEnabled && currentPlace === 'cave' && caveBellCollected && x <= 12) {
+    changeLocation('valparaiso', 'at-cave');
+  }
 
   if (!grounded) {
     velocityY -= 1600 * dt;
