@@ -418,7 +418,7 @@ function updatePackChase(time, dt) {
   }
   if (caveBellCollected) {
     if (packActive || packChaseComplete) resetPackChase();
-    const dogEyeOffset = Math.max(-3, Math.min(3, (x + 50 - (dogX + 95)) / 95 * 3));
+    const dogEyeOffset = Math.max(-2, Math.min(2, (x + 50 - (dogX + 95)) / 95 * 2));
     sootDog.style.setProperty('--dog-eye-x', `${dogEyeOffset.toFixed(1)}px`);
     return;
   }
@@ -1124,8 +1124,6 @@ function currentInteraction() {
   if (currentPlace === 'station' && x >= game.clientWidth * 0.58 && x <= game.clientWidth - 125) return 'take-train';
   if (currentPlace === 'valparaiso' && x <= 145) return 'take-return-train';
   if (currentPlace === 'valparaiso' && x >= game.clientWidth * 1.24 && x <= game.clientWidth * 1.56) return 'talk-tizne';
-  if (currentPlace === 'valparaiso' && x >= game.clientWidth * 3.2875 - 120) return 'enter-cave';
-  if (currentPlace === 'cave' && x <= 145) return caveBellCollected ? 'exit-cave' : 'flee-cave';
   if (currentPlace === 'cave' && !caveBellCollected && x >= game.clientWidth * 6 - 230) return 'collect-bell';
   return null;
 }
@@ -1310,20 +1308,6 @@ addEventListener('keydown', (event) => {
       else if (tizneConversationComplete) startDialogue([['Tizne', 'No tienes que decidir ahora. Los cerros no se irán a ninguna parte.']]);
       else startDialogue(tizneConversation);
     }
-    if (interaction === 'enter-cave') {
-      changeLocation('cave');
-    }
-    if (interaction === 'flee-cave') {
-      startDialogue([['Kuro', '¡Ay, no! ¡Qué miedooo!']]);
-      setTimeout(() => {
-        if (currentPlace !== 'cave') return;
-        closeDialogue();
-        autoEscapingCave = true;
-        facing = -1;
-        kuro.style.setProperty('--facing', facing);
-      }, 720);
-    }
-    if (interaction === 'exit-cave') changeLocation('valparaiso', 'at-cave');
     if (interaction === 'collect-bell') collectCaveBell();
     if (interaction === 'use-estafeta') {
       if (firstLetterSent) {
@@ -1391,8 +1375,22 @@ function loop(time) {
     facing = -1;
     kuro.style.setProperty('--facing', facing);
   }
-  if (controlsEnabled && currentPlace === 'cave' && caveBellCollected && x <= 12) {
-    changeLocation('valparaiso', 'at-cave');
+  if (controlsEnabled && !transitioning && currentPlace === 'valparaiso' && x >= game.clientWidth * 3.2875 - 110) {
+    changeLocation('cave');
+  }
+  if (controlsEnabled && !transitioning && currentPlace === 'cave' && x <= 12) {
+    if (caveBellCollected) {
+      changeLocation('valparaiso', 'at-cave');
+    } else {
+      startDialogue([['Kuro', '¡Ay, no! ¡Qué miedooo!']]);
+      setTimeout(() => {
+        if (currentPlace !== 'cave') return;
+        closeDialogue();
+        autoEscapingCave = true;
+        facing = -1;
+        kuro.style.setProperty('--facing', facing);
+      }, 720);
+    }
   }
 
   if (!grounded) {
@@ -1458,9 +1456,6 @@ function loop(time) {
     'take-train': 'Tomar el tren',
     'take-return-train': 'Tomar el tren a Santiago',
     'talk-tizne': 'Hablar con Tizne',
-    'enter-cave': 'Entrar a la cueva',
-    'flee-cave': 'Salir de la cueva',
-    'exit-cave': 'Volver a Valparaíso',
     'collect-bell': 'Recoger el cascabel',
     'exit-museum': 'Salir a Quinta Normal',
     'collect-postcard': 'Revisar vitrina'
