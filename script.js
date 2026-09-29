@@ -418,7 +418,8 @@ function updatePackChase(time, dt) {
   }
   if (caveBellCollected) {
     if (packActive || packChaseComplete) resetPackChase();
-    sootDog.style.setProperty('--dog-facing', x + 50 >= dogX + 95 ? '1' : '-1');
+    const dogEyeOffset = Math.max(-3, Math.min(3, (x + 50 - (dogX + 95)) / 95 * 3));
+    sootDog.style.setProperty('--dog-eye-x', `${dogEyeOffset.toFixed(1)}px`);
     return;
   }
 
