@@ -257,7 +257,7 @@ function updateGoatChase(time, dt) {
   }
   if (caveBellCollected) {
     goatActive = false;
-    goatX = game.clientWidth * 1.21;
+    goatX = game.clientWidth * 3;
     sootGoat.classList.add('active');
     sootGoat.classList.toggle('looking-left', x + 50 < goatX + 99);
     sootGoat.style.left = `${goatX}px`;
@@ -266,8 +266,8 @@ function updateGoatChase(time, dt) {
   }
   sootGoat.classList.remove('looking-left');
 
-  const chaseStart = game.clientWidth * .62;
-  const chaseEnd = game.clientWidth * 1.72;
+  const chaseStart = game.clientWidth * 2.62;
+  const chaseEnd = game.clientWidth * 3.75;
   if (!goatActive && !goatChaseComplete && x >= chaseStart && x < chaseEnd) {
     goatActive = true;
     goatX = Math.max(35, x - game.clientWidth * .34);
@@ -301,8 +301,8 @@ function updateGoatChase(time, dt) {
 }
 
 function resetPackChase() {
-  dogX = game.clientWidth * 3.42;
-  birdX = game.clientWidth * 3.20;
+  dogX = game.clientWidth * .96;
+  birdX = game.clientWidth * .60;
   packActive = false;
   packChaseComplete = false;
   packStartedAt = 0;
@@ -423,14 +423,14 @@ function updatePackChase(time, dt) {
     return;
   }
 
-  const chaseStart = game.clientWidth * 3.56;
-  const chaseEnd = game.clientWidth * 4.86;
+  const chaseStart = game.clientWidth * .72;
+  const chaseEnd = game.clientWidth * 2.15;
   if (!packActive && !packChaseComplete && x >= chaseStart && x < chaseEnd) {
     packActive = true;
     packStartedAt = time;
     nextDogShotAt = time + 1300;
-    dogX = game.clientWidth * 3.42;
-    birdX = game.clientWidth * 3.20;
+    dogX = game.clientWidth * .96;
+    birdX = game.clientWidth * .60;
     sootDog.classList.add('chasing');
     sootBird.classList.add('chasing');
   }
@@ -512,7 +512,7 @@ function updatePackChase(time, dt) {
 }
 
 function launchSootProjectile() {
-  const seaLionX = game.clientWidth * 6 * 0.34;
+  const seaLionX = game.clientWidth * 6 * 0.775;
   const caveFloor = game.clientHeight * 0.14;
   sootProjectileActive = true;
   sootProjectileX = seaLionX + (seaLionFacing < 0 ? 8 : 104);
@@ -568,9 +568,9 @@ function registerSootHit(time) {
 
 function updateSeaLionAttack(time, dt) {
   const canAttack = currentPlace === 'cave' && !caveBellCollected && dialogue.hidden && !autoEscapingCave;
-  const seaLionX = game.clientWidth * 6 * 0.34;
+  const seaLionX = game.clientWidth * 6 * 0.775;
   const seaLionCenterX = seaLionX + 68;
-  const revealedSeaLionCenterX = seaLionX - 160 + 87.5;
+  const revealedSeaLionCenterX = seaLionX + 87.5;
   sootSeaLion.classList.toggle('looking-left', currentPlace === 'cave' && caveBellCollected && x + 50 < revealedSeaLionCenterX);
   seaLionFacing = x + 50 < seaLionCenterX ? -1 : 1;
   sootSeaLion.style.setProperty('--sea-lion-facing', seaLionFacing);
@@ -1173,7 +1173,7 @@ function changeLocation(nextLocation, entry = 'default') {
     else if (atMuseum) x = 170;
     else if (atStation) x = entry === 'at-estafeta' ? game.clientWidth * 0.23 : entry === 'at-train' ? game.clientWidth * 0.58 : entry === 'from-route' ? game.clientWidth - 150 : 120;
     else if (atValparaiso) x = entry === 'from-map' ? game.clientWidth * 0.24 : entry === 'at-tizne' ? game.clientWidth * 1.34 : entry === 'at-hills' ? game.clientWidth * 1.60 : entry === 'at-mid-hills' ? game.clientWidth * 2.44 : entry === 'at-cave' ? game.clientWidth * 3.12 : entry === 'at-connector' ? game.clientWidth * 0.82 : entry === 'at-station-seam' ? game.clientWidth * 0.56 : entry === 'at-plaza-seam' ? game.clientWidth * 1.12 : 160;
-    else if (atCave) x = entry === 'at-goat' ? game.clientWidth * (caveBellCollected ? 1.08 : .82) : entry === 'at-sea-lion' ? game.clientWidth * 1.99 : entry === 'at-dog' ? game.clientWidth * 3.42 : entry === 'at-middle' ? game.clientWidth * 3 : entry === 'at-bird' ? game.clientWidth * 3.62 : entry === 'at-bell' ? game.clientWidth * 5.76 : 185;
+    else if (atCave) x = entry === 'at-goat' ? game.clientWidth * (caveBellCollected ? 3.08 : 2.72) : entry === 'at-sea-lion' ? game.clientWidth * 4.65 : entry === 'at-dog' ? game.clientWidth * 1.05 : entry === 'at-middle' ? game.clientWidth * 3.75 : entry === 'at-bird' ? game.clientWidth * .65 : entry === 'at-bell' ? game.clientWidth * 5.76 : 185;
     else x = entry === 'from-quinta' ? game.clientWidth * 1.6875 - 150 : entry === 'from-museum' ? game.clientWidth * 1.29 : entry === 'at-museum' ? game.clientWidth * 1.40 : entry === 'at-quinta' ? game.clientWidth * 1.20 : entry === 'at-mota' ? game.clientWidth * 0.36 : entry === 'at-plaza' ? game.clientWidth * 0.86 : entry === 'at-neighborhood' ? game.clientWidth * 0.46 : entry === 'at-seam' ? game.clientWidth * 0.90 : game.clientWidth * 0.14;
     y = 0;
     velocityY = 0;
