@@ -132,6 +132,7 @@ let dogX = 0;
 let dogLastHitAt = 0;
 let dogRecoilUntil = 0;
 let dogRecoilDirection = -1;
+let dogRecoilSpeed = 235;
 let birdX = 0;
 let birdLastHitAt = 0;
 let birdRecoilUntil = 0;
@@ -306,8 +307,8 @@ function updateGoatChase(time, dt) {
   let goatWasClawed = false;
   if (controlsEnabled && time < clawUntil && !goatIsClawRecoiling && goatWithinClaw && y < 58) {
     goatWasClawed = true;
-    goatClawRecoilDirection = facing;
-    goatX += goatClawRecoilDirection * 64;
+    goatClawRecoilDirection = -1;
+    goatX -= 64;
     goatClawRecoilUntil = time + 5000;
     sootGoat.classList.add('claw-hit');
     setTimeout(() => sootGoat.classList.remove('claw-hit'), 230);
@@ -335,6 +336,7 @@ function resetPackChase() {
   dogLastHitAt = 0;
   dogRecoilUntil = 0;
   dogRecoilDirection = -1;
+  dogRecoilSpeed = 235;
   birdLastHitAt = 0;
   birdRecoilUntil = 0;
   birdClawRecoilUntil = 0;
@@ -471,7 +473,7 @@ function updatePackChase(time, dt) {
   const birdIsRecoiling = time < birdRecoilUntil;
   const birdIsClawRecoiling = time < birdClawRecoilUntil;
   if (controlsEnabled) {
-    if (dogIsRecoiling) dogX += dogRecoilDirection * 235 * dt;
+    if (dogIsRecoiling) dogX += dogRecoilDirection * dogRecoilSpeed * dt;
     else if (!dogIsSpitting) {
       const dogTargetX = x - 48;
       const dogSpeed = dogTargetX > dogX ? 270 : 205;
@@ -490,7 +492,7 @@ function updatePackChase(time, dt) {
   }
 
   const dogDistance = Math.abs(x + 50 - (dogX + 83));
-  if (controlsEnabled && !dogProjectileActive && !dogIsSpitting && time >= nextDogShotAt && dogDistance >= 135 && dogDistance <= 560) {
+  if (controlsEnabled && !dogProjectileActive && !dogIsSpitting && !dogIsRecoiling && time >= nextDogShotAt && dogDistance >= 135 && dogDistance <= 560) {
     dogSpittingUntil = time + 270;
     nextDogShotAt = time + 2350;
     sootDog.classList.add('spitting');
@@ -514,9 +516,10 @@ function updatePackChase(time, dt) {
   let dogWasClawed = false;
   if (controlsEnabled && time < clawUntil && !dogIsRecoiling && dogWithinClaw && y < 58) {
     dogWasClawed = true;
-    dogRecoilDirection = facing;
-    dogX += dogRecoilDirection * 68;
-    dogRecoilUntil = time + 620;
+    dogRecoilDirection = -1;
+    dogRecoilSpeed = 110;
+    dogX -= 68;
+    dogRecoilUntil = time + 5000;
     dogSpittingUntil = 0;
     nextDogShotAt = Math.max(nextDogShotAt, time + 950);
     sootDog.classList.remove('spitting');
@@ -541,6 +544,7 @@ function updatePackChase(time, dt) {
   if (!dogWasClawed && dogTouchesKuro && time - dogLastHitAt > 1200) {
     dogLastHitAt = time;
     dogRecoilDirection = dogX < x ? -1 : 1;
+    dogRecoilSpeed = 235;
     dogRecoilUntil = time + 460;
     registerSootHit(time);
   }
@@ -554,8 +558,8 @@ function updatePackChase(time, dt) {
   let birdWasClawed = false;
   if (controlsEnabled && time < clawUntil && !birdIsClawRecoiling && birdWithinClawX && birdWithinClawY) {
     birdWasClawed = true;
-    birdClawRecoilDirection = facing;
-    birdX += birdClawRecoilDirection * 72;
+    birdClawRecoilDirection = -1;
+    birdX -= 72;
     birdClawRecoilUntil = time + 5000;
     sootBird.classList.add('claw-hit');
     setTimeout(() => sootBird.classList.remove('claw-hit'), 230);
