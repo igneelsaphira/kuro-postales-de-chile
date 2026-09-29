@@ -129,6 +129,7 @@ let packStartedAt = 0;
 let dogX = 0;
 let dogLastHitAt = 0;
 let dogRecoilUntil = 0;
+let dogRecoilDirection = -1;
 let birdX = 0;
 let birdLastHitAt = 0;
 let birdRecoilUntil = 0;
@@ -308,12 +309,13 @@ function resetPackChase() {
   packStartedAt = 0;
   dogLastHitAt = 0;
   dogRecoilUntil = 0;
+  dogRecoilDirection = -1;
   birdLastHitAt = 0;
   birdRecoilUntil = 0;
   nextDogShotAt = 0;
   dogSpittingUntil = 0;
   resetDogProjectile();
-  sootDog.classList.remove('chasing', 'spitting', 'passed');
+  sootDog.classList.remove('chasing', 'spitting', 'claw-hit', 'passed');
   sootBird.classList.remove('chasing', 'passed');
   sootDog.style.left = `${dogX}px`;
   sootDog.style.removeProperty('bottom');
@@ -441,7 +443,7 @@ function updatePackChase(time, dt) {
   const dogIsRecoiling = time < dogRecoilUntil;
   const birdIsRecoiling = time < birdRecoilUntil;
   if (controlsEnabled) {
-    if (dogIsRecoiling) dogX -= 185 * dt;
+    if (dogIsRecoiling) dogX += dogRecoilDirection * 235 * dt;
     else if (!dogIsSpitting) {
       const dogTargetX = x - 48;
       const dogSpeed = dogTargetX > dogX ? 270 : 205;
@@ -476,6 +478,21 @@ function updatePackChase(time, dt) {
   sootDog.style.setProperty('--dog-y', `${dogLift}px`);
   sootDog.style.setProperty('--dog-facing', x >= dogX ? '1' : '-1');
 
+  const dogDeltaFromKuro = dogX + 83 - (x + 50);
+  const dogWithinClaw = facing > 0
+    ? dogDeltaFromKuro >= -12 && dogDeltaFromKuro <= 126
+    : dogDeltaFromKuro <= 12 && dogDeltaFromKuro >= -126;
+  if (controlsEnabled && time < clawUntil && !dogIsRecoiling && dogWithinClaw && y < 58) {
+    dogRecoilDirection = facing;
+    dogX += dogRecoilDirection * 68;
+    dogRecoilUntil = time + 620;
+    dogSpittingUntil = 0;
+    nextDogShotAt = Math.max(nextDogShotAt, time + 950);
+    sootDog.classList.remove('spitting');
+    sootDog.classList.add('claw-hit');
+    setTimeout(() => sootDog.classList.remove('claw-hit'), 230);
+  }
+
   const caveFloor = game.clientHeight * .14;
   const diveProgress = ((time - packStartedAt) % 2300) / 2300;
   const diveAmount = diveProgress < .48 ? 0 : Math.sin(Math.min(1, (diveProgress - .48) / .52) * Math.PI);
@@ -492,6 +509,7 @@ function updatePackChase(time, dt) {
   const dogTouchesKuro = Math.abs(x + 50 - (dogX + 83)) < 76 && y < 52;
   if (dogTouchesKuro && time - dogLastHitAt > 1200) {
     dogLastHitAt = time;
+    dogRecoilDirection = dogX < x ? -1 : 1;
     dogRecoilUntil = time + 460;
     registerSootHit(time);
   }
