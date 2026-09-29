@@ -196,7 +196,7 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .soot-goat.active, .game.cave-return .soot-goat { opacity: 1; }
 .soot-sea-lion { --sea-lion-facing: -1; left: 77.5%; bottom: 14%; width: 136px; height: 181px; background: url('assets/chivato-lobo-marino-sombra-5frames-v4.png') 0 0 / 500% 100% no-repeat; transform: scaleX(var(--sea-lion-facing)); animation: sea-lion-breathe 1.9s steps(1, end) infinite; }
 .soot-dog { left: 16%; bottom: calc(14.8% + var(--dog-y, 0px)); width: 166px; height: 131px; background: url('assets/chivato-perro-sombra-4frames-v2.png') 0 0 / 200% 200% no-repeat; transform: scaleX(var(--dog-facing, 1)); transition: opacity .18s ease; animation: soot-dog-watch 2.8s steps(1, end) infinite; }
-.soot-bird { left: 10%; bottom: 46%; width: 150px; height: 100px; background: url('assets/chivato-ave-sombra-4frames-v1.png') 0 0 / 200% 200% no-repeat; transform: scaleX(var(--bird-facing, 1)); transform-origin: center; transition: opacity .18s ease; animation: soot-bird-swoop 3.2s steps(1, end) infinite; }
+.soot-bird { left: 10%; bottom: calc(14.8% + 63px); width: 150px; height: 100px; background: url('assets/chivato-ave-sombra-4frames-v1.png') 0 0 / 200% 200% no-repeat; transform: scaleX(var(--bird-facing, 1)); transform-origin: center; transition: opacity .18s ease; animation: none; }
 .soot-dog.chasing { background-image: url('assets/chivato-perro-sombra-run-v1.png'); background-size: 300% 200%; animation: none; }
 .soot-dog.chasing.spitting { background-image: url('assets/chivato-perro-sombra-4frames-v2.png'); background-size: 200% 200%; }
 .soot-bird.chasing { background-image: url('assets/chivato-ave-sombra-vuelo-4frames-v3.png'); background-size: 200% 200%; animation: none; }
@@ -241,7 +241,8 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .game.cave-return .soot-dog::before { content: ''; position: absolute; left: 86.7%; top: 34%; width: 3px; height: 8px; border-radius: 45%; background: #cdebd1; }
 .game.cave-return .soot-dog::after { content: ''; position: absolute; left: calc(86.6% + var(--dog-eye-x, 0px)); top: 34.8%; width: 2px; height: 5px; border-radius: 48%; background: #111820; transition: left .08s linear; }
 .bird-perch { display: none; }
-.game.cave-return .bird-perch { display: block; position: absolute; z-index: 4; left: calc(10% + 80px); bottom: 14.8%; width: 46px; height: 73px; filter: drop-shadow(0 3px 2px #02030577); }
+.game.cave-active .bird-perch { display: block; position: absolute; z-index: 4; left: calc(10% + 80px); bottom: 14.8%; width: 46px; height: 73px; filter: drop-shadow(0 3px 2px #02030577); }
+.game.cave-active:not(.cave-return) .bird-perch { filter: brightness(1.32) saturate(.82) drop-shadow(0 3px 2px #02030599); }
 .game.cave-return .bird-perch::before { content: ''; position: absolute; left: 20px; bottom: 0; width: 10px; height: 68px; border-radius: 5px 4px 2px 3px; background: linear-gradient(90deg, #3a251c 0 22%, #805c3d 25% 58%, #4c3022 62% 100%); box-shadow: inset -2px 0 #241812, inset 2px 0 #9b7048; }
 .game.cave-return .bird-perch::after { content: ''; position: absolute; left: 0; top: 2px; width: 46px; height: 9px; border-radius: 7px 5px 6px 4px; background: linear-gradient(#8d6946 0 36%, #4a3022 42% 100%); box-shadow: inset 0 -2px #281a13; transform: rotate(-2deg); }
 .game.cave-return .soot-bird { left: 10% !important; bottom: calc(14.8% + 63px) !important; background-image: url('assets/chivato-ave-revelada-4frames-v1.png'); background-position: 0 0 !important; filter: saturate(.82) brightness(1.04) drop-shadow(0 4px 3px #05060855); animation: none; }
