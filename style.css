@@ -184,7 +184,7 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .valparaiso-panorama-art { position: absolute; z-index: 2; left: 0; top: 0; bottom: 0; width: calc(min(100vw, 1100px) * 1.6875); background: url('assets/valparaiso-continuo-pixel-v1.png') center / 100% 100% no-repeat; image-rendering: pixelated; }
 .valparaiso-hills-art { position: absolute; z-index: 3; left: calc(min(100vw, 1100px) * 1.60); top: 0; bottom: 0; width: calc(min(100vw, 1100px) * 1.6875); background: url('assets/valparaiso-cerro-cueva-pixel-v1.png') center / 100% 100% no-repeat; image-rendering: pixelated; clip-path: polygon(6% 0, 100% 0, 100% 100%, 0 100%, 0 36%, 2% 25%, 4% 14%); }
 .tizne { position: absolute; z-index: 5; left: 83%; bottom: 22%; width: 105px; height: 105px; background: url('assets/tizne-pixel-v2.png') left center / 315px 105px no-repeat; image-rendering: pixelated; filter: saturate(.92) drop-shadow(0 3px 2px #49382d38); transform-origin: center bottom; }
-.dona-bruma { position: absolute; z-index: 5; left: 74%; bottom: 33.5%; width: 110px; height: 110px; background: url('assets/dona-bruma-pixel-v1.png') center bottom / contain no-repeat; image-rendering: pixelated; filter: drop-shadow(0 3px 2px #49382d66); }
+.dona-bruma { position: absolute; z-index: 5; left: 74%; bottom: 33.5%; width: 110px; height: 110px; background: url('assets/dona-bruma-pixel-v2.png') center bottom / contain no-repeat; image-rendering: pixelated; filter: drop-shadow(0 3px 2px #49382d66); }
 .scene.cave { width: calc(min(100vw, 1100px) * 6); overflow: visible; }
 .cave-layer { display: none; position: absolute; inset: 0 auto 0 0; z-index: 1; width: calc(min(100vw, 1100px) * 6); overflow: hidden; background: #080a0d; }
 .scene.cave .exterior-layer, .scene.cave .interior-layer, .scene.cave .plaza-layer, .scene.cave .quinta-layer, .scene.cave .museum-layer, .scene.cave .station-layer, .scene.cave .valparaiso-layer { display: none; }
@@ -293,6 +293,7 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .dialogue-name.kuro-speaker { color: #211d28; }
 .dialogue-name.mota-speaker { color: #b95843; }
 .dialogue-name.tizne-speaker { color: #426f70; }
+.dialogue-name.bruma-speaker { color: #9a6a3c; }
 .dialogue-name.album-speaker { color: #71806a; }
 .dialogue-help { position: absolute; left: 24px; bottom: 10px; color: #7d6b61; font-size: 12px; }
 .dialogue-next { position: absolute; right: 24px; bottom: 12px; color: #c98262; animation: dialogue-bob .8s ease-in-out infinite alternate; }
@@ -305,6 +306,7 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .portrait-right { right: 1%; }
 .portrait-frames { display: block; width: 100%; height: 100%; background-size: 200% 200%; background-repeat: no-repeat; background-position: 0 0; filter: drop-shadow(0 5px 5px #352c3540); animation: portrait-blink 5.3s steps(1, end) infinite; }
 .portrait-right .portrait-frames { animation-duration: 6.1s; animation-delay: -2s; }
+.dialogue-portrait[data-character="Doña Bruma"] .portrait-frames { background-size: contain; background-position: center bottom; animation: none !important; }
 .dialogue-portrait.is-speaking { filter: saturate(1) brightness(1); }
 .dialogue.is-typing .dialogue-portrait.is-speaking .portrait-frames { animation: portrait-speak .96s steps(1, end) infinite; }
 .dialogue-name { display: inline-block; padding: 4px 13px; margin: -4px 0 10px; border-radius: 10px; background: #ecd9bd80; font-size: .8em; letter-spacing: .035em; }
