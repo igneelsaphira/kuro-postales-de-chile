@@ -79,9 +79,9 @@ Especiales posibles: Rapa Nui y Antártida.
 - La casa de Doña Bruma queda en pausa. La casa de puerta verde puede seguir como referencia visual, pero no se añadirá una entrada ni se reemplazará el fondo de los cerros por ahora: hacerlo podría superponer elementos y obligar a rehacer la escena.
 - Antes de producir otra ciudad completa, probar una escena pequeña formada por objetos separados (por ejemplo, suelo, casas, puertas, árboles y elementos interactivos) para evaluar la idea de Felipe. Esto permitiría mover y ajustar piezas sin rehacer una ilustración panorámica entera. La decisión sobre aplicar este sistema al resto del juego queda abierta.
 - Valdivia es la siguiente ciudad después de Valparaíso. La primera escena a probar será un paseo exterior junto al río, construido con objetos separados; todavía no se decide el misterio ni el recorrido definitivo.
-- Un coipo será un personaje de Valdivia. Su personalidad, nombre y papel en la historia siguen abiertos. Se descarta la idea de las postales mojadas.
+- **Copo** será un gato con una jardinera café y un gorro con orejas de coipo: un guiño divertido al animal, no un coipo literal. Su personalidad y papel en la historia siguen abiertos. El coipo de formas CSS que aparece en la primera prueba es temporal; el sprite de Copo se creará más adelante. Se descarta la idea de las postales mojadas.
 - El Tótem del Agua sigue reservado para Chiloé. Valdivia puede presentar el agua y despertar la curiosidad de Kuro sin entregarle aún esa habilidad.
-- Primer prototipo jugable de Valdivia: nodo visible y seleccionable en el mapa debajo de Santiago, viaje en tren, paseo exterior junto al río, coipo conversable, muelle para observar el paisaje y regreso a Santiago. La escena se arma con piezas CSS separadas para probar su composición; el coipo y el aspecto visual siguen siendo bocetos antes de decidir el misterio.
+- Primer prototipo jugable de Valdivia: nodo visible y seleccionable en el mapa debajo de Santiago, viaje en tren, paseo exterior junto al río, personaje temporal conversable, muelle para observar el paisaje y regreso a Santiago. La escena se arma con piezas CSS separadas para probar su composición. El trayecto actual es corto: se ampliará en torno al misterio antes de considerarlo un nivel completo.
 
 ## Regla importante
 
