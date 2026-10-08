@@ -273,6 +273,7 @@ La misión se inspira libremente en la leyenda porteña de la **Cueva del Chivat
 - Doña Bruma aparece en la subida hacia la cueva. Kuro puede conocer su historia antes de entrar y devolverle el cascabel al salir; el doble salto permanece desbloqueado. La devolución se guarda entre sesiones y el diálogo con Tizne reconoce si ya ocurrió.
 - Al salir de la cueva, Doña Bruma reconoce el cascabel que lleva Kuro. Si no se conocían, Kuro se disculpa por haberlo tomado y ambos se presentan antes de que ella use su nombre.
 - La versión visual aprobada de Doña Bruma es una gata calicó de pelo largo y rizado con chal verde azulado. En el camino usa su sprite completo; durante las conversaciones usa una hoja de retratos de medio cuerpo con parpadeo y habla, igual que Kuro, Mota y Tizne.
+- Doña Bruma espera junto a la casa de puerta verde, apartada del borde de la vereda. Después de recuperar el cascabel, recuerda con nostalgia que podrá volver a hacerlo sonar cuando regrese la neblina.
 - Antes de entrar, un jugador precavido puede hablar con ella y conocer la historia.
 - Un jugador aventurero puede entrar inmediatamente y descubrir la verdad dentro de la cueva.
 - Las dos rutas son válidas y ninguna representa la respuesta moral correcta.
