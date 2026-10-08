@@ -96,6 +96,8 @@ let tizneConversationComplete = false;
 let whalePostcardCollected = localStorage.getItem('kuro-whale-postcard') === 'collected';
 let quintaPhotoCollected = localStorage.getItem('kuro-quinta-photo') === 'collected';
 let firstLetterSent = localStorage.getItem('kuro-first-letter') === 'sent';
+let returnedFromValparaiso = localStorage.getItem('kuro-returned-from-valparaiso') === 'yes';
+let grandmotherReplyRead = localStorage.getItem('kuro-grandmother-reply') === 'read';
 let caveBellCollected = localStorage.getItem('kuro-cave-bell') === 'collected';
 let brumaBellReturned = localStorage.getItem('kuro-bruma-bell-returned') === 'returned';
 let brumaMet = localStorage.getItem('kuro-bruma-met') === 'met';
@@ -1259,6 +1261,10 @@ function currentInteraction() {
 
 function changeLocation(nextLocation, entry = 'default') {
   if (transitioning) return;
+  if (currentPlace === 'valparaiso' && nextLocation === 'street' && tizneResponse) {
+    returnedFromValparaiso = true;
+    localStorage.setItem('kuro-returned-from-valparaiso', 'yes');
+  }
   transitioning = true;
   fade.classList.add('active');
   setTimeout(() => {
@@ -1440,7 +1446,16 @@ addEventListener('keydown', (event) => {
     if (interaction === 'talk-bruma') talkToBruma();
     if (interaction === 'collect-bell') collectCaveBell();
     if (interaction === 'use-estafeta') {
-      if (firstLetterSent) {
+      if (firstLetterSent && returnedFromValparaiso && tizneResponse) {
+        grandmotherReplyRead = true;
+        localStorage.setItem('kuro-grandmother-reply', 'read');
+        startDialogue([
+          ['Estafeta Gatuna', '¡Llegó una carta para Kuro! Es de tu abuelita.'],
+          ['Abuelita', '¡Kuro, mi niño! Me llegó tu primera carta. ¡Una ballena enorme y tu primera foto! Me alegró tanto saber de ti.'],
+          ['Abuelita', 'Cuando visites otro lugar, mándame otra, ¿sí? Así puedo imaginar por dónde andan tus patitas… y saber que estás bien.'],
+          ['Kuro', 'Le mandaré una desde el próximo lugar.']
+        ]);
+      } else if (firstLetterSent) {
         startDialogue([['Estafeta Gatuna', 'Tu carta ya va en camino. El viaje de hoy está guardado.']]);
       } else {
         firstLetterSent = true;
@@ -1582,7 +1597,9 @@ function loop(time) {
     'station-locked': 'Revisar la ruta',
     'take-photo': 'Sacar una foto',
     'view-mirador': 'Mirar el paisaje',
-    'use-estafeta': firstLetterSent ? 'Revisar Estafeta' : 'Enviar carta a la abuelita',
+    'use-estafeta': firstLetterSent && returnedFromValparaiso && tizneResponse
+      ? grandmotherReplyRead ? 'Releer carta de la abuelita' : 'Leer carta de la abuelita'
+      : firstLetterSent ? 'Revisar Estafeta' : 'Enviar carta a la abuelita',
     'take-train': 'Tomar el tren',
     'take-return-train': 'Tomar el tren a Santiago',
     'talk-tizne': 'Hablar con Tizne',

@@ -91,6 +91,7 @@ Primero validar la sensación de jugar una zona pequeña. No construir todo Chil
 - Quinta Normal conecta con una primera versión explorable de **Estación Mapocho**.
 - La estación incluye un tren antiguo, una ruta futura bloqueada y la primera **Estafeta Gatuna**.
 - Kuro puede enviarle su primera carta a la abuelita; el envío queda guardado y la Estafeta permite revisar su estado sin marcadores flotantes.
+- Tras completar Valparaíso y volver a Santiago, Kuro puede leer en la Estafeta la primera respuesta de su abuelita a aquella carta; ella le pide nuevas postales para imaginar el viaje y saber que está bien. La carta se puede releer.
 - Primera pasada gráfica de la casa terminada: exterior ilustrado de Barrio Yungay e interior cozy coherente.
 - Escala de Kuro corregida en la casa y puntos interactivos alineados con la puerta y el estante del álbum.
 - Ambientación suave añadida: pétalos de jacarandá, luz interior, polvo dorado y brillo del álbum.
@@ -168,7 +169,7 @@ En vez de una postal suelta, Kuro tendrá un **Álbum de Viaje**. Allí se guard
 - Postales encontradas.
 - Fotos de los miradores.
 - Posdatas o pequeños recuerdos.
-- Respuestas de la abuelita.
+- Más respuestas de la abuelita en viajes futuros.
 - Curiosidades desbloqueadas sobre los lugares visitados.
 
 El álbum será una forma tranquila de revisar el progreso y también puede mostrar páginas vacías para lugares que Kuro todavía no conoce.
