@@ -78,7 +78,9 @@ Especiales posibles: Rapa Nui y Antártida.
 
 - La casa de Doña Bruma queda en pausa. La casa de puerta verde puede seguir como referencia visual, pero no se añadirá una entrada ni se reemplazará el fondo de los cerros por ahora: hacerlo podría superponer elementos y obligar a rehacer la escena.
 - Antes de producir otra ciudad completa, probar una escena pequeña formada por objetos separados (por ejemplo, suelo, casas, puertas, árboles y elementos interactivos) para evaluar la idea de Felipe. Esto permitiría mover y ajustar piezas sin rehacer una ilustración panorámica entera. La decisión sobre aplicar este sistema al resto del juego queda abierta.
-- Valdivia es la siguiente ciudad propuesta después de Valparaíso. Su recorrido, personaje, misterio y relación con el Tótem del Agua se definirán antes de hacer arte o programación definitivos.
+- Valdivia es la siguiente ciudad después de Valparaíso. La primera escena a probar será un paseo exterior junto al río, construido con objetos separados; todavía no se decide el misterio ni el recorrido definitivo.
+- Un coipo será un personaje de Valdivia. Su personalidad, nombre y papel en la historia siguen abiertos. Se descarta la idea de las postales mojadas.
+- El Tótem del Agua sigue reservado para Chiloé. Valdivia puede presentar el agua y despertar la curiosidad de Kuro sin entregarle aún esa habilidad.
 
 ## Regla importante
 
