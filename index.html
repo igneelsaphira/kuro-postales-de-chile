@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Kuro — Primer prototipo</title>
-  <link rel="stylesheet" href="style.css?v=156" />
+  <link rel="stylesheet" href="style.css?v=157" />
 </head>
 <body>
   <main class="game" aria-label="Prototipo de Kuro">
@@ -112,6 +112,7 @@
         </div>
       </div>
       <div class="valdivia-layer" aria-label="Primer paseo por la costanera de Valdivia">
+        <div class="valdivia-start">
         <div class="valdivia-sky"></div>
         <div class="valdivia-hills"></div>
         <div class="valdivia-river"></div>
@@ -125,8 +126,24 @@
         <div class="valdivia-lamp lamp-one"></div>
         <div class="valdivia-lamp lamp-two"></div>
         <div class="valdivia-bench"></div>
-        <div class="valdivia-coipo" aria-label="Un coipo junto a la costanera"><i class="coipo-tail"></i><i class="coipo-body"></i><i class="coipo-head"></i><i class="coipo-ear"></i><i class="coipo-eye"></i></div>
+        <div class="valdivia-coipo" aria-label="Boceto temporal de Copo junto a la costanera"><i class="coipo-tail"></i><i class="coipo-body"></i><i class="coipo-head"></i><i class="coipo-ear"></i><i class="coipo-eye"></i></div>
         <div class="valdivia-pier"></div>
+        </div>
+        <div class="valdivia-market">
+          <div class="market-river"></div><div class="market-walkway"></div><div class="market-rail"></div>
+          <div class="market-stall stall-one"><span>FRUTAS</span></div>
+          <div class="market-stall stall-two"><span>FERIA FLUVIAL</span></div>
+          <div class="market-tracks" aria-label="Pequeñas huellas de barro"></div>
+          <div class="market-bridge"><span>PUENTE PEDRO DE VALDIVIA</span></div>
+          <div class="market-passage" aria-label="Subida oculta bajo el puente"></div>
+        </div>
+        <div class="valdivia-island">
+          <div class="island-river"></div><div class="island-walkway"></div>
+          <div class="island-garden"></div>
+          <div class="island-tree tree-a"></div><div class="island-tree tree-b"></div>
+          <div class="island-shelter"></div>
+          <div class="island-family" aria-label="Una familia de coipos junto al refugio"><i></i><i></i><i></i></div>
+        </div>
       </div>
       <div class="cave-layer" aria-label="Interior de la Cueva del Chivato">
         <div class="cave-panorama-art"></div>
@@ -248,6 +265,14 @@
             <p id="valparaiso-postscript" class="album-postscript"></p>
           </div>
         </article>
+        <article id="valdivia-album-page" class="album-memory" hidden>
+          <div class="album-photo valdivia-photo" aria-label="Recuerdo del río y los coipos de Valdivia"></div>
+          <div class="album-caption">
+            <h2>Un refugio junto al río</h2>
+            <p>Kuro y Copo siguieron las huellas hasta encontrar a una familia de coipos en Isla Teja.</p>
+            <p class="album-postscript">P. D. A veces un misterio solo necesita un lugar seco y un poco de ayuda.</p>
+          </div>
+        </article>
         <button id="album-prev" class="album-arrow album-prev" type="button" aria-label="Recuerdo anterior">‹</button>
         <button id="album-next" class="album-arrow album-next" type="button" aria-label="Recuerdo siguiente">›</button>
         <div id="album-page-number" class="album-page-number">Santiago · 00</div>
@@ -272,6 +297,6 @@
     <div id="fade" class="fade"></div>
     <div id="shutter-flash" class="shutter-flash"></div>
   </main>
-  <script src="script.js?v=151"></script>
+  <script src="script.js?v=152"></script>
 </body>
 </html>

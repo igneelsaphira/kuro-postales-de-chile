@@ -13,6 +13,7 @@ const albumEmpty = document.querySelector('#album-empty');
 const whaleAlbumPage = document.querySelector('#whale-album-page');
 const quintaPhotoPage = document.querySelector('#quinta-photo-page');
 const valparaisoAlbumPage = document.querySelector('#valparaiso-album-page');
+const valdiviaAlbumPage = document.querySelector('#valdivia-album-page');
 const valparaisoPostscript = document.querySelector('#valparaiso-postscript');
 const albumPageNumber = document.querySelector('#album-page-number');
 const albumPrev = document.querySelector('#album-prev');
@@ -102,6 +103,9 @@ let caveBellCollected = localStorage.getItem('kuro-cave-bell') === 'collected';
 let brumaBellReturned = localStorage.getItem('kuro-bruma-bell-returned') === 'returned';
 let brumaMet = localStorage.getItem('kuro-bruma-met') === 'met';
 let tizneResponse = localStorage.getItem('kuro-tizne-response');
+let valdiviaTracksFound = localStorage.getItem('kuro-valdivia-tracks') === 'found';
+let valdiviaPassageFound = localStorage.getItem('kuro-valdivia-passage') === 'found';
+let valdiviaFamilyHelped = localStorage.getItem('kuro-valdivia-family') === 'helped';
 let sittingInChair = false;
 let autoEscapingCave = false;
 let albumPageIndex = 0;
@@ -1050,11 +1054,13 @@ function renderAlbum() {
   if (whalePostcardCollected) pages.push({ element: whaleAlbumPage, number: 'Santiago · 01' });
   if (quintaPhotoCollected) pages.push({ element: quintaPhotoPage, number: 'Santiago · 02' });
   if (tizneResponse) pages.push({ element: valparaisoAlbumPage, number: 'Valparaíso · 01' });
+  if (valdiviaFamilyHelped) pages.push({ element: valdiviaAlbumPage, number: 'Valdivia · 01' });
   albumPageIndex = Math.max(0, Math.min(albumPageIndex, pages.length - 1));
   albumEmpty.hidden = pages.length > 0;
   whaleAlbumPage.hidden = true;
   quintaPhotoPage.hidden = true;
   valparaisoAlbumPage.hidden = true;
+  valdiviaAlbumPage.hidden = true;
   if (tizneResponse) valparaisoPostscript.textContent = tizneResponses[tizneResponse].postscript;
   albumPrev.hidden = pages.length < 2;
   albumNext.hidden = pages.length < 2;
@@ -1067,7 +1073,7 @@ function renderAlbum() {
 }
 
 function changeAlbumPage(direction) {
-  const pageCount = Number(whalePostcardCollected) + Number(quintaPhotoCollected) + Number(Boolean(tizneResponse));
+  const pageCount = Number(whalePostcardCollected) + Number(quintaPhotoCollected) + Number(Boolean(tizneResponse)) + Number(valdiviaFamilyHelped);
   if (pageCount < 2) return;
   albumPageIndex = (albumPageIndex + direction + pageCount) % pageCount;
   renderAlbum();
@@ -1262,8 +1268,11 @@ function currentInteraction() {
   if (currentPlace === 'station' && x >= game.clientWidth * 0.58 && x <= game.clientWidth - 125) return 'take-train';
   if (currentPlace === 'valparaiso' && x <= 145) return 'take-return-train';
   if (currentPlace === 'valdivia' && x <= 145) return 'take-return-train';
-  if (currentPlace === 'valdivia' && x >= game.clientWidth * 1.12 && x <= game.clientWidth * 1.43) return 'talk-coipo';
-  if (currentPlace === 'valdivia' && x >= game.clientWidth * 1.8) return 'look-river';
+  if (currentPlace === 'valdivia' && x >= game.clientWidth * 1.12 && x <= game.clientWidth * 1.43) return 'talk-copo';
+  if (currentPlace === 'valdivia' && x >= game.clientWidth * 2.2 && x <= game.clientWidth * 2.52) return 'inspect-tracks';
+  if (currentPlace === 'valdivia' && x >= game.clientWidth * 2.72 && x <= game.clientWidth * 3.05) return 'inspect-passage';
+  if (currentPlace === 'valdivia' && x >= game.clientWidth * 3.52 && x <= game.clientWidth * 3.83) return 'help-family';
+  if (currentPlace === 'valdivia' && x >= game.clientWidth * 1.80 && x <= game.clientWidth * 2.03) return 'look-river';
   if (currentPlace === 'valparaiso' && x >= game.clientWidth * 1.24 && x <= game.clientWidth * 1.56) return 'talk-tizne';
   if (currentPlace === 'valparaiso' && x >= game.clientWidth * 2.60 && x <= game.clientWidth * 2.90) return 'talk-bruma';
   const bellCenterX = game.clientWidth * 6 * 0.944 + 15;
@@ -1299,6 +1308,8 @@ function changeLocation(nextLocation, entry = 'default') {
     scene.classList.toggle('station', atStation);
     scene.classList.toggle('valparaiso', atValparaiso);
     scene.classList.toggle('valdivia', atValdivia);
+    scene.classList.toggle('valdivia-passage-found', valdiviaPassageFound);
+    scene.classList.toggle('valdivia-family-helped', valdiviaFamilyHelped);
     scene.classList.toggle('cave', atCave);
     scene.classList.toggle('cave-bell-collected', caveBellCollected);
     game.classList.toggle('cave-active', atCave);
@@ -1322,7 +1333,7 @@ function changeLocation(nextLocation, entry = 'default') {
     else if (atMuseum) x = 170;
     else if (atStation) x = entry === 'at-estafeta' ? game.clientWidth * 0.23 : entry === 'at-train' ? game.clientWidth * 0.58 : entry === 'from-route' ? game.clientWidth - 150 : 120;
     else if (atValparaiso) x = entry === 'at-train' ? 95 : entry === 'from-map' ? game.clientWidth * 0.24 : entry === 'at-tizne' ? game.clientWidth * 1.34 : entry === 'at-hills' ? game.clientWidth * 1.60 : entry === 'at-lower-hills' ? game.clientWidth * 2.07 : entry === 'at-mid-hills' ? game.clientWidth * 2.44 : entry === 'at-bruma' ? game.clientWidth * 2.62 : entry === 'at-cave' ? game.clientWidth * 3.12 : entry === 'at-connector' ? game.clientWidth * 0.82 : entry === 'at-station-seam' ? game.clientWidth * 0.56 : entry === 'at-plaza-seam' ? game.clientWidth * 1.12 : 160;
-    else if (atValdivia) x = entry === 'at-coipo' ? game.clientWidth * 1.13 : entry === 'at-pier' ? game.clientWidth * 1.83 : game.clientWidth * 0.22;
+    else if (atValdivia) x = entry === 'at-coipo' ? game.clientWidth * 1.13 : entry === 'at-pier' ? game.clientWidth * 1.83 : entry === 'at-market' ? game.clientWidth * 2.32 : entry === 'at-passage' ? game.clientWidth * 2.82 : entry === 'at-island' ? game.clientWidth * 3.63 : game.clientWidth * 0.22;
     else if (atCave) x = entry === 'at-goat' ? game.clientWidth * (caveBellCollected ? 3.08 : 2.72) : entry === 'at-sea-lion' ? game.clientWidth * 4.65 : entry === 'at-dog' ? game.clientWidth * 1.05 : entry === 'at-middle' ? game.clientWidth * 3.75 : entry === 'at-bird' ? game.clientWidth * .54 : entry === 'at-bell' ? game.clientWidth * 5.67 : 185;
     else x = entry === 'from-quinta' ? game.clientWidth * 1.6875 - 150 : entry === 'from-museum' ? game.clientWidth * 1.29 : entry === 'at-museum' ? game.clientWidth * 1.40 : entry === 'at-quinta' ? game.clientWidth * 1.20 : entry === 'at-mota' ? game.clientWidth * 0.36 : entry === 'at-plaza' ? game.clientWidth * 0.86 : entry === 'at-neighborhood' ? game.clientWidth * 0.46 : entry === 'at-seam' ? game.clientWidth * 0.90 : game.clientWidth * 0.14;
     y = 0;
@@ -1459,12 +1470,49 @@ addEventListener('keydown', (event) => {
       else startDialogue(tizneConversation);
     }
     if (interaction === 'talk-bruma') talkToBruma();
-    if (interaction === 'talk-coipo') startDialogue([
-      ['Coipo', 'Hola, viajero. ¿Es primera vez que ves el río desde aquí?'],
-      ['Kuro', 'Sí. Parece tranquilo, pero se mueve todo el tiempo.'],
-      ['Coipo', 'Yo lo conozco bastante bien. Ven a saludarme cuando quieras explorar la orilla.']
+    if (interaction === 'talk-copo') startDialogue([
+      ['Copo', valdiviaFamilyHelped ? '¡La familia ya tiene dónde refugiarse! Gracias por ayudarme, Kuro.' : 'Soy Copo. ¿Ves mi gorro? Me gustan tanto los coipos que lo hice yo mismo.'],
+      ['Kuro', valdiviaFamilyHelped ? 'Me alegra haber seguido esas huellitas.' : 'Me gusta. ¿Me acompañas a conocer la feria?'],
+      ['Copo', valdiviaFamilyHelped ? 'Cuando llueva, estarán calentitos bajo el techo.' : 'Claro. Hay unas huellas raras por ahí y todos bromean con que son mías.']
     ]);
     if (interaction === 'look-river') startDialogue([['Kuro', 'Desde este muelle se ve hasta la otra orilla. Me pregunto qué habrá más allá.']]);
+    if (interaction === 'inspect-tracks') {
+      valdiviaTracksFound = true;
+      localStorage.setItem('kuro-valdivia-tracks', 'found');
+      startDialogue([
+        ['Kuro', 'Son huellitas de barro… van desde los puestos hacia el puente.'],
+        ['Copo', '¡Te dije que no eran mías! Mi gorro no deja huellas.'],
+        ['Kuro', 'Sigámoslas. Alguien pequeño pasó por aquí.']
+      ]);
+    }
+    if (interaction === 'inspect-passage') {
+      if (!valdiviaTracksFound) startDialogue([['Kuro', 'Hay una subida oculta bajo el puente. Antes quiero ver adónde llevan esas huellas de la feria.']]);
+      else {
+        valdiviaPassageFound = true;
+        localStorage.setItem('kuro-valdivia-passage', 'found');
+        scene.classList.add('valdivia-passage-found');
+        startDialogue([
+          ['Copo', 'Mira, las huellas siguen por este pasadizo. Sale a una subida junto al puente.'],
+          ['Kuro', 'Podemos cruzar caminando hasta Isla Teja. Vamos.']
+        ]);
+      }
+    }
+    if (interaction === 'help-family') {
+      if (valdiviaFamilyHelped) startDialogue([['Copo', 'Ahora tienen un rincón seco. Qué bueno que seguimos las huellas.']]);
+      else {
+        valdiviaFamilyHelped = true;
+        localStorage.setItem('kuro-valdivia-family', 'helped');
+        scene.classList.add('valdivia-family-helped');
+        renderAlbum();
+        startDialogue([
+          ['Kuro', '¡Eran coipos de verdad! Los pequeños están temblando bajo la lluvia.'],
+          ['Copo', 'Hay ramas secas y un techo junto al jardín. Podemos acomodarles un refugio.'],
+          ['Kuro', 'Listo. Ya tienen un lugar calentito donde quedarse.'],
+          ['Copo', 'Mi gorro les manda saludos.'],
+          ['Álbum de Viaje', 'Nueva postal: Un refugio junto al río.']
+        ]);
+      }
+    }
     if (interaction === 'collect-bell') collectCaveBell();
     if (interaction === 'use-estafeta') {
       if (firstLetterSent && returnedFromValparaiso && tizneResponse) {
@@ -1531,8 +1579,9 @@ function loop(time) {
     }
   }
   if (controlsEnabled && (keys.has('arrowright') || keys.has('d'))) {
-    const activeWorldWidth = currentPlace === 'valparaiso' ? game.clientWidth * 3.2875 : currentPlace === 'cave' ? game.clientWidth * 6 : currentPlace === 'street' ? game.clientWidth * 1.6875 : currentPlace === 'valdivia' ? game.clientWidth * 2 : currentPlace === 'house' || currentPlace === 'museum' || currentPlace === 'plaza' || currentPlace === 'quinta' || currentPlace === 'station' ? game.clientWidth : worldWidth;
+    const activeWorldWidth = currentPlace === 'valparaiso' ? game.clientWidth * 3.2875 : currentPlace === 'cave' ? game.clientWidth * 6 : currentPlace === 'street' ? game.clientWidth * 1.6875 : currentPlace === 'valdivia' ? game.clientWidth * 4 : currentPlace === 'house' || currentPlace === 'museum' || currentPlace === 'plaza' || currentPlace === 'quinta' || currentPlace === 'station' ? game.clientWidth : worldWidth;
     x = Math.min(activeWorldWidth - 110, x + speed * dt);
+    if (currentPlace === 'valdivia' && !valdiviaPassageFound) x = Math.min(x, game.clientWidth * 3.02);
     facing = 1;
     kuro.style.setProperty('--facing', facing);
   }
@@ -1625,8 +1674,11 @@ function loop(time) {
     'take-return-train': 'Tomar el tren a Santiago',
     'talk-tizne': 'Hablar con Tizne',
     'talk-bruma': brumaBellReturned ? 'Hablar con Doña Bruma' : caveBellCollected ? 'Devolver el cascabel' : 'Hablar con Doña Bruma',
-    'talk-coipo': 'Hablar con el coipo',
+    'talk-copo': 'Hablar con Copo',
     'look-river': 'Mirar el río',
+    'inspect-tracks': valdiviaTracksFound ? 'Mirar las huellas' : 'Investigar huellitas',
+    'inspect-passage': valdiviaPassageFound ? 'Mirar el pasadizo' : 'Investigar bajo el puente',
+    'help-family': valdiviaFamilyHelped ? 'Visitar a los coipos' : 'Ayudar a los coipos',
     'collect-bell': 'Recoger el cascabel',
     'exit-museum': 'Salir a Quinta Normal',
     'collect-postcard': 'Revisar vitrina'
@@ -1643,7 +1695,7 @@ function loop(time) {
   interactionPrompt.hidden = !interaction || !dialogue.hidden;
 
   const viewportWidth = game.clientWidth;
-  const activeWorldWidth = currentPlace === 'valparaiso' ? viewportWidth * 3.2875 : currentPlace === 'cave' ? viewportWidth * 6 : currentPlace === 'street' ? viewportWidth * 1.6875 : currentPlace === 'valdivia' ? viewportWidth * 2 : currentPlace === 'house' || currentPlace === 'museum' || currentPlace === 'plaza' || currentPlace === 'quinta' || currentPlace === 'station' ? viewportWidth : worldWidth;
+  const activeWorldWidth = currentPlace === 'valparaiso' ? viewportWidth * 3.2875 : currentPlace === 'cave' ? viewportWidth * 6 : currentPlace === 'street' ? viewportWidth * 1.6875 : currentPlace === 'valdivia' ? viewportWidth * 4 : currentPlace === 'house' || currentPlace === 'museum' || currentPlace === 'plaza' || currentPlace === 'quinta' || currentPlace === 'station' ? viewportWidth : worldWidth;
   const maxCameraX = Math.max(0, activeWorldWidth - viewportWidth);
   const targetLookAhead = moving ? facing * 72 : 0;
   cameraLookAhead += (targetLookAhead - cameraLookAhead) * Math.min(1, 3 * dt);
@@ -1704,7 +1756,7 @@ if (['street', 'house', 'plaza', 'quinta', 'museum', 'station', 'valparaiso', 'v
       ? `at-${previewSpot}`
     : previewPlace === 'valparaiso' && ['train', 'tizne', 'hills', 'lower-hills', 'mid-hills', 'bruma', 'cave', 'connector', 'station-seam', 'plaza-seam'].includes(previewSpot)
       ? `at-${previewSpot}`
-    : previewPlace === 'valdivia' && ['coipo', 'pier'].includes(previewSpot)
+    : previewPlace === 'valdivia' && ['coipo', 'pier', 'market', 'passage', 'island'].includes(previewSpot)
       ? `at-${previewSpot}`
     : previewPlace === 'cave' && ['goat', 'sea-lion', 'dog', 'middle', 'bird', 'bell'].includes(previewSpot)
       ? `at-${previewSpot}`

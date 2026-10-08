@@ -263,13 +263,44 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .scene.station .kuro { --kuro-scale: .76; bottom: calc(15.5% + var(--run-lift, 0px) + var(--jump-y, 0px)); }
 .scene.valparaiso .kuro { --kuro-scale: .76; bottom: calc(var(--valpo-ground, 24%) + var(--run-lift, 0px) + var(--jump-y, 0px)); }
 .scene.cave .kuro { --kuro-scale: .76; bottom: calc(15% + var(--run-lift, 0px) + var(--jump-y, 0px)); }
-.scene.valdivia { width: calc(min(100vw, 1100px) * 2); overflow: visible; }
+.scene.valdivia { width: calc(min(100vw, 1100px) * 4); overflow: visible; }
 .valdivia-layer { display: none; position: absolute; inset: 0; z-index: 1; overflow: hidden; background: #a5c6c1; }
 .scene.valdivia > :not(.valdivia-layer):not(.kuro) { display: none; }
 .scene.valdivia .exterior-layer, .scene.valdivia .interior-layer, .scene.valdivia .plaza-layer, .scene.valdivia .quinta-layer, .scene.valdivia .museum-layer, .scene.valdivia .station-layer, .scene.valdivia .valparaiso-layer, .scene.valdivia .cave-layer { display: none; }
 .scene.valdivia .valdivia-layer { display: block; }
 .scene.valdivia .kuro { --kuro-scale: .76; bottom: calc(18% + var(--run-lift, 0px) + var(--jump-y, 0px)); }
 .valdivia-layer > div { position: absolute; }
+.valdivia-start { left: 0; top: 0; width: 50%; height: 100%; }
+.valdivia-start > div, .valdivia-market > div, .valdivia-island > div { position: absolute; }
+.valdivia-market { left: 50%; top: 0; width: 25%; height: 100%; background: linear-gradient(#87aeb2 0 54%, #618f91 55% 74%, #a99b80 75%); overflow: hidden; }
+.valdivia-island { left: 75%; top: 0; width: 25%; height: 100%; background: linear-gradient(#8fb7b5 0 48%, #5c877b 49% 73%, #b6a586 74%); overflow: hidden; }
+.market-river, .island-river { left: 0; right: 0; top: 55%; height: 21%; background: repeating-linear-gradient(176deg, #629396 0 21px, #8db6ad 23px 27px, #5b858a 29px 52px); }
+.market-walkway, .island-walkway { left: 0; right: 0; bottom: 0; height: 18%; border-top: 9px solid #d2c09e; background: repeating-linear-gradient(90deg, #ac9b80 0 91px, #897961 92px 96px); }
+.market-rail { left: 0; right: 0; bottom: 25%; height: 5px; background: #3d625e; box-shadow: 0 15px #557e75; }
+.market-rail::after { content: ''; position: absolute; inset: 0; height: 69px; background: repeating-linear-gradient(90deg, transparent 0 125px, #3d625e 126px 132px); }
+.market-stall { bottom: 18%; width: 170px; height: 155px; border: 7px solid #6e5142; border-top: 0; background: repeating-linear-gradient(90deg, #d3ad7b 0 25px, #c99b69 26px 50px); z-index: 2; }
+.market-stall::before { content: ''; position: absolute; left: -12px; right: -12px; top: -32px; height: 30px; background: repeating-linear-gradient(90deg, #bf705a 0 26px, #f0d5a0 27px 53px); clip-path: polygon(3% 0, 97% 0, 100% 100%, 0 100%); }
+.market-stall span { position: absolute; bottom: 13px; left: 6px; right: 6px; padding: 5px 0; background: #f1d9a6; color: #654937; text-align: center; font: bold 12px Georgia, serif; }
+.stall-one { left: 7%; }.stall-two { left: 32%; }
+.market-tracks { z-index: 3; left: 47%; bottom: 18%; width: 230px; height: 22px; background: radial-gradient(ellipse, #694d3b 0 5px, transparent 6px) 0 0 / 38px 20px repeat-x; transform: rotate(-5deg); opacity: .8; }
+.market-bridge { left: 69%; top: 34%; width: 33%; height: 43%; border-left: 18px solid #596964; border-right: 18px solid #596964; border-top: 20px solid #435c5c; background: linear-gradient(#789d96aa, #355c6266); z-index: 2; }
+.market-bridge::before { content: ''; position: absolute; left: -150px; right: -100px; top: -40px; height: 20px; background: #405b5c; box-shadow: 0 -11px #72928b; }
+.market-bridge span { position: absolute; left: -68px; top: -13px; color: #f0dfb6; font: bold 10px Georgia, serif; white-space: nowrap; }
+.market-passage { left: 79%; bottom: 18%; width: 115px; height: 95px; border: 7px solid #384c49; border-radius: 45% 45% 0 0; background: #263f3f; z-index: 3; box-shadow: inset 0 0 22px #192e30; }
+.market-passage::after { content: '↗'; position: absolute; left: 37px; top: 18px; color: #e9d9ae; font: bold 34px Georgia, serif; }
+.scene.valdivia:not(.valdivia-passage-found) .market-passage::after { content: '?'; }
+.island-garden { left: 2%; right: 0; bottom: 18%; height: 34%; background: linear-gradient(transparent 0 68%, #57745c 69%), radial-gradient(ellipse at 34% 93%, #799873 0 32%, transparent 33%), radial-gradient(ellipse at 76% 92%, #668a6f 0 38%, transparent 39%); }
+.island-tree { bottom: 18%; width: 20px; height: 43%; background: #594f3d; }
+.island-tree::before { content: ''; position: absolute; left: -100px; top: -80px; width: 220px; height: 180px; border-radius: 49%; background: radial-gradient(circle at 30% 30%, #97b587, #467461 70%); box-shadow: 15px 20px 0 #45705c; }
+.tree-a { left: 23%; }.tree-b { left: 82%; scale: .9; }
+.island-shelter { left: 52%; bottom: 18%; width: 215px; height: 100px; border: 9px solid #66533e; border-radius: 48% 48% 5px 5px; background: repeating-linear-gradient(30deg, #90744d 0 16px, #b39867 17px 27px); box-shadow: inset 0 -15px #5e6d4f; }
+.island-family { left: 65%; bottom: 18%; width: 145px; height: 75px; z-index: 4; }
+.island-family i { position: absolute; bottom: 0; width: 66px; height: 45px; border-radius: 55% 45% 34% 35%; background: #816349; box-shadow: inset -11px -8px #644c3b; }
+.island-family i::before { content: ''; position: absolute; right: -9px; top: -11px; width: 30px; height: 30px; border-radius: 50%; background: #927354; box-shadow: 7px 15px 0 -12px #252b28; }
+.island-family i:nth-child(2) { left: 45px; scale: .7; transform-origin: bottom left; }.island-family i:nth-child(3) { left: 83px; scale: .6; transform-origin: bottom left; }
+.scene.valdivia.valdivia-family-helped .island-shelter { box-shadow: inset 0 -15px #5e6d4f, 0 0 22px #f5dba0; }
+.valdivia-photo { background: linear-gradient(#8cb9b7 0 53%, #5c8e92 54% 70%, #6d8d6a 71% 77%, #b7a582 78%); }
+.valdivia-photo::after { content: '♣  ♣  ♣'; position: absolute; left: 13%; bottom: 24%; color: #385f50; font-size: 42px; letter-spacing: 12px; }
 .valdivia-sky { inset: 0 0 47%; background: linear-gradient(#749ca7, #c5d6c8 68%, #e4d7ba); }
 .valdivia-sky::after { content: ''; position: absolute; left: 8%; top: 12%; width: 24%; height: 12%; border-radius: 50%; background: #e2e5dcaa; box-shadow: 370px 22px 0 6px #e4e8dc99, 860px -6px 0 12px #dce6db99, 1450px 35px 0 4px #e8ebddaa; }
 .valdivia-hills { inset: 39% 0 31%; background: radial-gradient(ellipse at 8% 95%, #517c6c 0 34%, transparent 35%), radial-gradient(ellipse at 38% 95%, #5c806d 0 31%, transparent 32%), radial-gradient(ellipse at 73% 105%, #4c756b 0 38%, transparent 39%), #7da092; }
