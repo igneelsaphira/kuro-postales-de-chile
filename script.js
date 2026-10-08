@@ -51,13 +51,13 @@ const valparaisoHillGroundProfile = [
   [0, 14.7],
   [0.05, 14.7],
   [0.1, 14.4],
-  [0.15, 14.1],
-  [0.2, 14.3],
-  [0.25, 14.6],
-  [0.3, 15.7],
-  [0.35, 18.2],
-  [0.4, 20.6],
-  [0.45, 23],
+  [0.15, 15.1],
+  [0.2, 16.8],
+  [0.25, 18.6],
+  [0.3, 19.7],
+  [0.35, 21.2],
+  [0.4, 22.1],
+  [0.45, 23.5],
   [0.5, 25.3],
   [0.55, 27.8],
   [0.6, 29.6],
@@ -1300,7 +1300,7 @@ function changeLocation(nextLocation, entry = 'default') {
     else if (atQuinta) x = entry === 'from-museum' ? game.clientWidth * 0.5 : entry === 'at-mirador' ? game.clientWidth * 0.76 : 120;
     else if (atMuseum) x = 170;
     else if (atStation) x = entry === 'at-estafeta' ? game.clientWidth * 0.23 : entry === 'at-train' ? game.clientWidth * 0.58 : entry === 'from-route' ? game.clientWidth - 150 : 120;
-    else if (atValparaiso) x = entry === 'from-map' ? game.clientWidth * 0.24 : entry === 'at-tizne' ? game.clientWidth * 1.34 : entry === 'at-hills' ? game.clientWidth * 1.60 : entry === 'at-mid-hills' ? game.clientWidth * 2.44 : entry === 'at-bruma' ? game.clientWidth * 2.62 : entry === 'at-cave' ? game.clientWidth * 3.12 : entry === 'at-connector' ? game.clientWidth * 0.82 : entry === 'at-station-seam' ? game.clientWidth * 0.56 : entry === 'at-plaza-seam' ? game.clientWidth * 1.12 : 160;
+    else if (atValparaiso) x = entry === 'from-map' ? game.clientWidth * 0.24 : entry === 'at-tizne' ? game.clientWidth * 1.34 : entry === 'at-hills' ? game.clientWidth * 1.60 : entry === 'at-lower-hills' ? game.clientWidth * 2.07 : entry === 'at-mid-hills' ? game.clientWidth * 2.44 : entry === 'at-bruma' ? game.clientWidth * 2.62 : entry === 'at-cave' ? game.clientWidth * 3.12 : entry === 'at-connector' ? game.clientWidth * 0.82 : entry === 'at-station-seam' ? game.clientWidth * 0.56 : entry === 'at-plaza-seam' ? game.clientWidth * 1.12 : 160;
     else if (atCave) x = entry === 'at-goat' ? game.clientWidth * (caveBellCollected ? 3.08 : 2.72) : entry === 'at-sea-lion' ? game.clientWidth * 4.65 : entry === 'at-dog' ? game.clientWidth * 1.05 : entry === 'at-middle' ? game.clientWidth * 3.75 : entry === 'at-bird' ? game.clientWidth * .54 : entry === 'at-bell' ? game.clientWidth * 5.76 : 185;
     else x = entry === 'from-quinta' ? game.clientWidth * 1.6875 - 150 : entry === 'from-museum' ? game.clientWidth * 1.29 : entry === 'at-museum' ? game.clientWidth * 1.40 : entry === 'at-quinta' ? game.clientWidth * 1.20 : entry === 'at-mota' ? game.clientWidth * 0.36 : entry === 'at-plaza' ? game.clientWidth * 0.86 : entry === 'at-neighborhood' ? game.clientWidth * 0.46 : entry === 'at-seam' ? game.clientWidth * 0.90 : game.clientWidth * 0.14;
     y = 0;
@@ -1313,7 +1313,7 @@ function changeLocation(nextLocation, entry = 'default') {
     else if (entry === 'from-museum') cameraX = atQuinta ? 0 : Math.max(0, Math.min(worldWidth - game.clientWidth, 1430 - game.clientWidth * 0.45));
     else if (entry === 'at-mirador') cameraX = atQuinta ? 0 : Math.max(0, worldWidth - game.clientWidth);
     else if (entry === 'at-estafeta' || entry === 'at-train') cameraX = atStation ? 0 : Math.max(0, Math.min(worldWidth - game.clientWidth, x - game.clientWidth * 0.45));
-    else if (['at-tizne', 'at-hills', 'at-mid-hills', 'at-bruma', 'at-cave', 'at-connector', 'at-station-seam', 'at-plaza-seam'].includes(entry)) cameraX = Math.max(0, Math.min(game.clientWidth * 2.2875, x - game.clientWidth * 0.45));
+    else if (['at-tizne', 'at-hills', 'at-lower-hills', 'at-mid-hills', 'at-bruma', 'at-cave', 'at-connector', 'at-station-seam', 'at-plaza-seam'].includes(entry)) cameraX = Math.max(0, Math.min(game.clientWidth * 2.2875, x - game.clientWidth * 0.45));
     else if (atCave && ['at-goat', 'at-sea-lion', 'at-dog', 'at-middle', 'at-bird', 'at-bell'].includes(entry)) cameraX = Math.max(0, Math.min(game.clientWidth * 5, x - game.clientWidth * 0.45));
     else cameraX = 0;
     cameraLookAhead = 0;
@@ -1661,7 +1661,7 @@ if (['street', 'house', 'plaza', 'quinta', 'museum', 'station', 'valparaiso', 'c
       ? `at-${previewSpot}`
     : previewPlace === 'station' && ['estafeta', 'train'].includes(previewSpot)
       ? `at-${previewSpot}`
-    : previewPlace === 'valparaiso' && ['tizne', 'hills', 'mid-hills', 'bruma', 'cave', 'connector', 'station-seam', 'plaza-seam'].includes(previewSpot)
+    : previewPlace === 'valparaiso' && ['tizne', 'hills', 'lower-hills', 'mid-hills', 'bruma', 'cave', 'connector', 'station-seam', 'plaza-seam'].includes(previewSpot)
       ? `at-${previewSpot}`
     : previewPlace === 'cave' && ['goat', 'sea-lion', 'dog', 'middle', 'bird', 'bell'].includes(previewSpot)
       ? `at-${previewSpot}`
