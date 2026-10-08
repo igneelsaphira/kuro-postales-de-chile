@@ -1252,7 +1252,8 @@ function currentInteraction() {
   if (currentPlace === 'valparaiso' && x <= 145) return 'take-return-train';
   if (currentPlace === 'valparaiso' && x >= game.clientWidth * 1.24 && x <= game.clientWidth * 1.56) return 'talk-tizne';
   if (currentPlace === 'valparaiso' && x >= game.clientWidth * 2.60 && x <= game.clientWidth * 2.90) return 'talk-bruma';
-  if (currentPlace === 'cave' && !caveBellCollected && x >= game.clientWidth * 6 - 230) return 'collect-bell';
+  const bellCenterX = game.clientWidth * 6 * 0.944 + 15;
+  if (currentPlace === 'cave' && !caveBellCollected && Math.abs(x + 45 - bellCenterX) <= 115) return 'collect-bell';
   return null;
 }
 
@@ -1300,8 +1301,8 @@ function changeLocation(nextLocation, entry = 'default') {
     else if (atQuinta) x = entry === 'from-museum' ? game.clientWidth * 0.5 : entry === 'at-mirador' ? game.clientWidth * 0.76 : 120;
     else if (atMuseum) x = 170;
     else if (atStation) x = entry === 'at-estafeta' ? game.clientWidth * 0.23 : entry === 'at-train' ? game.clientWidth * 0.58 : entry === 'from-route' ? game.clientWidth - 150 : 120;
-    else if (atValparaiso) x = entry === 'from-map' ? game.clientWidth * 0.24 : entry === 'at-tizne' ? game.clientWidth * 1.34 : entry === 'at-hills' ? game.clientWidth * 1.60 : entry === 'at-lower-hills' ? game.clientWidth * 2.07 : entry === 'at-mid-hills' ? game.clientWidth * 2.44 : entry === 'at-bruma' ? game.clientWidth * 2.62 : entry === 'at-cave' ? game.clientWidth * 3.12 : entry === 'at-connector' ? game.clientWidth * 0.82 : entry === 'at-station-seam' ? game.clientWidth * 0.56 : entry === 'at-plaza-seam' ? game.clientWidth * 1.12 : 160;
-    else if (atCave) x = entry === 'at-goat' ? game.clientWidth * (caveBellCollected ? 3.08 : 2.72) : entry === 'at-sea-lion' ? game.clientWidth * 4.65 : entry === 'at-dog' ? game.clientWidth * 1.05 : entry === 'at-middle' ? game.clientWidth * 3.75 : entry === 'at-bird' ? game.clientWidth * .54 : entry === 'at-bell' ? game.clientWidth * 5.76 : 185;
+    else if (atValparaiso) x = entry === 'at-train' ? 95 : entry === 'from-map' ? game.clientWidth * 0.24 : entry === 'at-tizne' ? game.clientWidth * 1.34 : entry === 'at-hills' ? game.clientWidth * 1.60 : entry === 'at-lower-hills' ? game.clientWidth * 2.07 : entry === 'at-mid-hills' ? game.clientWidth * 2.44 : entry === 'at-bruma' ? game.clientWidth * 2.62 : entry === 'at-cave' ? game.clientWidth * 3.12 : entry === 'at-connector' ? game.clientWidth * 0.82 : entry === 'at-station-seam' ? game.clientWidth * 0.56 : entry === 'at-plaza-seam' ? game.clientWidth * 1.12 : 160;
+    else if (atCave) x = entry === 'at-goat' ? game.clientWidth * (caveBellCollected ? 3.08 : 2.72) : entry === 'at-sea-lion' ? game.clientWidth * 4.65 : entry === 'at-dog' ? game.clientWidth * 1.05 : entry === 'at-middle' ? game.clientWidth * 3.75 : entry === 'at-bird' ? game.clientWidth * .54 : entry === 'at-bell' ? game.clientWidth * 5.67 : 185;
     else x = entry === 'from-quinta' ? game.clientWidth * 1.6875 - 150 : entry === 'from-museum' ? game.clientWidth * 1.29 : entry === 'at-museum' ? game.clientWidth * 1.40 : entry === 'at-quinta' ? game.clientWidth * 1.20 : entry === 'at-mota' ? game.clientWidth * 0.36 : entry === 'at-plaza' ? game.clientWidth * 0.86 : entry === 'at-neighborhood' ? game.clientWidth * 0.46 : entry === 'at-seam' ? game.clientWidth * 0.90 : game.clientWidth * 0.14;
     y = 0;
     velocityY = 0;
@@ -1661,7 +1662,7 @@ if (['street', 'house', 'plaza', 'quinta', 'museum', 'station', 'valparaiso', 'c
       ? `at-${previewSpot}`
     : previewPlace === 'station' && ['estafeta', 'train'].includes(previewSpot)
       ? `at-${previewSpot}`
-    : previewPlace === 'valparaiso' && ['tizne', 'hills', 'lower-hills', 'mid-hills', 'bruma', 'cave', 'connector', 'station-seam', 'plaza-seam'].includes(previewSpot)
+    : previewPlace === 'valparaiso' && ['train', 'tizne', 'hills', 'lower-hills', 'mid-hills', 'bruma', 'cave', 'connector', 'station-seam', 'plaza-seam'].includes(previewSpot)
       ? `at-${previewSpot}`
     : previewPlace === 'cave' && ['goat', 'sea-lion', 'dog', 'middle', 'bird', 'bell'].includes(previewSpot)
       ? `at-${previewSpot}`
