@@ -74,6 +74,12 @@ El objetivo es comprobar si moverse, explorar y volver se sienten bien.
 
 Especiales posibles: Rapa Nui y Antártida.
 
+## Decisiones pendientes antes de construir Valdivia
+
+- La casa de Doña Bruma queda en pausa. La casa de puerta verde puede seguir como referencia visual, pero no se añadirá una entrada ni se reemplazará el fondo de los cerros por ahora: hacerlo podría superponer elementos y obligar a rehacer la escena.
+- Antes de producir otra ciudad completa, probar una escena pequeña formada por objetos separados (por ejemplo, suelo, casas, puertas, árboles y elementos interactivos) para evaluar la idea de Felipe. Esto permitiría mover y ajustar piezas sin rehacer una ilustración panorámica entera. La decisión sobre aplicar este sistema al resto del juego queda abierta.
+- Valdivia es la siguiente ciudad propuesta después de Valparaíso. Su recorrido, personaje, misterio y relación con el Tótem del Agua se definirán antes de hacer arte o programación definitivos.
+
 ## Regla importante
 
 Primero validar la sensación de jugar una zona pequeña. No construir todo Chile antes de saber si Kuro se siente rico al moverse y explorar.
