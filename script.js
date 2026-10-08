@@ -97,6 +97,7 @@ let whalePostcardCollected = localStorage.getItem('kuro-whale-postcard') === 'co
 let quintaPhotoCollected = localStorage.getItem('kuro-quinta-photo') === 'collected';
 let firstLetterSent = localStorage.getItem('kuro-first-letter') === 'sent';
 let caveBellCollected = localStorage.getItem('kuro-cave-bell') === 'collected';
+let brumaBellReturned = localStorage.getItem('kuro-bruma-bell-returned') === 'returned';
 let tizneResponse = localStorage.getItem('kuro-tizne-response');
 let sittingInChair = false;
 let autoEscapingCave = false;
@@ -977,14 +978,46 @@ function confirmTizneChoice(choiceId = dialogueChoiceButtons[selectedTizneChoice
   startDialogue([
     ['Kuro', response.line, 'annoyed'],
     ['Tizne', response.reply, 'remorseful'],
-    ['Tizne', 'El cascabel perteneció a Doña Bruma. Guiaba a los gatitos del barrio cuando bajaba la neblina.', 'remorseful'],
-    ['Kuro', 'Entonces debería devolvérselo.', 'annoyed'],
+    ['Tizne', 'El cascabel pertenece a Doña Bruma. Guiaba a los gatitos del barrio cuando bajaba la neblina.', 'remorseful'],
+    ['Kuro', brumaBellReturned ? 'Ya se lo devolví. Ella me contó por qué era importante.' : 'Entonces debería devolvérselo.', 'annoyed'],
     ['Álbum de Viaje', 'Nueva postal: Al volver de la Cueva del Chivato.']
   ], null, { Kuro: 'annoyed', Tizne: 'remorseful' });
 }
 
 function startTizneReturnConversation() {
-  startDialogue(tizneReturnConversation, showTizneChoice);
+  startDialogue(brumaBellReturned ? [
+    ['Tizne', 'Volviste… ¿encontraste el cascabel?', 'neutral'],
+    ['Kuro', 'Sí. Ya se lo devolví a Doña Bruma. Ella me contó a quién pertenecía.', 'annoyed'],
+    ['Tizne', 'Pensé que si te decía la verdad, no ibas a ayudarme.', 'remorseful'],
+    ['Kuro', 'Entonces no era de tu familia.', 'annoyed'],
+    ['Tizne', 'No. Un coleccionista paga bien por cosas antiguas. Yo… necesitaba una salida.', 'remorseful']
+  ] : tizneReturnConversation, showTizneChoice);
+}
+
+function talkToBruma() {
+  if (brumaBellReturned) {
+    startDialogue([
+      ['Doña Bruma', 'Qué lindo volver a oír el cascabel cuando baja la neblina.'],
+      ['Kuro', 'Todavía siento su impulso en mis patitas.']
+    ]);
+  } else if (caveBellCollected) {
+    startDialogue([
+      ['Kuro', 'Encontré este cascabel en la cueva. ¿Es suyo?'],
+      ['Doña Bruma', 'Lo creía perdido. Lo hacía sonar para que los gatitos encontraran el camino entre la neblina.'],
+      ['Kuro', 'Entonces debe volver con usted.'],
+      ['Doña Bruma', 'Gracias, pequeño viajero. Quédate con el impulso que te regaló; la magia ya es tuya.']
+    ], () => {
+      brumaBellReturned = true;
+      localStorage.setItem('kuro-bruma-bell-returned', 'returned');
+      dialogue.hidden = true;
+    });
+  } else {
+    startDialogue([
+      ['Doña Bruma', 'Soy Bruma. Antes guiaba a los gatitos de estos cerros con el sonido de mi cascabel.'],
+      ['Doña Bruma', 'Se perdió en la cueva, más arriba. Si entras, ve con cuidado.'],
+      ['Kuro', 'Si lo encuentro, se lo traeré.']
+    ]);
+  }
 }
 
 function renderAlbum() {
@@ -1195,6 +1228,7 @@ function currentInteraction() {
   if (currentPlace === 'station' && x >= game.clientWidth * 0.58 && x <= game.clientWidth - 125) return 'take-train';
   if (currentPlace === 'valparaiso' && x <= 145) return 'take-return-train';
   if (currentPlace === 'valparaiso' && x >= game.clientWidth * 1.24 && x <= game.clientWidth * 1.56) return 'talk-tizne';
+  if (currentPlace === 'valparaiso' && x >= game.clientWidth * 2.77 && x <= game.clientWidth * 3.00) return 'talk-bruma';
   if (currentPlace === 'cave' && !caveBellCollected && x >= game.clientWidth * 6 - 230) return 'collect-bell';
   return null;
 }
@@ -1379,6 +1413,7 @@ addEventListener('keydown', (event) => {
       else if (tizneConversationComplete) startDialogue([['Tizne', 'No tienes que decidir ahora. Los cerros no se irán a ninguna parte.']]);
       else startDialogue(tizneConversation);
     }
+    if (interaction === 'talk-bruma') talkToBruma();
     if (interaction === 'collect-bell') collectCaveBell();
     if (interaction === 'use-estafeta') {
       if (firstLetterSent) {
@@ -1527,6 +1562,7 @@ function loop(time) {
     'take-train': 'Tomar el tren',
     'take-return-train': 'Tomar el tren a Santiago',
     'talk-tizne': 'Hablar con Tizne',
+    'talk-bruma': brumaBellReturned ? 'Hablar con Doña Bruma' : caveBellCollected ? 'Devolver el cascabel' : 'Hablar con Doña Bruma',
     'collect-bell': 'Recoger el cascabel',
     'exit-museum': 'Salir a Quinta Normal',
     'collect-postcard': 'Revisar vitrina'

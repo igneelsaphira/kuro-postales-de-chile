@@ -24,6 +24,7 @@ El standalone web incluye:
 - Ataque con pelota de hollín, un rebote y zarpazo para devolverla.
 - Cascabel persistente que desbloquea el doble salto y transforma el regreso por la cueva.
 - Reencuentro con Tizne, tres respuestas de personalidad y postal de Valparaíso con posdata variable.
+- Encuentro con Doña Bruma en los cerros: cuenta la historia del cascabel y Kuro puede devolvérselo sin perder el doble salto.
 - Movimiento, salto, carrera, cámara e interacciones.
 
 ## Abrir localmente
