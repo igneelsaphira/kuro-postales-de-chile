@@ -1012,14 +1012,14 @@ function talkToBruma() {
     const reunion = brumaMet ? [
       ['Doña Bruma', 'Volviste… Ese cascabel que llevas, ¿lo encontraste en la cueva?'],
       ['Kuro', 'Sí. Perdón por llevármelo. Vine a devolvérselo.'],
-      ['Doña Bruma', 'Lo creía perdido. Lo hacía sonar para que los gatitos encontraran el camino entre la neblina.'],
+      ['Doña Bruma', 'Lo creía perdido. Solía hacerlo sonar para que los gatitos encontraran el camino entre la neblina.'],
       ['Doña Bruma', '¿Cómo te llamas, pequeño viajero?'],
       ['Kuro', 'Kuro.'],
       ['Doña Bruma', 'Gracias, Kuro. El cascabel vuelve conmigo, pero el impulso que te dio se quedará contigo.']
     ] : [
       ['Doña Bruma', 'Espera… Ese cascabel que llevas, ¿dónde lo encontraste?'],
       ['Kuro', 'En la cueva. Perdón, no sabía que era suyo. Se lo devuelvo.'],
-      ['Doña Bruma', 'Gracias. Soy Bruma. Lo hacía sonar para que los gatitos encontraran el camino entre la neblina.'],
+      ['Doña Bruma', 'Gracias. Soy Bruma. Solía hacerlo sonar para que los gatitos encontraran el camino entre la neblina.'],
       ['Kuro', 'Yo soy Kuro. Me ayudó a salir de allí.'],
       ['Doña Bruma', 'Me alegra. El cascabel vuelve conmigo, pero el impulso que te dio se quedará contigo.']
     ];
