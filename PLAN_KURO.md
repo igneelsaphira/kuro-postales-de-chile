@@ -82,6 +82,7 @@ Especiales posibles: Rapa Nui y Antártida.
 - **Copo** será un gato con una jardinera café y un gorro con orejas de coipo: un guiño divertido al animal, no un coipo literal. Su personalidad y papel en la historia siguen abiertos. El coipo de formas CSS que aparece en la primera prueba es temporal; el sprite de Copo se creará más adelante. Se descarta la idea de las postales mojadas.
 - El Tótem del Agua sigue reservado para Chiloé. Valdivia puede presentar el agua y despertar la curiosidad de Kuro sin entregarle aún esa habilidad.
 - Primer prototipo jugable de Valdivia: nodo visible y seleccionable en el mapa debajo de Santiago, viaje en tren, paseo exterior junto al río, personaje temporal conversable, muelle para observar el paisaje y regreso a Santiago. La escena se arma con piezas CSS separadas para probar su composición. El trayecto actual es corto: se ampliará en torno al misterio antes de considerarlo un nivel completo.
+- Recorrido narrativo propuesto para ampliar Valdivia: costanera y Feria Fluvial en la ribera principal → huellas pequeñas que se pierden bajo el puente Pedro de Valdivia → pasadizo **ficticio del juego** que lleva a una subida oculta → cruce normal por el puente hacia Isla Teja. Kuro no atraviesa el agua. La Feria Fluvial no está en Isla Teja. El origen de las huellas y la resolución del misterio quedan por decidir.
 
 ## Regla importante
 
