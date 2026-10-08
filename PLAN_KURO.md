@@ -74,15 +74,16 @@ El objetivo es comprobar si moverse, explorar y volver se sienten bien.
 
 Especiales posibles: Rapa Nui y Antártida.
 
-## Decisiones pendientes antes de construir Valdivia
+## Valdivia: decisiones y recorrido
 
 - La casa de Doña Bruma queda en pausa. La casa de puerta verde puede seguir como referencia visual, pero no se añadirá una entrada ni se reemplazará el fondo de los cerros por ahora: hacerlo podría superponer elementos y obligar a rehacer la escena.
 - Antes de producir otra ciudad completa, probar una escena pequeña formada por objetos separados (por ejemplo, suelo, casas, puertas, árboles y elementos interactivos) para evaluar la idea de Felipe. Esto permitiría mover y ajustar piezas sin rehacer una ilustración panorámica entera. La decisión sobre aplicar este sistema al resto del juego queda abierta.
-- Valdivia es la siguiente ciudad después de Valparaíso. La primera escena a probar será un paseo exterior junto al río, construido con objetos separados; todavía no se decide el misterio ni el recorrido definitivo.
+- Valdivia es la siguiente ciudad después de Valparaíso. La primera escena de prueba es un paseo exterior junto al río, construido con objetos separados.
 - **Copo** será un gato con una jardinera café y un gorro con orejas de coipo: un guiño divertido al animal, no un coipo literal. Su personalidad y papel en la historia siguen abiertos. El coipo de formas CSS que aparece en la primera prueba es temporal; el sprite de Copo se creará más adelante. Se descarta la idea de las postales mojadas.
 - El Tótem del Agua sigue reservado para Chiloé. Valdivia puede presentar el agua y despertar la curiosidad de Kuro sin entregarle aún esa habilidad.
 - Primer prototipo jugable de Valdivia: nodo visible y seleccionable en el mapa debajo de Santiago, viaje en tren, paseo exterior junto al río, personaje temporal conversable, muelle para observar el paisaje y regreso a Santiago. La escena se arma con piezas CSS separadas para probar su composición. El trayecto actual es corto: se ampliará en torno al misterio antes de considerarlo un nivel completo.
-- Recorrido narrativo propuesto para ampliar Valdivia: costanera y Feria Fluvial en la ribera principal → huellas pequeñas que se pierden bajo el puente Pedro de Valdivia → pasadizo **ficticio del juego** que lleva a una subida oculta → cruce normal por el puente hacia Isla Teja. Kuro no atraviesa el agua. La Feria Fluvial no está en Isla Teja. El origen de las huellas y la resolución del misterio quedan por decidir.
+- Misterio aprobado: pequeñas huellas embarradas aparecen en la Feria Fluvial. Kuro y Copo las siguen por la costanera; alguien bromea con que fueron de Copo por su gorro de coipo. Las huellas se pierden bajo el puente Pedro de Valdivia. Un pasadizo **ficticio del juego** lleva a una subida oculta; luego cruzan por el puente hacia Isla Teja. Allí encuentran una pequeña familia de coipos que busca un lugar seco para refugiarse y la ayudan. La Feria Fluvial está en la ribera principal, no en Isla Teja. Kuro no atraviesa el agua.
+- Próxima ampliación jugable: construir la Feria Fluvial, las pistas bajo el puente y la llegada a Isla Teja como tramos de un recorrido continuo. La escena actual de costanera es solo el primer tramo; el aspecto de Copo se creará después.
 
 ## Regla importante
 
