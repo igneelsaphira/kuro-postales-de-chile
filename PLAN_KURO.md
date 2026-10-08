@@ -81,6 +81,7 @@ Especiales posibles: Rapa Nui y Antártida.
 - Valdivia es la siguiente ciudad después de Valparaíso. La primera escena a probar será un paseo exterior junto al río, construido con objetos separados; todavía no se decide el misterio ni el recorrido definitivo.
 - Un coipo será un personaje de Valdivia. Su personalidad, nombre y papel en la historia siguen abiertos. Se descarta la idea de las postales mojadas.
 - El Tótem del Agua sigue reservado para Chiloé. Valdivia puede presentar el agua y despertar la curiosidad de Kuro sin entregarle aún esa habilidad.
+- Primer prototipo jugable de Valdivia: nodo visible y seleccionable en el mapa debajo de Santiago, viaje en tren, paseo exterior junto al río, coipo conversable, muelle para observar el paisaje y regreso a Santiago. La escena se arma con piezas CSS separadas para probar su composición; el coipo y el aspecto visual siguen siendo bocetos antes de decidir el misterio.
 
 ## Regla importante
 

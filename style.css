@@ -263,6 +263,38 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .scene.station .kuro { --kuro-scale: .76; bottom: calc(15.5% + var(--run-lift, 0px) + var(--jump-y, 0px)); }
 .scene.valparaiso .kuro { --kuro-scale: .76; bottom: calc(var(--valpo-ground, 24%) + var(--run-lift, 0px) + var(--jump-y, 0px)); }
 .scene.cave .kuro { --kuro-scale: .76; bottom: calc(15% + var(--run-lift, 0px) + var(--jump-y, 0px)); }
+.scene.valdivia { width: calc(min(100vw, 1100px) * 2); overflow: visible; }
+.valdivia-layer { display: none; position: absolute; inset: 0; z-index: 1; overflow: hidden; background: #a5c6c1; }
+.scene.valdivia > :not(.valdivia-layer):not(.kuro) { display: none; }
+.scene.valdivia .exterior-layer, .scene.valdivia .interior-layer, .scene.valdivia .plaza-layer, .scene.valdivia .quinta-layer, .scene.valdivia .museum-layer, .scene.valdivia .station-layer, .scene.valdivia .valparaiso-layer, .scene.valdivia .cave-layer { display: none; }
+.scene.valdivia .valdivia-layer { display: block; }
+.scene.valdivia .kuro { --kuro-scale: .76; bottom: calc(18% + var(--run-lift, 0px) + var(--jump-y, 0px)); }
+.valdivia-layer > div { position: absolute; }
+.valdivia-sky { inset: 0 0 47%; background: linear-gradient(#749ca7, #c5d6c8 68%, #e4d7ba); }
+.valdivia-sky::after { content: ''; position: absolute; left: 8%; top: 12%; width: 24%; height: 12%; border-radius: 50%; background: #e2e5dcaa; box-shadow: 370px 22px 0 6px #e4e8dc99, 860px -6px 0 12px #dce6db99, 1450px 35px 0 4px #e8ebddaa; }
+.valdivia-hills { inset: 39% 0 31%; background: radial-gradient(ellipse at 8% 95%, #517c6c 0 34%, transparent 35%), radial-gradient(ellipse at 38% 95%, #5c806d 0 31%, transparent 32%), radial-gradient(ellipse at 73% 105%, #4c756b 0 38%, transparent 39%), #7da092; }
+.valdivia-river { inset: 57% 0 18%; background: repeating-linear-gradient(174deg, #709ea0 0 18px, #8ab0ac 20px 24px, #598b92 27px 48px); }
+.valdivia-bank { left: 0; right: 0; bottom: 17%; height: 7%; background: #7d8b75; border-top: 7px solid #c0aa80; }
+.valdivia-walkway { left: 0; right: 0; bottom: 0; height: 18%; background: repeating-linear-gradient(90deg, #aa9a7d 0 94px, #8b7c67 95px 99px), #aa9a7d; border-top: 10px solid #d6c4a0; box-shadow: inset 0 12px #c0aa89; }
+.valdivia-rail { left: 0; right: 0; bottom: 25%; height: 5px; background: #3d625e; box-shadow: 0 15px #557e75; }
+.valdivia-rail::after { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(90deg, transparent 0 125px, #3d625e 126px 132px); height: 69px; }
+.valdivia-station { left: 3%; bottom: 24%; width: 15%; height: 27%; padding-top: 17%; border: 8px solid #645f53; border-bottom: 0; background: repeating-linear-gradient(90deg, #b79673 0 34px, #c6a886 35px 43px); color: #433e37; text-align: center; font: bold clamp(9px, 1.2vw, 17px) Georgia, serif; letter-spacing: .04em; box-shadow: 10px 9px 0 #374a4866; }
+.valdivia-station::before { content: ''; position: absolute; left: -8px; right: -8px; top: -24px; height: 20px; background: #5a5c53; clip-path: polygon(0 100%, 12% 0, 88% 0, 100% 100%); }
+.valdivia-tree { bottom: 18%; width: 18px; height: 32%; background: #564e3e; z-index: 2; }
+.valdivia-tree i { position: absolute; bottom: 37%; left: -105px; width: 225px; height: 190px; border-radius: 49% 51% 42% 48%; background: radial-gradient(circle at 30% 30%, #82a47e, #426b61 70%); box-shadow: 28px 28px 0 #496f62; }
+.tree-one { left: 28%; }.tree-two { left: 63%; scale: .8; }.tree-three { left: 91%; scale: 1.1; }
+.valdivia-lamp { bottom: 18%; width: 8px; height: 29%; background: #3c514d; z-index: 3; }
+.valdivia-lamp::before { content: ''; position: absolute; left: -16px; top: -21px; width: 40px; height: 28px; border: 4px solid #3c514d; border-radius: 15px 15px 4px 4px; background: #f2d8a7; box-shadow: 0 0 22px #f4dea988; }
+.lamp-one { left: 45%; }.lamp-two { left: 82%; }
+.valdivia-bench { left: 48%; bottom: 17%; width: 110px; height: 26px; border: 5px solid #55483c; background: #9a7453; box-shadow: 0 -23px 0 -6px #9a7453; }
+.valdivia-pier { right: 3%; bottom: 18%; width: 14%; height: 11%; background: repeating-linear-gradient(90deg, #916e50 0 18px, #654c3d 19px 22px); transform: skewY(-5deg); border: 5px solid #654c3d; }
+.valdivia-coipo { left: 62%; bottom: 18%; width: 120px; height: 90px; z-index: 4; filter: drop-shadow(0 4px 2px #2d484888); }
+.valdivia-coipo i { position: absolute; display: block; }
+.coipo-tail { width: 82px; height: 13px; left: -44px; bottom: 8px; border-radius: 50%; background: #574635; transform: rotate(-19deg); }
+.coipo-body { width: 86px; height: 53px; left: 10px; bottom: 5px; border-radius: 50% 48% 35% 30%; background: linear-gradient(#927355, #6c5542); }
+.coipo-head { width: 49px; height: 43px; right: 0; bottom: 23px; border-radius: 50% 45% 42% 45%; background: #9b7957; box-shadow: inset -10px -8px #765b45; }
+.coipo-ear { right: 27px; bottom: 59px; width: 14px; height: 17px; border-radius: 50%; background: #5c4337; }
+.coipo-eye { right: 10px; bottom: 51px; width: 5px; height: 5px; border-radius: 50%; background: #242725; box-shadow: 12px 19px 0 2px #4a382e; }
 .location-label { position: absolute; z-index: 7; top: 48px; left: 50%; translate: -50% 0; padding: 7px 16px; border-radius: 20px; background: #fff4d6d9; color: #6a4840; font-weight: bold; opacity: .9; }
 .road-sign, .plaza-sign, .location-label { display: none !important; }
 .kuro { position: absolute; z-index: 5; left: 22%; bottom: calc(31% + var(--run-lift, 0px) + var(--jump-y, 0px)); width: 100px; height: 133px; background-image: url('assets/kuro-idle-sprite-sheet.png'); background-repeat: no-repeat; background-size: 400px 133px; background-position: 0 0; image-rendering: pixelated; transform: scaleX(var(--facing, 1)) scale(var(--kuro-scale, 1)); transform-origin: center bottom; }
