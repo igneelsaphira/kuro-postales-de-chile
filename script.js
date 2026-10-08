@@ -98,6 +98,7 @@ let quintaPhotoCollected = localStorage.getItem('kuro-quinta-photo') === 'collec
 let firstLetterSent = localStorage.getItem('kuro-first-letter') === 'sent';
 let caveBellCollected = localStorage.getItem('kuro-cave-bell') === 'collected';
 let brumaBellReturned = localStorage.getItem('kuro-bruma-bell-returned') === 'returned';
+let brumaMet = localStorage.getItem('kuro-bruma-met') === 'met';
 let tizneResponse = localStorage.getItem('kuro-tizne-response');
 let sittingInChair = false;
 let autoEscapingCave = false;
@@ -1001,12 +1002,23 @@ function talkToBruma() {
       ['Kuro', 'Todavía siento su impulso en mis patitas.']
     ]);
   } else if (caveBellCollected) {
-    startDialogue([
-      ['Kuro', 'Encontré este cascabel en la cueva. ¿Es suyo?'],
+    const reunion = brumaMet ? [
+      ['Doña Bruma', 'Volviste… Ese cascabel que llevas, ¿lo encontraste en la cueva?'],
+      ['Kuro', 'Sí. Perdón por llevármelo. Vine a devolvérselo.'],
       ['Doña Bruma', 'Lo creía perdido. Lo hacía sonar para que los gatitos encontraran el camino entre la neblina.'],
-      ['Kuro', 'Entonces debe volver con usted.'],
-      ['Doña Bruma', 'Gracias, pequeño viajero. Quédate con el impulso que te regaló; la magia ya es tuya.']
-    ], () => {
+      ['Doña Bruma', '¿Cómo te llamas, pequeño viajero?'],
+      ['Kuro', 'Kuro.'],
+      ['Doña Bruma', 'Gracias, Kuro. El cascabel vuelve conmigo, pero el impulso que te dio se quedará contigo.']
+    ] : [
+      ['Doña Bruma', 'Espera… Ese cascabel que llevas, ¿dónde lo encontraste?'],
+      ['Kuro', 'En la cueva. Perdón, no sabía que era suyo. Se lo devuelvo.'],
+      ['Doña Bruma', 'Gracias. Soy Bruma. Lo hacía sonar para que los gatitos encontraran el camino entre la neblina.'],
+      ['Kuro', 'Yo soy Kuro. Me ayudó a salir de allí.'],
+      ['Doña Bruma', 'Me alegra. El cascabel vuelve conmigo, pero el impulso que te dio se quedará contigo.']
+    ];
+    startDialogue(reunion, () => {
+      brumaMet = true;
+      localStorage.setItem('kuro-bruma-met', 'met');
       brumaBellReturned = true;
       localStorage.setItem('kuro-bruma-bell-returned', 'returned');
       dialogue.hidden = true;
@@ -1016,7 +1028,11 @@ function talkToBruma() {
       ['Doña Bruma', 'Soy Bruma. Antes guiaba a los gatitos de estos cerros con el sonido de mi cascabel.'],
       ['Doña Bruma', 'Se perdió en la cueva, más arriba. Si entras, ve con cuidado.'],
       ['Kuro', 'Si lo encuentro, se lo traeré.']
-    ]);
+    ], () => {
+      brumaMet = true;
+      localStorage.setItem('kuro-bruma-met', 'met');
+      dialogue.hidden = true;
+    });
   }
 }
 
