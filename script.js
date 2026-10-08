@@ -812,7 +812,7 @@ const portraitSheets = {
     remorseful: 'assets/tizne-dialogue-remorseful-frames-v1.png'
   },
   'Doña Bruma': {
-    neutral: 'assets/dona-bruma-pixel-v2.png'
+    neutral: 'assets/dona-bruma-dialogue-frames-v1.png'
   }
 };
 const npcPortraits = {
