@@ -103,9 +103,9 @@ let caveBellCollected = localStorage.getItem('kuro-cave-bell') === 'collected';
 let brumaBellReturned = localStorage.getItem('kuro-bruma-bell-returned') === 'returned';
 let brumaMet = localStorage.getItem('kuro-bruma-met') === 'met';
 let tizneResponse = localStorage.getItem('kuro-tizne-response');
-let valdiviaTracksFound = localStorage.getItem('kuro-valdivia-tracks') === 'found';
-let valdiviaPassageFound = localStorage.getItem('kuro-valdivia-passage') === 'found';
-let valdiviaFamilyHelped = localStorage.getItem('kuro-valdivia-family') === 'helped';
+let valdiviaTracksFound = localStorage.getItem('kuro-valdivia-tracks-v1') === 'found';
+let valdiviaPassageFound = localStorage.getItem('kuro-valdivia-passage-v1') === 'found';
+let valdiviaFamilyHelped = localStorage.getItem('kuro-valdivia-family-v1') === 'helped';
 let sittingInChair = false;
 let autoEscapingCave = false;
 let albumPageIndex = 0;
@@ -1478,7 +1478,7 @@ addEventListener('keydown', (event) => {
     if (interaction === 'look-river') startDialogue([['Kuro', 'Desde este muelle se ve hasta la otra orilla. Me pregunto qué habrá más allá.']]);
     if (interaction === 'inspect-tracks') {
       valdiviaTracksFound = true;
-      localStorage.setItem('kuro-valdivia-tracks', 'found');
+      localStorage.setItem('kuro-valdivia-tracks-v1', 'found');
       startDialogue([
         ['Kuro', 'Son huellitas de barro… van desde los puestos hacia el puente.'],
         ['Copo', '¡Te dije que no eran mías! Mi gorro no deja huellas.'],
@@ -1489,7 +1489,7 @@ addEventListener('keydown', (event) => {
       if (!valdiviaTracksFound) startDialogue([['Kuro', 'Hay una subida oculta bajo el puente. Antes quiero ver adónde llevan esas huellas de la feria.']]);
       else {
         valdiviaPassageFound = true;
-        localStorage.setItem('kuro-valdivia-passage', 'found');
+        localStorage.setItem('kuro-valdivia-passage-v1', 'found');
         scene.classList.add('valdivia-passage-found');
         startDialogue([
           ['Copo', 'Mira, las huellas siguen por este pasadizo. Sale a una subida junto al puente.'],
@@ -1501,7 +1501,7 @@ addEventListener('keydown', (event) => {
       if (valdiviaFamilyHelped) startDialogue([['Copo', 'Ahora tienen un rincón seco. Qué bueno que seguimos las huellas.']]);
       else {
         valdiviaFamilyHelped = true;
-        localStorage.setItem('kuro-valdivia-family', 'helped');
+        localStorage.setItem('kuro-valdivia-family-v1', 'helped');
         scene.classList.add('valdivia-family-helped');
         renderAlbum();
         startDialogue([
