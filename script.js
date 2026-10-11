@@ -162,18 +162,27 @@ let dogProjectileSpin = 0;
 let dogProjectileDeflected = false;
 let audioContext = null;
 const bridgePathBase = [
-  [.36, .68, 0, .43], [.18, .68, .34, .51],
-  [.18, .42, .43, .83], [.18, .78, .73, .90],
-  [.56, .78, .82, 1.18], [.30, .78, 1.08, 1.26],
-  [.30, .56, 1.18, 1.51], [.30, .72, 1.42, 1.55]
+  [.32, .68, 0, .38, 'trail'],
+  [.12, .88, .26, .55, 'clearing'],
+  [.10, .41, .47, 1.14, 'trail'],
+  [.59, .90, .47, 1.14, 'trail'],
+  [.10, .90, .86, 1.08, 'clearing'],
+  [.13, .87, 1.04, 1.34, 'clearing'],
+  [.33, .67, 1.29, 1.52, 'trail']
 ];
 const bridgePathLayout = Array.from({ length: 4 }, (_, stage) =>
-  bridgePathBase.map(([left, right, low, high]) => [
+  bridgePathBase.map(([left, right, low, high, kind]) => [
     ...(stage % 2 ? [1 - right, 1 - left] : [left, right]),
-    low + stage * 1.48, high + stage * 1.48, stage
+    low + stage * 1.48, high + stage * 1.48, stage, kind
   ])
 ).flat();
 const bridgePathElement = document.querySelector('.bridge-earth-path');
+const bridgeClues = [
+  [.27, .78, 'Las pisadas se separan aquí. Hay otra ruta por el lado del agua.'],
+  [.73, 2.26, 'Entre el barro hay tallos mordidos. Alguien salió del agua hace poco.'],
+  [.27, 3.74, 'La tierra está más húmeda. Las huellas siguen hacia los juncos de la orilla.']
+];
+const bridgeCluesSeen = new Set();
 function bridgeTop() { return game.clientHeight * 5.92; }
 function bridgeOnPath(nextX, nextDepth) {
   const centerX = nextX + 50;
@@ -183,15 +192,29 @@ function bridgeOnPath(nextX, nextDepth) {
   );
 }
 function renderBridgePath() {
-  bridgePathElement.replaceChildren(...bridgePathLayout.map(([left, right, low, high, stage]) => {
+  const segments = bridgePathLayout.map(([left, right, low, high, stage, kind]) => {
     const segment = document.createElement('div');
-    segment.className = `bridge-path-segment stage-${stage + 1}`;
+    segment.className = `bridge-path-segment stage-${stage + 1} ${kind}`;
     segment.style.left = `${left * game.clientWidth}px`;
     segment.style.width = `${(right - left) * game.clientWidth}px`;
     segment.style.bottom = `calc(4% + ${low * game.clientHeight}px)`;
     segment.style.height = `${(high - low) * game.clientHeight}px`;
     return segment;
-  }));
+  });
+  const footprints = Array.from({ length: 4 }, (_, stage) => {
+    const routeX = stage % 2 ? .73 : .27;
+    const depths = [[.5, .35], [routeX, .59], [routeX, .78], [1 - routeX, .78], [routeX, .98], [.5, 1.17], [.5, 1.38]];
+    return depths.map(([left, depth], step) => {
+      const print = document.createElement('i');
+      print.className = 'bridge-footprints';
+      print.style.left = `${left * game.clientWidth}px`;
+      print.style.bottom = `calc(4% + ${(depth + stage * 1.48) * game.clientHeight}px)`;
+      print.style.rotate = `${left < .5 ? -13 : 13}deg`;
+      if (step === 2 || step === 3) print.classList.add('faint');
+      return print;
+    });
+  }).flat();
+  bridgePathElement.replaceChildren(...segments, ...footprints);
 }
 addEventListener('resize', renderBridgePath);
 renderBridgePath();
@@ -1312,6 +1335,12 @@ function currentInteraction() {
   if (currentPlace === 'valdivia' && x >= game.clientWidth * 2.72 && x <= game.clientWidth * 3.05) return 'inspect-passage';
   if (currentPlace === 'bridge' && bridgeDepth >= bridgeTop() - 24) return 'cross-bridge';
   if (currentPlace === 'bridge' && bridgeDepth <= 24) return 'leave-bridge';
+  if (currentPlace === 'bridge') {
+    const clueIndex = bridgeClues.findIndex(([left, depth], index) => !bridgeCluesSeen.has(index) &&
+      Math.abs(x + 50 - left * game.clientWidth) < 58 &&
+      Math.abs(bridgeDepth - depth * game.clientHeight) < 54);
+    if (clueIndex !== -1) return `bridge-clue-${clueIndex}`;
+  }
   if (currentPlace === 'valdivia' && x >= game.clientWidth * 3.52 && x <= game.clientWidth * 3.83) return 'help-family';
   if (currentPlace === 'valdivia' && x >= game.clientWidth * 1.80 && x <= game.clientWidth * 2.03) return 'look-river';
   if (currentPlace === 'valparaiso' && x >= game.clientWidth * 1.24 && x <= game.clientWidth * 1.56) return 'talk-tizne';
@@ -1516,6 +1545,11 @@ addEventListener('keydown', (event) => {
       valdiviaBridgeCrossed = true;
       localStorage.setItem('kuro-valdivia-bridge-v1', 'crossed');
       changeLocation('valdivia', 'at-island');
+    }
+    if (interaction?.startsWith('bridge-clue-')) {
+      const clueIndex = Number(interaction.slice('bridge-clue-'.length));
+      bridgeCluesSeen.add(clueIndex);
+      startDialogue([['Kuro', bridgeClues[clueIndex][2]]]);
     }
     if (interaction === 'talk-tizne') {
       if (caveBellCollected && !tizneResponse) startTizneReturnConversation();
@@ -1752,6 +1786,9 @@ function loop(time) {
     'inspect-passage': valdiviaPassageFound ? 'Entrar a la subida' : 'Investigar bajo el puente',
     'leave-bridge': 'Volver a la feria',
     'cross-bridge': 'Cruzar hacia los coipos',
+    'bridge-clue-0': 'Examinar las pisadas',
+    'bridge-clue-1': 'Mirar los tallos',
+    'bridge-clue-2': 'Seguir las huellas',
     'help-family': valdiviaFamilyHelped ? 'Visitar a los coipos' : 'Ayudar a los coipos',
     'collect-bell': 'Recoger el cascabel',
     'exit-museum': 'Salir a Quinta Normal',
