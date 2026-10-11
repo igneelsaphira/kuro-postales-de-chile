@@ -80,6 +80,9 @@ let frame = 0;
 let timer = 0;
 let lastTime = performance.now();
 let cameraX = 0;
+let cameraY = 0;
+let bridgeDepth = 0;
+let bridgeDirection = 'back';
 let cameraLookAhead = 0;
 let facing = 1;
 let currentPlace = 'street';
@@ -105,6 +108,7 @@ let brumaMet = localStorage.getItem('kuro-bruma-met') === 'met';
 let tizneResponse = localStorage.getItem('kuro-tizne-response');
 let valdiviaTracksFound = localStorage.getItem('kuro-valdivia-tracks-v1') === 'found';
 let valdiviaPassageFound = localStorage.getItem('kuro-valdivia-passage-v1') === 'found';
+let valdiviaBridgeCrossed = localStorage.getItem('kuro-valdivia-bridge-v1') === 'crossed';
 let valdiviaFamilyHelped = localStorage.getItem('kuro-valdivia-family-v1') === 'helped';
 let sittingInChair = false;
 let autoEscapingCave = false;
@@ -157,8 +161,43 @@ let dogProjectileBounces = 0;
 let dogProjectileSpin = 0;
 let dogProjectileDeflected = false;
 let audioContext = null;
+const bridgePathBase = [
+  [.36, .68, 0, .43], [.18, .68, .34, .51],
+  [.18, .42, .43, .83], [.18, .78, .73, .90],
+  [.56, .78, .82, 1.18], [.30, .78, 1.08, 1.26],
+  [.30, .56, 1.18, 1.51], [.30, .72, 1.42, 1.55]
+];
+const bridgePathLayout = Array.from({ length: 4 }, (_, stage) =>
+  bridgePathBase.map(([left, right, low, high]) => [
+    ...(stage % 2 ? [1 - right, 1 - left] : [left, right]),
+    low + stage * 1.48, high + stage * 1.48, stage
+  ])
+).flat();
+const bridgePathElement = document.querySelector('.bridge-earth-path');
+function bridgeTop() { return game.clientHeight * 5.92; }
+function bridgeOnPath(nextX, nextDepth) {
+  const centerX = nextX + 50;
+  return bridgePathLayout.some(([left, right, low, high]) =>
+    centerX >= left * game.clientWidth + 8 && centerX <= right * game.clientWidth - 8 &&
+    nextDepth >= low * game.clientHeight && nextDepth <= high * game.clientHeight
+  );
+}
+function renderBridgePath() {
+  bridgePathElement.replaceChildren(...bridgePathLayout.map(([left, right, low, high, stage]) => {
+    const segment = document.createElement('div');
+    segment.className = `bridge-path-segment stage-${stage + 1}`;
+    segment.style.left = `${left * game.clientWidth}px`;
+    segment.style.width = `${(right - left) * game.clientWidth}px`;
+    segment.style.bottom = `calc(4% + ${low * game.clientHeight}px)`;
+    segment.style.height = `${(high - low) * game.clientHeight}px`;
+    return segment;
+  }));
+}
+addEventListener('resize', renderBridgePath);
+renderBridgePath();
 
 function movementHintText() {
+  if (currentPlace === 'bridge') return '↑ ↓ subir y bajar · ← → moverse · Espacio saltar';
   if (currentPlace === 'cave' && !caveBellCollected) return '← → moverse · Shift correr · Espacio saltar · F zarpazo';
   if (caveBellCollected) return '← → moverse · Shift correr · Espacio ×2 doble salto';
   return '← → moverse · Shift correr · Espacio saltar';
@@ -208,7 +247,7 @@ function attemptJump() {
   if (grounded) {
     grounded = false;
     jumpsUsed = 1;
-    velocityY = 620;
+    velocityY = currentPlace === 'bridge' ? 700 : 620;
     frame = 0;
     return;
   }
@@ -1271,6 +1310,8 @@ function currentInteraction() {
   if (currentPlace === 'valdivia' && x >= game.clientWidth * 1.12 && x <= game.clientWidth * 1.43) return 'talk-copo';
   if (currentPlace === 'valdivia' && x >= game.clientWidth * 2.2 && x <= game.clientWidth * 2.52) return 'inspect-tracks';
   if (currentPlace === 'valdivia' && x >= game.clientWidth * 2.72 && x <= game.clientWidth * 3.05) return 'inspect-passage';
+  if (currentPlace === 'bridge' && bridgeDepth >= bridgeTop() - 24) return 'cross-bridge';
+  if (currentPlace === 'bridge' && bridgeDepth <= 24) return 'leave-bridge';
   if (currentPlace === 'valdivia' && x >= game.clientWidth * 3.52 && x <= game.clientWidth * 3.83) return 'help-family';
   if (currentPlace === 'valdivia' && x >= game.clientWidth * 1.80 && x <= game.clientWidth * 2.03) return 'look-river';
   if (currentPlace === 'valparaiso' && x >= game.clientWidth * 1.24 && x <= game.clientWidth * 1.56) return 'talk-tizne';
@@ -1299,6 +1340,7 @@ function changeLocation(nextLocation, entry = 'default') {
     const atStation = currentPlace === 'station';
     const atValparaiso = currentPlace === 'valparaiso';
     const atValdivia = currentPlace === 'valdivia';
+    const atBridge = currentPlace === 'bridge';
     const atCave = currentPlace === 'cave';
     scene.classList.toggle('inside', inside);
     scene.classList.toggle('street', atStreet);
@@ -1308,6 +1350,7 @@ function changeLocation(nextLocation, entry = 'default') {
     scene.classList.toggle('station', atStation);
     scene.classList.toggle('valparaiso', atValparaiso);
     scene.classList.toggle('valdivia', atValdivia);
+    scene.classList.toggle('bridge', atBridge);
     scene.classList.toggle('valdivia-passage-found', valdiviaPassageFound);
     scene.classList.toggle('valdivia-family-helped', valdiviaFamilyHelped);
     scene.classList.toggle('cave', atCave);
@@ -1326,7 +1369,7 @@ function changeLocation(nextLocation, entry = 'default') {
       resetPackChase();
     }
     locationLabel.hidden = atMuseum;
-    locationLabel.textContent = inside ? 'Casa de Kuro' : atPlaza ? 'Plaza Yungay' : atQuinta ? 'Quinta Normal' : atMuseum ? 'Museo · Sala de la Ballena' : atStation ? 'Estación Mapocho' : atValparaiso ? 'Valparaíso' : atValdivia ? 'Valdivia · Costanera' : atCave ? 'Cueva del Chivato' : 'Barrio Yungay · Plaza Yungay · Quinta Normal';
+    locationLabel.textContent = inside ? 'Casa de Kuro' : atPlaza ? 'Plaza Yungay' : atQuinta ? 'Quinta Normal' : atMuseum ? 'Museo · Sala de la Ballena' : atStation ? 'Estación Mapocho' : atValparaiso ? 'Valparaíso' : atValdivia ? 'Valdivia · Costanera' : atBridge ? 'Puente Pedro de Valdivia · Subida' : atCave ? 'Cueva del Chivato' : 'Barrio Yungay · Plaza Yungay · Quinta Normal';
     if (inside) x = entry === 'at-chair' ? game.clientWidth * 0.34 : 175;
     else if (atPlaza) x = entry === 'from-quinta' ? game.clientWidth - 150 : entry === 'at-mota' ? game.clientWidth * 0.35 : 120;
     else if (atQuinta) x = entry === 'from-museum' ? game.clientWidth * 0.5 : entry === 'at-mirador' ? game.clientWidth * 0.76 : 120;
@@ -1334,12 +1377,15 @@ function changeLocation(nextLocation, entry = 'default') {
     else if (atStation) x = entry === 'at-estafeta' ? game.clientWidth * 0.23 : entry === 'at-train' ? game.clientWidth * 0.58 : entry === 'from-route' ? game.clientWidth - 150 : 120;
     else if (atValparaiso) x = entry === 'at-train' ? 95 : entry === 'from-map' ? game.clientWidth * 0.24 : entry === 'at-tizne' ? game.clientWidth * 1.34 : entry === 'at-hills' ? game.clientWidth * 1.60 : entry === 'at-lower-hills' ? game.clientWidth * 2.07 : entry === 'at-mid-hills' ? game.clientWidth * 2.44 : entry === 'at-bruma' ? game.clientWidth * 2.62 : entry === 'at-cave' ? game.clientWidth * 3.12 : entry === 'at-connector' ? game.clientWidth * 0.82 : entry === 'at-station-seam' ? game.clientWidth * 0.56 : entry === 'at-plaza-seam' ? game.clientWidth * 1.12 : 160;
     else if (atValdivia) x = entry === 'at-coipo' ? game.clientWidth * 1.13 : entry === 'at-pier' ? game.clientWidth * 1.83 : entry === 'at-market' ? game.clientWidth * 2.32 : entry === 'at-passage' ? game.clientWidth * 2.82 : entry === 'at-island' ? game.clientWidth * 3.63 : game.clientWidth * 0.22;
+    else if (atBridge) x = game.clientWidth * .50 - 50;
     else if (atCave) x = entry === 'at-goat' ? game.clientWidth * (caveBellCollected ? 3.08 : 2.72) : entry === 'at-sea-lion' ? game.clientWidth * 4.65 : entry === 'at-dog' ? game.clientWidth * 1.05 : entry === 'at-middle' ? game.clientWidth * 3.75 : entry === 'at-bird' ? game.clientWidth * .54 : entry === 'at-bell' ? game.clientWidth * 5.67 : 185;
     else x = entry === 'from-quinta' ? game.clientWidth * 1.6875 - 150 : entry === 'from-museum' ? game.clientWidth * 1.29 : entry === 'at-museum' ? game.clientWidth * 1.40 : entry === 'at-quinta' ? game.clientWidth * 1.20 : entry === 'at-mota' ? game.clientWidth * 0.36 : entry === 'at-plaza' ? game.clientWidth * 0.86 : entry === 'at-neighborhood' ? game.clientWidth * 0.46 : entry === 'at-seam' ? game.clientWidth * 0.90 : game.clientWidth * 0.14;
     y = 0;
     velocityY = 0;
     grounded = true;
     jumpsUsed = 0;
+    bridgeDepth = 0;
+    bridgeDirection = 'back';
     autoEscapingCave = false;
     if (['at-neighborhood', 'at-seam', 'at-plaza', 'at-mota', 'at-quinta', 'at-museum', 'from-museum'].includes(entry) && atStreet) cameraX = Math.max(0, Math.min(game.clientWidth * 0.6875, x - game.clientWidth * 0.45));
     else if (entry === 'from-quinta') cameraX = atStreet ? game.clientWidth * 0.6875 : atPlaza ? 0 : Math.max(0, worldWidth - game.clientWidth);
@@ -1349,10 +1395,12 @@ function changeLocation(nextLocation, entry = 'default') {
     else if (['at-tizne', 'at-hills', 'at-lower-hills', 'at-mid-hills', 'at-bruma', 'at-cave', 'at-connector', 'at-station-seam', 'at-plaza-seam'].includes(entry)) cameraX = Math.max(0, Math.min(game.clientWidth * 2.2875, x - game.clientWidth * 0.45));
     else if (atCave && ['at-goat', 'at-sea-lion', 'at-dog', 'at-middle', 'at-bird', 'at-bell'].includes(entry)) cameraX = Math.max(0, Math.min(game.clientWidth * 5, x - game.clientWidth * 0.45));
     else cameraX = 0;
+    cameraY = atBridge ? Math.max(0, scene.offsetHeight - game.clientHeight) : 0;
+    if (atBridge) renderBridgePath();
     cameraLookAhead = 0;
     dialogue.hidden = true;
     scene.classList.remove('window-gazing');
-    scene.style.transform = `translateX(${-cameraX}px)`;
+    scene.style.transform = `translate(${-cameraX}px, ${-cameraY}px)`;
     requestAnimationFrame(() => {
       fade.classList.remove('active');
       transitioning = false;
@@ -1463,6 +1511,12 @@ addEventListener('keydown', (event) => {
     }
     if (interaction === 'take-train') openWorldMap();
     if (interaction === 'take-return-train') openWorldMap();
+    if (interaction === 'leave-bridge') changeLocation('valdivia', 'at-passage');
+    if (interaction === 'cross-bridge') {
+      valdiviaBridgeCrossed = true;
+      localStorage.setItem('kuro-valdivia-bridge-v1', 'crossed');
+      changeLocation('valdivia', 'at-island');
+    }
     if (interaction === 'talk-tizne') {
       if (caveBellCollected && !tizneResponse) startTizneReturnConversation();
       else if (tizneResponse) startDialogue([['Tizne', tizneResponses[tizneResponse].followUp, 'remorseful']]);
@@ -1488,13 +1542,15 @@ addEventListener('keydown', (event) => {
     if (interaction === 'inspect-passage') {
       if (!valdiviaTracksFound) startDialogue([['Kuro', 'Hay una subida oculta bajo el puente. Antes quiero ver adónde llevan esas huellas de la feria.']]);
       else {
-        valdiviaPassageFound = true;
-        localStorage.setItem('kuro-valdivia-passage-v1', 'found');
-        scene.classList.add('valdivia-passage-found');
-        startDialogue([
-          ['Copo', 'Mira, las huellas siguen por este pasadizo. Sale a una subida junto al puente.'],
-          ['Kuro', 'Podemos cruzar caminando hasta Isla Teja. Vamos.']
-        ]);
+        if (!valdiviaPassageFound) {
+          valdiviaPassageFound = true;
+          localStorage.setItem('kuro-valdivia-passage-v1', 'found');
+          scene.classList.add('valdivia-passage-found');
+          startDialogue([
+            ['Copo', 'Mira, las huellas siguen por aquí. Hay plataformas para subir por el puente.'],
+            ['Kuro', 'Voy a subir saltando. Isla Teja nos espera arriba.']
+          ], () => changeLocation('bridge'));
+        } else changeLocation('bridge');
       }
     }
     if (interaction === 'help-family') {
@@ -1568,7 +1624,7 @@ function loop(time) {
   scene.style.setProperty('--prop-scale', propScale.toFixed(3));
   if (sittingInChair) x = game.clientWidth * 0.34;
   const controlsEnabled = dialogue.hidden && travelAlbum.hidden && photoMoment.hidden && worldMap.hidden && !sittingInChair && !autoEscapingCave;
-  const moving = autoEscapingCave || (controlsEnabled && (keys.has('arrowright') || keys.has('d') || keys.has('arrowleft') || keys.has('a')));
+  const moving = autoEscapingCave || (controlsEnabled && (keys.has('arrowright') || keys.has('d') || keys.has('arrowleft') || keys.has('a') || (currentPlace === 'bridge' && (keys.has('arrowup') || keys.has('w') || keys.has('arrowdown') || keys.has('s')))));
   const sprinting = keys.has('shift');
   const speed = sprinting ? 370 : 240;
   if (autoEscapingCave) {
@@ -1579,16 +1635,31 @@ function loop(time) {
     }
   }
   if (controlsEnabled && (keys.has('arrowright') || keys.has('d'))) {
-    const activeWorldWidth = currentPlace === 'valparaiso' ? game.clientWidth * 3.2875 : currentPlace === 'cave' ? game.clientWidth * 6 : currentPlace === 'street' ? game.clientWidth * 1.6875 : currentPlace === 'valdivia' ? game.clientWidth * 4 : currentPlace === 'house' || currentPlace === 'museum' || currentPlace === 'plaza' || currentPlace === 'quinta' || currentPlace === 'station' ? game.clientWidth : worldWidth;
-    x = Math.min(activeWorldWidth - 110, x + speed * dt);
-    if (currentPlace === 'valdivia' && !valdiviaPassageFound) x = Math.min(x, game.clientWidth * 3.02);
+    const activeWorldWidth = currentPlace === 'valparaiso' ? game.clientWidth * 3.2875 : currentPlace === 'cave' ? game.clientWidth * 6 : currentPlace === 'street' ? game.clientWidth * 1.6875 : currentPlace === 'valdivia' ? game.clientWidth * 4 : currentPlace === 'bridge' || currentPlace === 'house' || currentPlace === 'museum' || currentPlace === 'plaza' || currentPlace === 'quinta' || currentPlace === 'station' ? game.clientWidth : worldWidth;
+    const nextX = Math.min(activeWorldWidth - 110, x + speed * dt);
+    if (currentPlace !== 'bridge' || bridgeOnPath(nextX, bridgeDepth)) x = nextX;
+    if (currentPlace === 'valdivia' && !valdiviaBridgeCrossed) x = Math.min(x, game.clientWidth * 3.02);
+    if (currentPlace === 'bridge') bridgeDirection = 'side';
     facing = 1;
     kuro.style.setProperty('--facing', facing);
   }
   if (controlsEnabled && (keys.has('arrowleft') || keys.has('a'))) {
-    x = Math.max(10, x - speed * dt);
+    const nextX = Math.max(10, x - speed * dt);
+    if (currentPlace !== 'bridge' || bridgeOnPath(nextX, bridgeDepth)) x = nextX;
+    if (currentPlace === 'bridge') bridgeDirection = 'side';
     facing = -1;
     kuro.style.setProperty('--facing', facing);
+  }
+  if (controlsEnabled && currentPlace === 'bridge') {
+    if (keys.has('arrowup') || keys.has('w')) {
+      const nextDepth = Math.min(bridgeTop(), bridgeDepth + speed * .86 * dt);
+      if (bridgeOnPath(x, nextDepth)) bridgeDepth = nextDepth;
+      bridgeDirection = 'back';
+    } else if (keys.has('arrowdown') || keys.has('s')) {
+      const nextDepth = Math.max(0, bridgeDepth - speed * .86 * dt);
+      if (bridgeOnPath(x, nextDepth)) bridgeDepth = nextDepth;
+      bridgeDirection = 'side';
+    }
   }
   if (controlsEnabled && !transitioning && currentPlace === 'valparaiso' && x >= game.clientWidth * 3.2875 - 110) {
     changeLocation('cave');
@@ -1649,6 +1720,7 @@ function loop(time) {
   kuro.classList.toggle('swiping', time < clawUntil);
   kuro.style.left = `${x}px`;
   kuro.style.setProperty('--jump-y', `${y}px`);
+  kuro.style.setProperty('--bridge-depth', `${bridgeDepth}px`);
   const interaction = currentInteraction();
   const interactionLabels = {
     'enter-house': 'Entrar a casa',
@@ -1677,7 +1749,9 @@ function loop(time) {
     'talk-copo': 'Hablar con Copo',
     'look-river': 'Mirar el río',
     'inspect-tracks': valdiviaTracksFound ? 'Mirar las huellas' : 'Investigar huellitas',
-    'inspect-passage': valdiviaPassageFound ? 'Mirar el pasadizo' : 'Investigar bajo el puente',
+    'inspect-passage': valdiviaPassageFound ? 'Entrar a la subida' : 'Investigar bajo el puente',
+    'leave-bridge': 'Volver a la feria',
+    'cross-bridge': 'Cruzar hacia los coipos',
     'help-family': valdiviaFamilyHelped ? 'Visitar a los coipos' : 'Ayudar a los coipos',
     'collect-bell': 'Recoger el cascabel',
     'exit-museum': 'Salir a Quinta Normal',
@@ -1695,7 +1769,7 @@ function loop(time) {
   interactionPrompt.hidden = !interaction || !dialogue.hidden;
 
   const viewportWidth = game.clientWidth;
-  const activeWorldWidth = currentPlace === 'valparaiso' ? viewportWidth * 3.2875 : currentPlace === 'cave' ? viewportWidth * 6 : currentPlace === 'street' ? viewportWidth * 1.6875 : currentPlace === 'valdivia' ? viewportWidth * 4 : currentPlace === 'house' || currentPlace === 'museum' || currentPlace === 'plaza' || currentPlace === 'quinta' || currentPlace === 'station' ? viewportWidth : worldWidth;
+  const activeWorldWidth = currentPlace === 'valparaiso' ? viewportWidth * 3.2875 : currentPlace === 'cave' ? viewportWidth * 6 : currentPlace === 'street' ? viewportWidth * 1.6875 : currentPlace === 'valdivia' ? viewportWidth * 4 : currentPlace === 'bridge' || currentPlace === 'house' || currentPlace === 'museum' || currentPlace === 'plaza' || currentPlace === 'quinta' || currentPlace === 'station' ? viewportWidth : worldWidth;
   const maxCameraX = Math.max(0, activeWorldWidth - viewportWidth);
   const targetLookAhead = moving ? facing * 72 : 0;
   cameraLookAhead += (targetLookAhead - cameraLookAhead) * Math.min(1, 3 * dt);
@@ -1708,9 +1782,15 @@ function loop(time) {
   else if (focusOnScreen > deadzoneRight) desiredCameraX = focusX - deadzoneRight;
   desiredCameraX = Math.max(0, Math.min(maxCameraX, desiredCameraX));
   cameraX += (desiredCameraX - cameraX) * Math.min(1, 4.5 * dt);
-  scene.style.transform = `translateX(${-cameraX}px)`;
+  if (currentPlace === 'bridge') {
+    const feetFromTop = scene.offsetHeight - scene.offsetHeight * .04 - bridgeDepth - y;
+    const desiredCameraY = Math.max(0, Math.min(scene.offsetHeight - game.clientHeight, feetFromTop - game.clientHeight * .68));
+    cameraY += (desiredCameraY - cameraY) * Math.min(1, 6 * dt);
+  } else cameraY = 0;
+  scene.style.transform = `translate(${-cameraX}px, ${-cameraY}px)`;
   if (currentPlace === 'cave') game.style.setProperty('--cave-light-x', `${x - cameraX + 50}px`);
   kuro.classList.toggle('jumping', !grounded);
+  kuro.classList.toggle('back-facing', currentPlace === 'bridge' && bridgeDirection === 'back');
   kuro.classList.toggle('running', grounded && moving);
   kuro.classList.toggle('interact', grounded && !moving && !dialogue.hidden);
   kuro.classList.toggle('chair-reading', sittingInChair);
@@ -1730,6 +1810,7 @@ function loop(time) {
       timer = time;
     }
   }
+  if (currentPlace === 'bridge' && bridgeDirection === 'back') kuro.style.backgroundPositionX = '';
   requestAnimationFrame(loop);
 }
 requestAnimationFrame(loop);
@@ -1744,7 +1825,7 @@ renderAlbum();
 const previewParams = new URLSearchParams(window.location.search);
 const requestedPreviewPlace = previewParams.get('preview');
 const previewPlace = requestedPreviewPlace === 'sotomayor' ? 'valparaiso' : ['plaza', 'quinta'].includes(requestedPreviewPlace) ? 'street' : requestedPreviewPlace;
-if (['street', 'house', 'plaza', 'quinta', 'museum', 'station', 'valparaiso', 'valdivia', 'cave'].includes(previewPlace)) {
+if (['street', 'house', 'plaza', 'quinta', 'museum', 'station', 'valparaiso', 'valdivia', 'bridge', 'cave'].includes(previewPlace)) {
   const previewSpot = previewParams.get('at');
   const previewEntry = requestedPreviewPlace === 'quinta'
     ? 'at-quinta'

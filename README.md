@@ -26,12 +26,15 @@ El standalone web incluye:
 - Reencuentro con Tizne, tres respuestas de personalidad y postal de Valparaíso con posdata variable.
 - Encuentro con Doña Bruma en los cerros: cuenta la historia del cascabel y Kuro puede devolvérselo sin perder el doble salto.
 - Movimiento, salto, carrera, cámara e interacciones.
+- Subida de tierra vista desde arriba dentro del Puente Pedro de Valdivia, con cuatro tramos largos de camino ancho en zigzag entre la feria y los coipos de Isla Teja. Kuro se ve de espaldas al subir, alternando las patas y la cola al caminar.
 
 ## Abrir localmente
 
 Abre `index.html` en un navegador o inicia un servidor web local desde la carpeta del proyecto.
 
 Controles principales: flechas o `A`/`D` para moverse, `Shift` para correr, `Espacio` para saltar, `E` para interactuar y `F` para dar un zarpazo dentro de la cueva.
+
+Para revisar directamente la subida del puente, abre `index.html?preview=bridge`. Usa `↑`/`W` para subir, `↓`/`S` para bajar y `←`/`→` para seguir los giros del camino. Pulsa `E` arriba para cruzar hacia los coipos o abajo para volver a la feria.
 
 ## Estado
 
