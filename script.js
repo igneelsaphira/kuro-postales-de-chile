@@ -1658,7 +1658,7 @@ function loop(time) {
     } else if (keys.has('arrowdown') || keys.has('s')) {
       const nextDepth = Math.max(0, bridgeDepth - speed * .86 * dt);
       if (bridgeOnPath(x, nextDepth)) bridgeDepth = nextDepth;
-      bridgeDirection = 'side';
+      bridgeDirection = 'front';
     }
   }
   if (controlsEnabled && !transitioning && currentPlace === 'valparaiso' && x >= game.clientWidth * 3.2875 - 110) {
@@ -1791,6 +1791,7 @@ function loop(time) {
   if (currentPlace === 'cave') game.style.setProperty('--cave-light-x', `${x - cameraX + 50}px`);
   kuro.classList.toggle('jumping', !grounded);
   kuro.classList.toggle('back-facing', currentPlace === 'bridge' && bridgeDirection === 'back');
+  kuro.classList.toggle('front-facing', currentPlace === 'bridge' && bridgeDirection === 'front');
   kuro.classList.toggle('running', grounded && moving);
   kuro.classList.toggle('interact', grounded && !moving && !dialogue.hidden);
   kuro.classList.toggle('chair-reading', sittingInChair);
@@ -1810,7 +1811,7 @@ function loop(time) {
       timer = time;
     }
   }
-  if (currentPlace === 'bridge' && bridgeDirection === 'back') kuro.style.backgroundPositionX = '';
+  if (currentPlace === 'bridge' && bridgeDirection !== 'side') kuro.style.backgroundPositionX = '';
   requestAnimationFrame(loop);
 }
 requestAnimationFrame(loop);
