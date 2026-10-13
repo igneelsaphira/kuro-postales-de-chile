@@ -192,15 +192,14 @@ const bridgeFootprintLayout = [
   [1.00, 3.18], [1.44, 3.18], [1.77, 3.55], [1.77, 4.01],
   [1.34, 4.19], [.82, 4.19], [.45, 4.56], [.45, 4.94],
   [.83, 5.11], [1.27, 5.11], [1.55, 5.52], [1.55, 5.85],
-  [.30, .83], [1.44, 1.76], [.42, 2.53], [1.05, 3.70], [1.89, 5.20]
+  [.30, .83], [1.44, 1.76], [.42, 2.53], [1.05, 3.70]
 ];
 const bridgePathElement = document.querySelector('.bridge-earth-path');
 const bridgeClues = [
   [.30, .83, 'Bajo las vigas hay huellas que se desvían hacia el río. Quiero mirar un poco más.'],
   [1.65, 1.40, 'Ese sendero oscuro se ve blando. Quizá pueda rodearlo.'],
   [.42, 2.53, 'El barro conserva marcas frescas y pequeños tallos mordidos.'],
-  [1.05, 3.70, 'Esta islita estaba escondida entre los juncos. Menos mal traje el tronco.'],
-  [1.89, 5.20, 'El agua está tranquila y hay totoras por todos lados. Los coipos deben estar cerca.']
+  [1.05, 3.70, 'Esta islita estaba escondida entre los juncos. Menos mal traje el tronco.']
 ];
 const bridgeCluesSeen = new Set();
 let bridgeMudSeconds = 0;
@@ -1873,7 +1872,6 @@ function loop(time) {
     'bridge-clue-1': 'Mirar el barro',
     'bridge-clue-2': 'Mirar el barro',
     'bridge-clue-3': 'Explorar los juncos',
-    'bridge-clue-4': 'Mirar la orilla',
     'help-family': valdiviaFamilyHelped ? 'Visitar a los coipos' : 'Ayudar a los coipos',
     'collect-bell': 'Recoger el cascabel',
     'exit-museum': 'Salir a Quinta Normal',
