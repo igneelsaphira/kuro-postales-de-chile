@@ -26,7 +26,7 @@ El standalone web incluye:
 - Reencuentro con Tizne, tres respuestas de personalidad y postal de Valparaíso con posdata variable.
 - Encuentro con Doña Bruma en los cerros: cuenta la historia del cascabel y Kuro puede devolvérselo sin perder el doble salto.
 - Movimiento, salto, carrera, cámara e interacciones.
-- Subida y bajada de tierra vistas desde arriba dentro del Puente Pedro de Valdivia. El recorrido se extiende hacia ambos lados de la pantalla: terrazas de barro, desvíos entre vigas, huellas, una orilla con bote y juncos y un humedal antes de llegar a los coipos de Isla Teja. Kuro se ve de espaldas al subir y de frente al bajar, alternando las patas y la cola al caminar.
+- Subida y bajada de tierra vistas desde arriba dentro del Puente Pedro de Valdivia. El recorrido se extiende hacia ambos lados de la pantalla: terrazas de barro, desvíos entre vigas, huellas, una orilla con bote y juncos y un humedal antes de llegar a los coipos de Isla Teja. El barro movedizo atasca a Kuro y lo hace volver a tierra firme; en otro atajo puede empujar un tronco con `E` para cruzar un charco, o tomar la ruta larga. Kuro se ve de espaldas al subir y de frente al bajar, alternando las patas y la cola al caminar.
 
 ## Abrir localmente
 

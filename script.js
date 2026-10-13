@@ -195,15 +195,29 @@ const bridgeFootprintLayout = [
 const bridgePathElement = document.querySelector('.bridge-earth-path');
 const bridgeClues = [
   [.30, .83, 'Bajo las vigas hay huellas que se desvían hacia el río. Quiero mirar un poco más.'],
-  [1.44, 1.76, 'Este sendero estrecho vuelve a unirse con el grande. Alguien conoce bien este lugar.'],
+  [1.65, 1.40, 'Ese sendero oscuro se ve blando. Quizá pueda rodearlo.'],
   [.42, 2.53, 'El barro conserva marcas frescas y pequeños tallos mordidos.'],
   [1.05, 3.70, 'Entre los juncos encuentro un paso escondido. ¡Puedo acortar camino!'],
   [1.89, 5.20, 'El agua está tranquila y hay totoras por todos lados. Los coipos deben estar cerca.']
 ];
 const bridgeCluesSeen = new Set();
+let bridgeMudSeconds = 0;
+let bridgeMudLearned = false;
+let bridgeLogPlaced = false;
 function bridgeTop() { return game.clientHeight * 5.92; }
+function bridgeInMud(centerX, depth) {
+  return centerX >= game.clientWidth * 1.28 + 8 && centerX <= game.clientWidth * 1.63 - 8 &&
+    depth >= game.clientHeight * 1.58 && depth <= game.clientHeight * 2.08;
+}
+function bridgeInPuddle(centerX, depth) {
+  return centerX >= game.clientWidth * .88 && centerX <= game.clientWidth * 1.23 &&
+    depth >= game.clientHeight * 3.52 && depth <= game.clientHeight * 3.85;
+}
 function bridgeOnPath(nextX, nextDepth) {
   const centerX = nextX + 50;
+  if (bridgeMudLearned && bridgeInMud(centerX, nextDepth)) return false;
+  if (bridgeInPuddle(centerX, nextDepth) &&
+    (!bridgeLogPlaced || Math.abs(centerX - game.clientWidth * 1.05) > 36)) return false;
   return bridgePathLayout.some(([left, right, low, high]) =>
     centerX >= left * game.clientWidth + 8 && centerX <= right * game.clientWidth - 8 &&
     nextDepth >= low * game.clientHeight && nextDepth <= high * game.clientHeight
@@ -227,7 +241,24 @@ function renderBridgePath() {
     print.style.rotate = `${index % 2 ? -16 : 15}deg`;
     return print;
   });
-  bridgePathElement.replaceChildren(...segments, ...footprints);
+  const mud = document.createElement('div');
+  mud.className = 'bridge-sinking-mud';
+  mud.style.left = `${game.clientWidth * 1.28}px`;
+  mud.style.width = `${game.clientWidth * .35}px`;
+  mud.style.bottom = `calc(4% + ${game.clientHeight * 1.58}px)`;
+  mud.style.height = `${game.clientHeight * .50}px`;
+  const puddle = document.createElement('div');
+  puddle.className = 'bridge-puddle';
+  puddle.style.left = `${game.clientWidth * .88}px`;
+  puddle.style.width = `${game.clientWidth * .35}px`;
+  puddle.style.bottom = `calc(4% + ${game.clientHeight * 3.52}px)`;
+  puddle.style.height = `${game.clientHeight * .33}px`;
+  const log = document.createElement('div');
+  log.className = 'bridge-crossing-log';
+  log.style.left = `${game.clientWidth * 1.05 - 17}px`;
+  log.style.bottom = `calc(4% + ${game.clientHeight * 3.46}px)`;
+  log.style.height = `${game.clientHeight * .45}px`;
+  bridgePathElement.replaceChildren(...segments, ...footprints, mud, puddle, log);
 }
 addEventListener('resize', renderBridgePath);
 renderBridgePath();
@@ -1348,6 +1379,10 @@ function currentInteraction() {
   if (currentPlace === 'valdivia' && x >= game.clientWidth * 2.72 && x <= game.clientWidth * 3.05) return 'inspect-passage';
   if (currentPlace === 'bridge' && bridgeDepth >= bridgeTop() - 24) return 'cross-bridge';
   if (currentPlace === 'bridge' && bridgeDepth <= 24) return 'leave-bridge';
+  if (currentPlace === 'bridge' && !bridgeLogPlaced &&
+    Math.abs(x + 50 - game.clientWidth * 1.05) < 85 &&
+    ((bridgeDepth > game.clientHeight * 3.27 && bridgeDepth < game.clientHeight * 3.52) ||
+      (bridgeDepth > game.clientHeight * 3.85 && bridgeDepth < game.clientHeight * 4.10))) return 'bridge-log';
   if (currentPlace === 'bridge') {
     const clueIndex = bridgeClues.findIndex(([left, depth], index) => !bridgeCluesSeen.has(index) &&
       Math.abs(x + 50 - left * game.clientWidth) < 58 &&
@@ -1559,6 +1594,11 @@ addEventListener('keydown', (event) => {
       localStorage.setItem('kuro-valdivia-bridge-v1', 'crossed');
       changeLocation('valdivia', 'at-island');
     }
+    if (interaction === 'bridge-log') {
+      bridgeLogPlaced = true;
+      scene.classList.add('bridge-log-placed');
+      startDialogue([['Kuro', 'Si empujo este tronco sobre el charco, podré cruzar por el atajo. ¡Ahí va!']]);
+    }
     if (interaction?.startsWith('bridge-clue-')) {
       const clueIndex = Number(interaction.slice('bridge-clue-'.length));
       bridgeCluesSeen.add(clueIndex);
@@ -1673,7 +1713,7 @@ function loop(time) {
   const controlsEnabled = dialogue.hidden && travelAlbum.hidden && photoMoment.hidden && worldMap.hidden && !sittingInChair && !autoEscapingCave;
   const moving = autoEscapingCave || (controlsEnabled && (keys.has('arrowright') || keys.has('d') || keys.has('arrowleft') || keys.has('a') || (currentPlace === 'bridge' && (keys.has('arrowup') || keys.has('w') || keys.has('arrowdown') || keys.has('s')))));
   const sprinting = keys.has('shift');
-  const speed = sprinting ? 370 : 240;
+  const speed = (sprinting ? 370 : 240) * (currentPlace === 'bridge' && bridgeInMud(x + 50, bridgeDepth) ? .18 : 1);
   if (autoEscapingCave) {
     x = Math.max(10, x - 520 * dt);
     if (x <= 12) {
@@ -1708,6 +1748,19 @@ function loop(time) {
       bridgeDirection = 'front';
     }
   }
+  if (currentPlace === 'bridge' && controlsEnabled && grounded && !bridgeMudLearned && bridgeInMud(x + 50, bridgeDepth)) {
+    bridgeMudSeconds += dt;
+    if (bridgeMudSeconds >= .65) {
+      const returnAbove = bridgeDepth > game.clientHeight * 1.84;
+      bridgeDepth = game.clientHeight * (returnAbove ? 2.28 : 1.40);
+      x = game.clientWidth * 1.45 - 50;
+      bridgeMudLearned = true;
+      bridgeMudSeconds = 0;
+      scene.classList.add('bridge-mud-known');
+      keys.clear();
+      startDialogue([['Kuro', '¡Ay, estoy demasiado atascado! Mejor me devuelvo y busco tierra firme.']]);
+    }
+  } else bridgeMudSeconds = 0;
   if (controlsEnabled && !transitioning && currentPlace === 'valparaiso' && x >= game.clientWidth * 3.2875 - 110) {
     changeLocation('cave');
   }
@@ -1799,8 +1852,9 @@ function loop(time) {
     'inspect-passage': valdiviaPassageFound ? 'Entrar a la subida' : 'Investigar bajo el puente',
     'leave-bridge': 'Volver a la feria',
     'cross-bridge': 'Cruzar hacia los coipos',
+    'bridge-log': 'Empujar el tronco',
     'bridge-clue-0': 'Examinar las pisadas',
-    'bridge-clue-1': 'Mirar el sendero',
+    'bridge-clue-1': 'Mirar el barro',
     'bridge-clue-2': 'Mirar el barro',
     'bridge-clue-3': 'Explorar los juncos',
     'bridge-clue-4': 'Mirar la orilla',
