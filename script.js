@@ -265,6 +265,55 @@ function renderBridgePath() {
   const land = document.createElement('div');
   land.className = 'bridge-land';
   land.replaceChildren(...segments);
+  // Draw only the exposed perimeter of the joined land; intersections stay open.
+  const shore = document.createElement('canvas');
+  shore.className = 'bridge-shore';
+  const pixel = 3;
+  const worldW = game.clientWidth * 2.4;
+  const worldH = game.clientHeight * 6.5;
+  shore.width = Math.ceil(worldW / pixel);
+  shore.height = Math.ceil(worldH / pixel);
+  const cols = shore.width, rows = shore.height;
+  const cells = new Uint8Array(cols * rows);
+  const ctx = shore.getContext('2d');
+  for (let row = 0; row < rows; row++) {
+    const depth = worldH * .96 - (row + .5) * pixel;
+    for (let col = 0; col < cols; col++) {
+      const px = (col + .5) * pixel;
+      cells[row * cols + col] = bridgePathLayout.some(([l, r, lo, hi, kind]) => {
+        const left = l * game.clientWidth, right = r * game.clientWidth;
+        const low = lo * game.clientHeight, high = hi * game.clientHeight;
+        if (px < left || px > right || depth < low || depth > high) return false;
+        if (kind !== 'island') return true;
+        return ((px - (left + right) / 2) / ((right - left) / 2)) ** 2 +
+          ((depth - (low + high) / 2) / ((high - low) / 2)) ** 2 <= 1;
+      });
+    }
+  }
+  const solid = (col, row) => col >= 0 && row >= 0 && col < cols && row < rows && cells[row * cols + col];
+  for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < cols; col++) {
+      if (!solid(col, row)) continue;
+      const edge = !solid(col - 1, row) || !solid(col + 1, row) || !solid(col, row - 1) || !solid(col, row + 1);
+      if (!edge) continue;
+      const seed = (col * 31 + row * 17) % 13;
+      ctx.fillStyle = !solid(col, row + 1) ? '#584832' : '#746044';
+      ctx.fillRect(col, row, 1, 1);
+      // Broken clusters of grass, with individual upright blades and a soil gap between them.
+      if (seed < 4) {
+        ctx.fillStyle = seed % 2 ? '#68764b' : '#798250';
+        ctx.fillRect(col - 1, row - 1, 3, 1);
+        ctx.fillRect(col, row - 3, 1, 3);
+        ctx.fillStyle = '#90935b';
+        ctx.fillRect(col - 1, row - 2, 1, 1);
+        ctx.fillRect(col + 1, row - 3, 1, 2);
+      } else if (seed === 8) {
+        ctx.fillStyle = '#ad9268';
+        ctx.fillRect(col, row, 1, 1);
+      }
+    }
+  }
+  land.append(shore);
   bridgePathElement.replaceChildren(puddle, land, ...footprints, mud, log, postcard);
 }
 addEventListener('resize', renderBridgePath);

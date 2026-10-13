@@ -304,7 +304,10 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .bridge-reeds.reeds-low { left: 87%; bottom: 72%; }.bridge-reeds.reeds-high { left: 40%; bottom: 83%; width: 160px; }
 .bridge-earth-path { position: absolute; inset: 0; z-index: 2; }
 /* Outline the joined land silhouette, so connected paths have no internal borders. */
-.bridge-land { position: absolute; inset: 0; z-index: 1; pointer-events: none; filter: drop-shadow(3px 0 0 #738052) drop-shadow(-3px 0 0 #738052) drop-shadow(0 -3px 0 #88905b) drop-shadow(0 3px 0 #596644) drop-shadow(0 5px 0 #61513d) drop-shadow(0 3px 0 #304f4b66); }
+.bridge-land { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.bridge-shore { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; image-rendering: pixelated; }
+.bridge-land .bridge-path-segment { border-radius: 0; box-shadow: none; }
+.bridge-land .bridge-path-segment.island { border-radius: 50%; }
 .bridge-path-segment { z-index: 1; position: absolute; border-radius: 12px; background: #927044 url('assets/bridge-earth-pixel-v1.webp') 0 0 / 384px 384px repeat; image-rendering: pixelated; }
 .bridge-path-segment.island { border-radius: 48% 43% 46% 39%; box-shadow: inset 0 0 0 7px #726a4c, 0 3px 0 #345f5f88; }
 .bridge-path-segment.clearing { border-radius: 24px 17px 27px 20px; background-color: #bba17b; }
