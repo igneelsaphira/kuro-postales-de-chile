@@ -269,7 +269,7 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .scene.valdivia .exterior-layer, .scene.valdivia .interior-layer, .scene.valdivia .plaza-layer, .scene.valdivia .quinta-layer, .scene.valdivia .museum-layer, .scene.valdivia .station-layer, .scene.valdivia .valparaiso-layer, .scene.valdivia .cave-layer { display: none; }
 .scene.valdivia .valdivia-layer { display: block; }
 .scene.valdivia .kuro { --kuro-scale: .76; bottom: calc(18% + var(--run-lift, 0px) + var(--jump-y, 0px)); }
-.scene.bridge { width: min(100vw, 1100px); height: 650%; bottom: auto; overflow: hidden; }
+.scene.bridge { width: calc(min(100vw, 1100px) * 2.4); height: 650%; bottom: auto; overflow: hidden; }
 .scene.bridge > :not(.bridge-climb-layer):not(.kuro) { display: none; }
 .scene.bridge .bridge-climb-layer { display: block; }
 .scene.bridge .kuro { --kuro-scale: .76; bottom: calc(4% - 12px + var(--bridge-depth, 0px) + var(--run-lift, 0px) + var(--jump-y, 0px)); }
@@ -290,12 +290,18 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
   75%, 100% { background-image: url('assets/kuro-front-walk-v2.png'); transform: translateY(1px) scale(calc(-1 * var(--kuro-scale, .76)), var(--kuro-scale, .76)); }
 }
 .bridge-climb-layer { display: none; position: absolute; inset: 0; z-index: 1; overflow: hidden; background: #708d64; }
-.bridge-river { position: absolute; inset: 0; background: radial-gradient(circle at 30% 22%, #9db780 0 4px, transparent 5px) 0 0 / 81px 69px, linear-gradient(90deg, #568185 0 13%, #698a65 14% 86%, #568185 87% 100%); }
+.bridge-river { position: absolute; inset: 0; background: radial-gradient(circle at 30% 22%, #9db780 0 4px, transparent 5px) 0 0 / 81px 69px, radial-gradient(ellipse at 24% 43%, #649396 0 8%, transparent 10%), radial-gradient(ellipse at 72% 72%, #608b8d 0 10%, transparent 13%), repeating-linear-gradient(90deg, #4f7d80 0 7%, #749568 9% 24%, #668b68 25% 41%, #4c7c80 43% 50%); }
 .bridge-column { position: absolute; top: 2%; bottom: 0; width: 8%; background: repeating-linear-gradient(0deg, #677a74 0 24px, #8a9990 25px 30px); border: 8px solid #4a6561; box-shadow: 16px 0 25px #193d4266; }
 .column-left { left: 3%; }.column-right { right: 3%; }
 .bridge-girders { position: absolute; inset: 5% 9%; border-left: 12px solid #425e60; border-right: 12px solid #425e60; background: repeating-linear-gradient(155deg, transparent 0 180px, #496b6a55 182px 190px, transparent 192px 360px); }
-.bridge-wetland { position: absolute; z-index: 1; left: 10%; right: 10%; top: 1%; height: 12%; border-radius: 35% 40% 28% 32%; background: radial-gradient(ellipse at 48% 60%, #91b3a0 0 24%, #6b9a91 25% 43%, transparent 44%), radial-gradient(ellipse at 35% 78%, #668975 0 14%, transparent 15%), repeating-linear-gradient(107deg, transparent 0 13px, #435d39 14px 17px, transparent 18px 35px), #789264; box-shadow: inset 0 0 0 15px #57795080; opacity: .94; }
+.bridge-wetland { position: absolute; z-index: 1; left: 48%; width: 42%; top: 1%; height: 12%; border-radius: 35% 40% 28% 32%; background: radial-gradient(ellipse at 48% 60%, #91b3a0 0 24%, #6b9a91 25% 43%, transparent 44%), radial-gradient(ellipse at 35% 78%, #668975 0 14%, transparent 15%), repeating-linear-gradient(107deg, transparent 0 13px, #435d39 14px 17px, transparent 18px 35px), #789264; box-shadow: inset 0 0 0 15px #57795080; opacity: .94; }
 .bridge-wetland::after { content: ''; position: absolute; inset: 3% 1%; background: repeating-linear-gradient(74deg, transparent 0 27px, #526e41 28px 31px, transparent 32px 55px); mask-image: linear-gradient(90deg, #000 0 22%, transparent 34% 67%, #000 79% 100%); }
+.bridge-boat { position: absolute; z-index: 1; left: 76%; bottom: 28%; width: 122px; height: 28px; border-radius: 14% 12% 55% 55%; background: #33565d; box-shadow: 0 7px 0 #28494f55; rotate: -8deg; }
+.bridge-boat::before { content: ''; position: absolute; left: 18%; right: 18%; top: -8px; height: 12px; border: 4px solid #29484c; border-radius: 45% 45% 0 0; }
+.bridge-driftwood { position: absolute; z-index: 1; left: 9%; bottom: 44%; width: 95px; height: 16px; border-radius: 45% 30% 40% 25%; background: linear-gradient(#9a7957, #634c38); rotate: -18deg; box-shadow: 3px 5px 0 #365e5a66; }
+.bridge-driftwood::after { content: ''; position: absolute; left: 42%; bottom: 8px; width: 11px; height: 27px; border-radius: 55% 45% 0 0; background: #765940; rotate: -31deg; }
+.bridge-reeds { position: absolute; z-index: 1; width: 130px; height: 74px; border-radius: 45%; background: repeating-linear-gradient(73deg, transparent 0 8px, #405b37 9px 12px, transparent 13px 20px), repeating-linear-gradient(105deg, transparent 0 11px, #9cad63 12px 15px, transparent 16px 25px); filter: drop-shadow(0 4px 2px #34564077); }
+.bridge-reeds.reeds-low { left: 87%; bottom: 72%; }.bridge-reeds.reeds-high { left: 40%; bottom: 83%; width: 160px; }
 .bridge-earth-path { position: absolute; inset: 0; z-index: 2; filter: drop-shadow(0 8px 0 #415b4680); }
 .bridge-path-segment { position: absolute; border-radius: 12px; background: radial-gradient(circle at 22% 35%, #755f46 0 3px, transparent 4px) 0 0 / 57px 63px, radial-gradient(circle at 69% 66%, #d2b68a 0 6px, transparent 7px) 0 0 / 89px 81px, #b59a72; box-shadow: inset 0 0 0 5px #816f5299, inset 0 0 26px #d4ba8a55; }
 .bridge-path-segment.clearing { border-radius: 24px 17px 27px 20px; background-color: #bba17b; }
@@ -308,9 +314,15 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .bridge-footprints.faint { opacity: .25; }
 .bridge-footprints::before, .bridge-footprints::after { content: ''; position: absolute; width: 12px; height: 17px; border-radius: 55% 55% 45% 45%; background: radial-gradient(circle at 20% 11%, #70593f 0 2px, transparent 3px), radial-gradient(circle at 52% 4%, #70593f 0 2px, transparent 3px), radial-gradient(circle at 82% 13%, #70593f 0 2px, transparent 3px), radial-gradient(ellipse at 50% 69%, #70593f 0 5px, transparent 6px); }
 .bridge-footprints::before { left: 1px; bottom: 0; rotate: -20deg; }.bridge-footprints::after { right: 1px; top: 0; rotate: 18deg; }
+.bridge-path-segment.zone-river { background-color: #bda27a; }
+.bridge-path-segment.zone-underpass { background-color: #9d896e; }
+.bridge-path-segment.zone-mud { background-color: #9d8764; }
+.bridge-path-segment.zone-reeds { background-color: #b3a078; }
+.bridge-path-segment.zone-wetland { background-color: #acaa7c; }
+.bridge-path-segment.detour { border-radius: 26px 15px 27px 16px; box-shadow: inset 0 0 0 5px #786b5077, inset 0 0 32px #d4ba8a55; }
 .bridge-climb-layer::after { content: ''; position: absolute; z-index: 3; left: 0; right: 0; bottom: 0; height: 4%; border-top: 10px solid #9baa71; background: repeating-linear-gradient(90deg, #a89575 0 55px, #8d7a64 56px 60px); }
 .bridge-start-sign, .bridge-exit-sign { position: absolute; z-index: 4; padding: 12px 18px; border: 5px solid #475956; border-radius: 5px; background: #dfcfaa; color: #3c5450; font: bold 17px Georgia, serif; text-align: center; box-shadow: 6px 8px 0 #2c4b4d66; }
-.bridge-start-sign { bottom: 7%; right: 2%; max-width: 24%; font-size: 13px; }.bridge-exit-sign { top: 4%; right: 2%; }
+.bridge-start-sign { bottom: 7%; left: 2%; max-width: 12%; font-size: 13px; }.bridge-exit-sign { top: 4%; right: 25%; }
 .bridge-start-sign small, .bridge-exit-sign small { font-size: 12px; }
 .valdivia-layer > div { position: absolute; }
 .valdivia-start { left: 0; top: 0; width: 50%; height: 100%; }

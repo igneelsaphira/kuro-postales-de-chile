@@ -161,26 +161,44 @@ let dogProjectileBounces = 0;
 let dogProjectileSpin = 0;
 let dogProjectileDeflected = false;
 let audioContext = null;
-const bridgePathBase = [
-  [.32, .68, 0, .38, 'trail'],
-  [.12, .88, .26, .55, 'clearing'],
-  [.10, .41, .47, 1.14, 'trail'],
-  [.59, .90, .47, 1.14, 'trail'],
-  [.10, .90, .86, 1.08, 'clearing'],
-  [.13, .87, 1.04, 1.34, 'clearing'],
-  [.33, .67, 1.29, 1.52, 'trail']
+// Coordenadas en pantallas: cada terraza obliga a mirar hacia un lado distinto.
+const bridgePathLayout = [
+  [.35, .68, 0, .52, 'trail', 'river'],
+  [.32, 1.37, .35, .73, 'clearing', 'river'],
+  [.12, .48, .62, 1.06, 'detour', 'river'],
+  [1.16, 1.53, .62, 1.37, 'trail', 'underpass'],
+  [1.18, 2.18, 1.20, 1.58, 'clearing', 'underpass'],
+  [1.84, 2.19, 1.48, 2.27, 'trail', 'underpass'],
+  [1.28, 1.63, 1.48, 2.20, 'detour', 'underpass'],
+  [.60, 2.18, 2.08, 2.47, 'clearing', 'mud'],
+  [.25, .79, 2.12, 2.73, 'detour', 'mud'],
+  [.44, .81, 2.38, 3.12, 'trail', 'mud'],
+  [.43, 1.94, 2.96, 3.37, 'clearing', 'mud'],
+  [.25, .62, 3.26, 3.65, 'detour', 'mud'],
+  [1.60, 1.96, 3.28, 4.13, 'trail', 'reeds'],
+  [.88, 1.23, 3.27, 4.10, 'detour', 'reeds'],
+  [.25, 1.95, 4.00, 4.38, 'clearing', 'reeds'],
+  [.27, .63, 4.27, 5.07, 'trail', 'reeds'],
+  [.27, 1.67, 4.92, 5.32, 'clearing', 'wetland'],
+  [1.48, 2.16, 5.05, 5.37, 'detour', 'wetland'],
+  [1.35, 1.74, 5.23, 5.96, 'trail', 'wetland']
 ];
-const bridgePathLayout = Array.from({ length: 4 }, (_, stage) =>
-  bridgePathBase.map(([left, right, low, high, kind]) => [
-    ...(stage % 2 ? [1 - right, 1 - left] : [left, right]),
-    low + stage * 1.48, high + stage * 1.48, stage, kind
-  ])
-).flat();
+const bridgeFootprintLayout = [
+  [.50, .24], [.82, .53], [1.12, .55], [1.34, .91],
+  [1.40, 1.30], [1.75, 1.40], [2.00, 1.78], [1.73, 2.26],
+  [1.31, 2.27], [.87, 2.27], [.62, 2.60], [.62, 3.00],
+  [1.00, 3.18], [1.44, 3.18], [1.77, 3.55], [1.77, 4.01],
+  [1.34, 4.19], [.82, 4.19], [.45, 4.56], [.45, 4.94],
+  [.83, 5.11], [1.27, 5.11], [1.55, 5.52], [1.55, 5.85],
+  [.30, .83], [1.44, 1.76], [.42, 2.53], [1.05, 3.70], [1.89, 5.20]
+];
 const bridgePathElement = document.querySelector('.bridge-earth-path');
 const bridgeClues = [
-  [.27, .78, 'Las pisadas se separan aquí. Hay otra ruta por el lado del agua.'],
-  [.73, 2.26, 'Entre el barro hay tallos mordidos. Alguien salió del agua hace poco.'],
-  [.27, 3.74, 'La tierra está más húmeda. Las huellas siguen hacia los juncos de la orilla.']
+  [.30, .83, 'Bajo las vigas hay huellas que se desvían hacia el río. Quiero mirar un poco más.'],
+  [1.44, 1.76, 'Este sendero estrecho vuelve a unirse con el grande. Alguien conoce bien este lugar.'],
+  [.42, 2.53, 'El barro conserva marcas frescas y pequeños tallos mordidos.'],
+  [1.05, 3.70, 'Entre los juncos encuentro un paso escondido. ¡Puedo acortar camino!'],
+  [1.89, 5.20, 'El agua está tranquila y hay totoras por todos lados. Los coipos deben estar cerca.']
 ];
 const bridgeCluesSeen = new Set();
 function bridgeTop() { return game.clientHeight * 5.92; }
@@ -192,28 +210,23 @@ function bridgeOnPath(nextX, nextDepth) {
   );
 }
 function renderBridgePath() {
-  const segments = bridgePathLayout.map(([left, right, low, high, stage, kind]) => {
+  const segments = bridgePathLayout.map(([left, right, low, high, kind, zone]) => {
     const segment = document.createElement('div');
-    segment.className = `bridge-path-segment stage-${stage + 1} ${kind}`;
+    segment.className = `bridge-path-segment ${kind} zone-${zone}`;
     segment.style.left = `${left * game.clientWidth}px`;
     segment.style.width = `${(right - left) * game.clientWidth}px`;
     segment.style.bottom = `calc(4% + ${low * game.clientHeight}px)`;
     segment.style.height = `${(high - low) * game.clientHeight}px`;
     return segment;
   });
-  const footprints = Array.from({ length: 4 }, (_, stage) => {
-    const routeX = stage % 2 ? .73 : .27;
-    const depths = [[.5, .35], [routeX, .59], [routeX, .78], [1 - routeX, .78], [routeX, .98], [.5, 1.17], [.5, 1.38]];
-    return depths.map(([left, depth], step) => {
-      const print = document.createElement('i');
-      print.className = 'bridge-footprints';
-      print.style.left = `${left * game.clientWidth}px`;
-      print.style.bottom = `calc(4% + ${(depth + stage * 1.48) * game.clientHeight}px)`;
-      print.style.rotate = `${left < .5 ? -13 : 13}deg`;
-      if (step === 2 || step === 3) print.classList.add('faint');
-      return print;
-    });
-  }).flat();
+  const footprints = bridgeFootprintLayout.map(([left, depth], index) => {
+    const print = document.createElement('i');
+    print.className = index >= 24 ? 'bridge-footprints faint' : 'bridge-footprints';
+    print.style.left = `${left * game.clientWidth}px`;
+    print.style.bottom = `calc(4% + ${depth * game.clientHeight}px)`;
+    print.style.rotate = `${index % 2 ? -16 : 15}deg`;
+    return print;
+  });
   bridgePathElement.replaceChildren(...segments, ...footprints);
 }
 addEventListener('resize', renderBridgePath);
@@ -1669,7 +1682,7 @@ function loop(time) {
     }
   }
   if (controlsEnabled && (keys.has('arrowright') || keys.has('d'))) {
-    const activeWorldWidth = currentPlace === 'valparaiso' ? game.clientWidth * 3.2875 : currentPlace === 'cave' ? game.clientWidth * 6 : currentPlace === 'street' ? game.clientWidth * 1.6875 : currentPlace === 'valdivia' ? game.clientWidth * 4 : currentPlace === 'bridge' || currentPlace === 'house' || currentPlace === 'museum' || currentPlace === 'plaza' || currentPlace === 'quinta' || currentPlace === 'station' ? game.clientWidth : worldWidth;
+    const activeWorldWidth = currentPlace === 'valparaiso' ? game.clientWidth * 3.2875 : currentPlace === 'cave' ? game.clientWidth * 6 : currentPlace === 'street' ? game.clientWidth * 1.6875 : currentPlace === 'valdivia' ? game.clientWidth * 4 : currentPlace === 'bridge' ? game.clientWidth * 2.4 : currentPlace === 'house' || currentPlace === 'museum' || currentPlace === 'plaza' || currentPlace === 'quinta' || currentPlace === 'station' ? game.clientWidth : worldWidth;
     const nextX = Math.min(activeWorldWidth - 110, x + speed * dt);
     if (currentPlace !== 'bridge' || bridgeOnPath(nextX, bridgeDepth)) x = nextX;
     if (currentPlace === 'valdivia' && !valdiviaBridgeCrossed) x = Math.min(x, game.clientWidth * 3.02);
@@ -1787,8 +1800,10 @@ function loop(time) {
     'leave-bridge': 'Volver a la feria',
     'cross-bridge': 'Cruzar hacia los coipos',
     'bridge-clue-0': 'Examinar las pisadas',
-    'bridge-clue-1': 'Mirar los tallos',
-    'bridge-clue-2': 'Seguir las huellas',
+    'bridge-clue-1': 'Mirar el sendero',
+    'bridge-clue-2': 'Mirar el barro',
+    'bridge-clue-3': 'Explorar los juncos',
+    'bridge-clue-4': 'Mirar la orilla',
     'help-family': valdiviaFamilyHelped ? 'Visitar a los coipos' : 'Ayudar a los coipos',
     'collect-bell': 'Recoger el cascabel',
     'exit-museum': 'Salir a Quinta Normal',
@@ -1806,7 +1821,7 @@ function loop(time) {
   interactionPrompt.hidden = !interaction || !dialogue.hidden;
 
   const viewportWidth = game.clientWidth;
-  const activeWorldWidth = currentPlace === 'valparaiso' ? viewportWidth * 3.2875 : currentPlace === 'cave' ? viewportWidth * 6 : currentPlace === 'street' ? viewportWidth * 1.6875 : currentPlace === 'valdivia' ? viewportWidth * 4 : currentPlace === 'bridge' || currentPlace === 'house' || currentPlace === 'museum' || currentPlace === 'plaza' || currentPlace === 'quinta' || currentPlace === 'station' ? viewportWidth : worldWidth;
+  const activeWorldWidth = currentPlace === 'valparaiso' ? viewportWidth * 3.2875 : currentPlace === 'cave' ? viewportWidth * 6 : currentPlace === 'street' ? viewportWidth * 1.6875 : currentPlace === 'valdivia' ? viewportWidth * 4 : currentPlace === 'bridge' ? viewportWidth * 2.4 : currentPlace === 'house' || currentPlace === 'museum' || currentPlace === 'plaza' || currentPlace === 'quinta' || currentPlace === 'station' ? viewportWidth : worldWidth;
   const maxCameraX = Math.max(0, activeWorldWidth - viewportWidth);
   const targetLookAhead = moving ? facing * 72 : 0;
   cameraLookAhead += (targetLookAhead - cameraLookAhead) * Math.min(1, 3 * dt);
