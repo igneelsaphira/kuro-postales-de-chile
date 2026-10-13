@@ -262,7 +262,10 @@ function renderBridgePath() {
   postcard.className = 'bridge-secret-postcard';
   postcard.style.left = `${game.clientWidth * 1.05 - 18}px`;
   postcard.style.bottom = `calc(4% + ${game.clientHeight * 3.79}px)`;
-  bridgePathElement.replaceChildren(puddle, ...segments, ...footprints, mud, log, postcard);
+  const land = document.createElement('div');
+  land.className = 'bridge-land';
+  land.replaceChildren(...segments);
+  bridgePathElement.replaceChildren(puddle, land, ...footprints, mud, log, postcard);
 }
 addEventListener('resize', renderBridgePath);
 renderBridgePath();
