@@ -301,8 +301,20 @@ function renderBridgePath() {
       const edge = !solid(col - 1, row) || !solid(col + 1, row) || !solid(col, row - 1) || !solid(col, row + 1);
       if (!edge) continue;
       const seed = (col * 31 + row * 17) % 13;
-      ctx.fillStyle = !solid(col, row + 1) ? '#584832' : '#746044';
-      ctx.fillRect(col, row, 1, 1);
+      const exposedBottom = !solid(col, row + 1);
+      const soilWidth = 1 + Math.floor(bankNoise(Math.floor(col / 4), Math.floor(row / 4)) * 3);
+      const inwardX = !solid(col - 1, row) ? 1 : !solid(col + 1, row) ? -1 : 0;
+      const inwardY = !solid(col, row - 1) ? 1 : exposedBottom ? -1 : 0;
+      for (let layer = soilWidth; layer >= 0; layer--) {
+        const sx = col + inwardX * layer, sy = row + inwardY * layer;
+        if (!solid(sx, sy)) continue;
+        ctx.fillStyle = layer === 0 ? (exposedBottom ? '#584832' : '#746044') : '#806444';
+        ctx.fillRect(sx, sy, 1, 1);
+      }
+      if (exposedBottom && bankNoise(col + 71, row) < .025) {
+        ctx.fillStyle = '#615039';
+        ctx.fillRect(col, row + 1, 1, seed === 0 ? 2 : 1);
+      }
       if (seed === 8) {
         ctx.fillStyle = '#ad9268';
         ctx.fillRect(col, row, 1, 1);
@@ -336,7 +348,22 @@ function renderBridgePath() {
       }
     }
   }
-  land.append(shore, ...bankPlants);
+  const stoneSpots = [
+    [.39, .39, 38], [1.31, .68, 42], [2.09, 1.54, 40],
+    [.33, 2.30, 33], [.73, 2.99, 34], [.94, 3.30, 45],
+    [1.15, 3.79, 30], [1.89, 4.08, 38], [.36, 4.98, 34], [1.64, 5.28, 38]
+  ];
+  const stones = stoneSpots.map(([left, depth, width], index) => {
+    const stone = document.createElement('i');
+    stone.className = 'bridge-bank-stones';
+    stone.style.width = `${width}px`;
+    stone.style.height = `${width * .7}px`;
+    stone.style.left = `${left * viewW - width / 2}px`;
+    stone.style.bottom = `calc(4% + ${depth * viewH - 5}px)`;
+    stone.style.transform = `rotate(${index % 3 * 5 - 5}deg) scaleX(${index % 2 ? -1 : 1})`;
+    return stone;
+  });
+  land.append(shore, ...stones, ...bankPlants);
   bridgePathElement.replaceChildren(puddle, land, ...footprints, mud, log, postcard);
 }
 addEventListener('resize', renderBridgePath);

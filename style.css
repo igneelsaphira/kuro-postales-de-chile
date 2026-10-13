@@ -696,3 +696,5 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 }
 
 .bridge-bank-plant { position: absolute; z-index: 3; background: url('assets/bridge-bank-plants-v1.webp') center / contain no-repeat; image-rendering: pixelated; pointer-events: none; }
+
+.bridge-bank-stones { position: absolute; z-index: 3; pointer-events: none; background: url('assets/bridge-bank-stones-v1.webp') center / contain no-repeat; image-rendering: pixelated; }
