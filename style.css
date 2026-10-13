@@ -290,7 +290,7 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
   75%, 100% { background-image: url('assets/kuro-front-walk-v2.png'); transform: translateY(1px) scale(calc(-1 * var(--kuro-scale, .76)), var(--kuro-scale, .76)); }
 }
 .bridge-climb-layer { display: none; position: absolute; inset: 0; z-index: 1; overflow: hidden; background: #708d64; }
-.bridge-river { position: absolute; inset: 0; background: radial-gradient(circle at 30% 22%, #9db780 0 4px, transparent 5px) 0 0 / 81px 69px, radial-gradient(ellipse at 24% 43%, #649396 0 8%, transparent 10%), radial-gradient(ellipse at 72% 72%, #608b8d 0 10%, transparent 13%), repeating-linear-gradient(90deg, #4f7d80 0 7%, #749568 9% 24%, #668b68 25% 41%, #4c7c80 43% 50%); }
+.bridge-river { position: absolute; inset: 0; background: linear-gradient(#7ea79622, #5d887633), url('assets/bridge-wetland-water-v1.webp') center / 800px 800px repeat; }
 .bridge-column { position: absolute; top: 2%; bottom: 0; width: 8%; background: repeating-linear-gradient(0deg, #677a74 0 24px, #8a9990 25px 30px); border: 8px solid #4a6561; box-shadow: 16px 0 25px #193d4266; }
 .column-left { left: 3%; }.column-right { right: 3%; }
 .bridge-girders { position: absolute; inset: 5% 9%; border-left: 12px solid #425e60; border-right: 12px solid #425e60; background: repeating-linear-gradient(155deg, transparent 0 180px, #496b6a55 182px 190px, transparent 192px 360px); }
