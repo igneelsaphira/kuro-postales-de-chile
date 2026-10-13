@@ -223,16 +223,6 @@ function bridgeOnPath(nextX, nextDepth) {
   );
 }
 function renderBridgePath() {
-  const ripples = Array.from({ length: 48 }, (_, index) => {
-    const ripple = document.createElement('i');
-    ripple.className = 'bridge-water-ring';
-    ripple.style.left = `${4 + (index % 6) * 16 + (Math.floor(index / 6) % 2) * 5}%`;
-    ripple.style.top = `${3 + Math.floor(index / 6) * 12}%`;
-    ripple.style.animationDelay = `${-(index * 1.37) % 7}s`;
-    ripple.style.animationDuration = `${4.5 + (index % 4) * .7}s`;
-    return ripple;
-  });
-  document.querySelector('.bridge-river').replaceChildren(...ripples);
   const segments = bridgePathLayout.map(([left, right, low, high, kind, zone]) => {
     const segment = document.createElement('div');
     segment.className = `bridge-path-segment ${kind} zone-${zone}`;
