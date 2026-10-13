@@ -236,7 +236,7 @@ function renderBridgePath() {
   });
   const footprints = bridgeFootprintLayout.map(([left, depth], index) => {
     const print = document.createElement('i');
-    print.className = index >= 24 ? 'bridge-footprints faint' : 'bridge-footprints';
+    print.className = `bridge-footprints ${index % 2 ? 'front' : 'hind'}${index >= 24 ? ' faint' : ''}`;
     print.style.left = `${left * viewW}px`;
     print.style.bottom = `calc(4% + ${depth * viewH}px)`;
     print.style.rotate = `${index % 2 ? -16 : 15}deg`;
@@ -288,9 +288,15 @@ function renderBridgePath() {
         const left = l * viewW, right = r * viewW;
         const low = lo * viewH, high = hi * viewH;
         if (px < left || px > right || depth < low || depth > high) return false;
-        if (kind !== 'island') return true;
-        return ((px - (left + right) / 2) / ((right - left) / 2)) ** 2 +
-          ((depth - (low + high) / 2) / ((high - low) / 2)) ** 2 <= 1;
+        if (kind === 'island') {
+          return ((px - (left + right) / 2) / ((right - left) / 2)) ** 2 +
+            ((depth - (low + high) / 2) / ((high - low) / 2)) ** 2 <= 1;
+        }
+        // Round the joined path's outside corners without changing its walkable layout.
+        const radius = Math.min(38, (right - left) / 3, (high - low) / 2);
+        const nearestX = Math.max(left + radius, Math.min(px, right - radius));
+        const nearestY = Math.max(low + radius, Math.min(depth, high - radius));
+        return (px - nearestX) ** 2 + (depth - nearestY) ** 2 <= radius ** 2;
       });
     }
   }
