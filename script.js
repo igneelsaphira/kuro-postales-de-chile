@@ -293,6 +293,7 @@ function renderBridgePath() {
   }
   const bankPlants = [];
   const planted = [];
+  const bankNoise = (a, b) => { const n = Math.sin(a * 127.1 + b * 311.7) * 43758.5453; return n - Math.floor(n); };
   const solid = (col, row) => col >= 0 && row >= 0 && col < cols && row < rows && cells[row * cols + col];
   for (let row = 0; row < rows; row++) {
     for (let col = 0; col < cols; col++) {
@@ -307,18 +308,31 @@ function renderBridgePath() {
         ctx.fillRect(col, row, 1, 1);
       }
       const px = col * pixel, py = row * pixel;
-      const spacing = 44 + seed * 2;
-      if (seed < 4 && !planted.some(([x, y]) => (x - px) ** 2 + (y - py) ** 2 < spacing ** 2)) {
+      const patch = Math.sin(px / 79 + py / 137) + Math.cos(py / 91 - px / 163);
+      const spacing = 85 + bankNoise(col, row) * 75;
+      if (patch > -.3 && bankNoise(col + 7, row) < .12 &&
+        !planted.some(([x, y]) => (x - px) ** 2 + (y - py) ** 2 < spacing ** 2)) {
         planted.push([px, py]);
-        const plant = document.createElement('i');
-        plant.className = 'bridge-bank-plant';
-        const size = 35 + ((col * 7 + row * 3) % 30);
-        plant.style.width = `${size}px`;
-        plant.style.height = `${size}px`;
-        plant.style.left = `${px - size / 2}px`;
-        plant.style.top = `${py - size * .82}px`;
-        plant.style.transform = `scaleX(${seed % 2 ? -1 : 1})`;
-        bankPlants.push(plant);
+        const count = 2 + Math.floor(bankNoise(col, row + 9) * 4);
+        for (let tuft = 0; tuft < count; tuft++) {
+          const variation = bankNoise(col + tuft * 11, row + 19);
+          let rootX = px + (bankNoise(col + tuft, row + 31) - .5) * 56;
+          let rootY = py + (bankNoise(col + 41, row + tuft) - .5) * 36;
+          if (!solid(Math.floor(rootX / pixel), Math.floor(rootY / pixel))) {
+            rootX = px; rootY = py;
+          }
+          const plant = document.createElement('i');
+          plant.className = 'bridge-bank-plant';
+          const size = 22 + variation * 29;
+          plant.style.width = `${size * (.8 + bankNoise(col + tuft, row) * .35)}px`;
+          plant.style.height = `${size}px`;
+          plant.style.left = `${rootX - size / 2}px`;
+          plant.style.top = `${rootY - size * .82}px`;
+          plant.style.transformOrigin = '50% 82%';
+          plant.style.transform = `rotate(${variation * 18 - 9}deg) scaleX(${tuft % 2 ? -1 : 1})`;
+          plant.style.filter = `brightness(${.83 + variation * .15})`;
+          bankPlants.push(plant);
+        }
       }
     }
   }
