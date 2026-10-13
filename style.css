@@ -290,8 +290,7 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
   75%, 100% { background-image: url('assets/kuro-front-walk-v2.png'); transform: translateY(1px) scale(calc(-1 * var(--kuro-scale, .76)), var(--kuro-scale, .76)); }
 }
 .bridge-climb-layer { display: none; position: absolute; inset: 0; z-index: 1; overflow: hidden; background: #708d64; }
-.bridge-river { position: absolute; inset: 0; background: linear-gradient(#7ea79622, #5d887633), url('assets/bridge-wetland-water-v1.webp') 0 0 / 800px 800px repeat; animation: bridge-water-drift 24s ease-in-out infinite alternate; }
-@keyframes bridge-water-drift { to { background-position: 0 0, 32px 22px; } }
+.bridge-river { position: absolute; inset: 0; background: linear-gradient(#7ea79622, #5d887633), url('assets/bridge-wetland-water-v1.webp') 0 0 / 800px 800px repeat; }
 .bridge-river::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 23% 40%, #c9e0c22b, transparent 32%), radial-gradient(ellipse at 74% 64%, #a8d3ca25, transparent 35%); animation: bridge-water-light 6s ease-in-out infinite alternate; }
 @keyframes bridge-water-light { to { opacity: .35; } }
 .bridge-column { position: absolute; top: 2%; bottom: 0; width: 8%; background: repeating-linear-gradient(0deg, #677a74 0 24px, #8a9990 25px 30px); border: 8px solid #4a6561; box-shadow: 16px 0 25px #193d4266; }
@@ -697,3 +696,8 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 }
 
 @media (prefers-reduced-motion: reduce) { .bridge-river, .bridge-river::after, .bridge-puddle::after { animation: none; } }
+
+.bridge-water-ring { position: absolute; width: 76px; height: 25px; border: 1px solid #d6ecce; border-radius: 50%; opacity: 0; pointer-events: none; animation: bridge-ring-expand 5s linear infinite; }
+.bridge-water-ring::after { content: ''; position: absolute; inset: 5px 12px; border-top: 1px solid #c1ded2; border-radius: 50%; }
+@keyframes bridge-ring-expand { 0% { transform: scale(.2); opacity: 0; } 18% { opacity: .38; } 80%, 100% { transform: scale(1.35); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .bridge-water-ring { animation: none; } }
