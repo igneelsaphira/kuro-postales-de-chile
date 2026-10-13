@@ -284,19 +284,21 @@ function renderBridgePath() {
     const depth = worldH * .96 - (row + .5) * pixel;
     for (let col = 0; col < cols; col++) {
       const px = (col + .5) * pixel;
+      const sampleX = px + 9 * Math.sin(depth / 48 + px / 113) + 3 * Math.sin(depth / 19 - px / 67);
+      const sampleDepth = depth + 7 * Math.sin(px / 54 + depth / 127);
       cells[row * cols + col] = bridgePathLayout.some(([l, r, lo, hi, kind]) => {
         const left = l * viewW, right = r * viewW;
         const low = lo * viewH, high = hi * viewH;
-        if (px < left || px > right || depth < low || depth > high) return false;
+        if (sampleX < left || sampleX > right || sampleDepth < low || sampleDepth > high) return false;
         if (kind === 'island') {
-          return ((px - (left + right) / 2) / ((right - left) / 2)) ** 2 +
-            ((depth - (low + high) / 2) / ((high - low) / 2)) ** 2 <= 1;
+          return ((sampleX - (left + right) / 2) / ((right - left) / 2)) ** 2 +
+            ((sampleDepth - (low + high) / 2) / ((high - low) / 2)) ** 2 <= 1;
         }
         // Round the joined path's outside corners without changing its walkable layout.
         const radius = Math.min(38, (right - left) / 3, (high - low) / 2);
-        const nearestX = Math.max(left + radius, Math.min(px, right - radius));
-        const nearestY = Math.max(low + radius, Math.min(depth, high - radius));
-        return (px - nearestX) ** 2 + (depth - nearestY) ** 2 <= radius ** 2;
+        const nearestX = Math.max(left + radius, Math.min(sampleX, right - radius));
+        const nearestY = Math.max(low + radius, Math.min(sampleDepth, high - radius));
+        return (sampleX - nearestX) ** 2 + (sampleDepth - nearestY) ** 2 <= radius ** 2;
       });
     }
   }
