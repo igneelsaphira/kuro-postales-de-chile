@@ -303,17 +303,16 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .bridge-reeds { position: absolute; z-index: 1; width: 130px; height: 74px; border-radius: 45%; background: repeating-linear-gradient(73deg, transparent 0 8px, #405b37 9px 12px, transparent 13px 20px), repeating-linear-gradient(105deg, transparent 0 11px, #9cad63 12px 15px, transparent 16px 25px); filter: drop-shadow(0 4px 2px #34564077); }
 .bridge-reeds.reeds-low { left: 87%; bottom: 72%; }.bridge-reeds.reeds-high { left: 40%; bottom: 83%; width: 160px; }
 .bridge-earth-path { position: absolute; inset: 0; z-index: 2; filter: drop-shadow(0 8px 0 #415b4680); }
-.bridge-path-segment { z-index: 1; position: absolute; border-radius: 12px; background: radial-gradient(circle at 22% 35%, #755f46 0 3px, transparent 4px) 0 0 / 57px 63px, radial-gradient(circle at 69% 66%, #d2b68a 0 6px, transparent 7px) 0 0 / 89px 81px, #b59a72; box-shadow: inset 0 0 0 5px #816f5299, inset 0 0 26px #d4ba8a55; }
+.bridge-path-segment { z-index: 1; position: absolute; border-radius: 12px; background: #927044 url('assets/bridge-earth-pixel-v1.webp') 0 0 / 384px 384px repeat; image-rendering: pixelated; }
 .bridge-path-segment.island { border-radius: 48% 43% 46% 39%; box-shadow: inset 0 0 0 7px #726a4c, 0 3px 0 #345f5f88; }
 .bridge-path-segment.clearing { border-radius: 24px 17px 27px 20px; background-color: #bba17b; }
 .bridge-path-segment.trail { border-radius: 20px 13px 18px 16px; }
 .bridge-path-segment.stage-2 { background-color: #a98e6c; }
 .bridge-path-segment.stage-3 { background-color: #b7a17a; }
 .bridge-path-segment.stage-4 { background-color: #b29a75; }
-.bridge-path-segment::after { content: ''; position: absolute; inset: 0; border-radius: inherit; background: repeating-linear-gradient(0deg, transparent 0 69px, #8e77572b 71px 74px, transparent 76px 144px); }
-.bridge-footprints { position: absolute; z-index: 2; width: 30px; height: 34px; opacity: .52; pointer-events: none; }
-.bridge-footprints.faint { opacity: .25; }
-.bridge-footprints::before, .bridge-footprints::after { content: ''; position: absolute; width: 12px; height: 17px; border-radius: 55% 55% 45% 45%; background: radial-gradient(circle at 20% 11%, #70593f 0 2px, transparent 3px), radial-gradient(circle at 52% 4%, #70593f 0 2px, transparent 3px), radial-gradient(circle at 82% 13%, #70593f 0 2px, transparent 3px), radial-gradient(ellipse at 50% 69%, #70593f 0 5px, transparent 6px); }
+.bridge-footprints { position: absolute; z-index: 2; width: 30px; height: 34px; opacity: .85; pointer-events: none; }
+.bridge-footprints.faint { opacity: .50; }
+.bridge-footprints::before, .bridge-footprints::after { content: ''; position: absolute; width: 12px; height: 17px; border-radius: 55% 55% 45% 45%; background: radial-gradient(circle at 20% 11%, #483724 0 2px, transparent 3px), radial-gradient(circle at 52% 4%, #483724 0 2px, transparent 3px), radial-gradient(circle at 82% 13%, #483724 0 2px, transparent 3px), radial-gradient(ellipse at 50% 69%, #483724 0 5px, transparent 6px); }
 .bridge-footprints::before { left: 1px; bottom: 0; rotate: -20deg; }.bridge-footprints::after { right: 1px; top: 0; rotate: 18deg; }
 .bridge-sinking-mud, .bridge-puddle, .bridge-crossing-log, .bridge-secret-postcard { position: absolute; pointer-events: none; }
 .bridge-sinking-mud { z-index: 3; border-radius: 29% 18% 24% 32%; background: radial-gradient(circle at 24% 36%, #b69c7655 0 9px, transparent 11px), radial-gradient(circle at 73% 70%, #d1b48a66 0 6px, transparent 8px), radial-gradient(ellipse at 48% 50%, #534b3b 0 25%, #75634b 58%, #8e7858 82%, transparent 100%); box-shadow: inset 0 0 22px #3f3b2a88; animation: bridge-mud-breathe 1.7s ease-in-out infinite alternate; }

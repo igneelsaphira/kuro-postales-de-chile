@@ -230,6 +230,7 @@ function renderBridgePath() {
     segment.style.width = `${(right - left) * game.clientWidth}px`;
     segment.style.bottom = `calc(4% + ${low * game.clientHeight}px)`;
     segment.style.height = `${(high - low) * game.clientHeight}px`;
+    segment.style.backgroundPosition = `${-left * game.clientWidth}px ${high * game.clientHeight}px`;
     return segment;
   });
   const footprints = bridgeFootprintLayout.map(([left, depth], index) => {
