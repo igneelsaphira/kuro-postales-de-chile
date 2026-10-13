@@ -223,45 +223,46 @@ function bridgeOnPath(nextX, nextDepth) {
   );
 }
 function renderBridgePath() {
+  const viewW = game.clientWidth, viewH = game.clientHeight;
   const segments = bridgePathLayout.map(([left, right, low, high, kind, zone]) => {
     const segment = document.createElement('div');
     segment.className = `bridge-path-segment ${kind} zone-${zone}`;
-    segment.style.left = `${left * game.clientWidth}px`;
-    segment.style.width = `${(right - left) * game.clientWidth}px`;
-    segment.style.bottom = `calc(4% + ${low * game.clientHeight}px)`;
-    segment.style.height = `${(high - low) * game.clientHeight}px`;
-    segment.style.backgroundPosition = `${-left * game.clientWidth}px ${high * game.clientHeight}px`;
+    segment.style.left = `${left * viewW}px`;
+    segment.style.width = `${(right - left) * viewW}px`;
+    segment.style.bottom = `calc(4% + ${low * viewH}px)`;
+    segment.style.height = `${(high - low) * viewH}px`;
+    segment.style.backgroundPosition = `${-left * viewW}px ${high * viewH}px`;
     return segment;
   });
   const footprints = bridgeFootprintLayout.map(([left, depth], index) => {
     const print = document.createElement('i');
     print.className = index >= 24 ? 'bridge-footprints faint' : 'bridge-footprints';
-    print.style.left = `${left * game.clientWidth}px`;
-    print.style.bottom = `calc(4% + ${depth * game.clientHeight}px)`;
+    print.style.left = `${left * viewW}px`;
+    print.style.bottom = `calc(4% + ${depth * viewH}px)`;
     print.style.rotate = `${index % 2 ? -16 : 15}deg`;
     return print;
   });
   const mud = document.createElement('div');
   mud.className = 'bridge-sinking-mud';
-  mud.style.left = `${game.clientWidth * 1.28}px`;
-  mud.style.width = `${game.clientWidth * .35}px`;
-  mud.style.bottom = `calc(4% + ${game.clientHeight * 1.58}px)`;
-  mud.style.height = `${game.clientHeight * .50}px`;
+  mud.style.left = `${viewW * 1.28}px`;
+  mud.style.width = `${viewW * .35}px`;
+  mud.style.bottom = `calc(4% + ${viewH * 1.58}px)`;
+  mud.style.height = `${viewH * .50}px`;
   const puddle = document.createElement('div');
   puddle.className = 'bridge-puddle';
-  puddle.style.left = `${game.clientWidth * .69}px`;
-  puddle.style.width = `${game.clientWidth * .72}px`;
-  puddle.style.bottom = `calc(4% + ${game.clientHeight * 3.38}px)`;
-  puddle.style.height = `${game.clientHeight * .60}px`;
+  puddle.style.left = `${viewW * .69}px`;
+  puddle.style.width = `${viewW * .72}px`;
+  puddle.style.bottom = `calc(4% + ${viewH * 3.38}px)`;
+  puddle.style.height = `${viewH * .60}px`;
   const log = document.createElement('div');
   log.className = 'bridge-crossing-log';
-  log.style.left = `${game.clientWidth * 1.05 - 17}px`;
-  log.style.bottom = `calc(4% + ${game.clientHeight * 3.30}px)`;
-  log.style.height = `${game.clientHeight * .45}px`;
+  log.style.left = `${viewW * 1.05 - 17}px`;
+  log.style.bottom = `calc(4% + ${viewH * 3.30}px)`;
+  log.style.height = `${viewH * .45}px`;
   const postcard = document.createElement('div');
   postcard.className = 'bridge-secret-postcard';
-  postcard.style.left = `${game.clientWidth * 1.05 - 18}px`;
-  postcard.style.bottom = `calc(4% + ${game.clientHeight * 3.79}px)`;
+  postcard.style.left = `${viewW * 1.05 - 18}px`;
+  postcard.style.bottom = `calc(4% + ${viewH * 3.79}px)`;
   const land = document.createElement('div');
   land.className = 'bridge-land';
   land.replaceChildren(...segments);
@@ -269,8 +270,8 @@ function renderBridgePath() {
   const shore = document.createElement('canvas');
   shore.className = 'bridge-shore';
   const pixel = 3;
-  const worldW = game.clientWidth * 2.4;
-  const worldH = game.clientHeight * 6.5;
+  const worldW = viewW * 2.4;
+  const worldH = viewH * 6.5;
   shore.width = Math.ceil(worldW / pixel);
   shore.height = Math.ceil(worldH / pixel);
   const cols = shore.width, rows = shore.height;
@@ -281,8 +282,8 @@ function renderBridgePath() {
     for (let col = 0; col < cols; col++) {
       const px = (col + .5) * pixel;
       cells[row * cols + col] = bridgePathLayout.some(([l, r, lo, hi, kind]) => {
-        const left = l * game.clientWidth, right = r * game.clientWidth;
-        const low = lo * game.clientHeight, high = hi * game.clientHeight;
+        const left = l * viewW, right = r * viewW;
+        const low = lo * viewH, high = hi * viewH;
         if (px < left || px > right || depth < low || depth > high) return false;
         if (kind !== 'island') return true;
         return ((px - (left + right) / 2) / ((right - left) / 2)) ** 2 +
@@ -290,6 +291,8 @@ function renderBridgePath() {
       });
     }
   }
+  const bankPlants = [];
+  const planted = [];
   const solid = (col, row) => col >= 0 && row >= 0 && col < cols && row < rows && cells[row * cols + col];
   for (let row = 0; row < rows; row++) {
     for (let col = 0; col < cols; col++) {
@@ -299,21 +302,27 @@ function renderBridgePath() {
       const seed = (col * 31 + row * 17) % 13;
       ctx.fillStyle = !solid(col, row + 1) ? '#584832' : '#746044';
       ctx.fillRect(col, row, 1, 1);
-      // Broken clusters of grass, with individual upright blades and a soil gap between them.
-      if (seed < 4) {
-        ctx.fillStyle = seed % 2 ? '#68764b' : '#798250';
-        ctx.fillRect(col - 1, row - 1, 3, 1);
-        ctx.fillRect(col, row - 3, 1, 3);
-        ctx.fillStyle = '#90935b';
-        ctx.fillRect(col - 1, row - 2, 1, 1);
-        ctx.fillRect(col + 1, row - 3, 1, 2);
-      } else if (seed === 8) {
+      if (seed === 8) {
         ctx.fillStyle = '#ad9268';
         ctx.fillRect(col, row, 1, 1);
       }
+      const px = col * pixel, py = row * pixel;
+      const spacing = 44 + seed * 2;
+      if (seed < 4 && !planted.some(([x, y]) => (x - px) ** 2 + (y - py) ** 2 < spacing ** 2)) {
+        planted.push([px, py]);
+        const plant = document.createElement('i');
+        plant.className = 'bridge-bank-plant';
+        const size = 35 + ((col * 7 + row * 3) % 30);
+        plant.style.width = `${size}px`;
+        plant.style.height = `${size}px`;
+        plant.style.left = `${px - size / 2}px`;
+        plant.style.top = `${py - size * .82}px`;
+        plant.style.transform = `scaleX(${seed % 2 ? -1 : 1})`;
+        bankPlants.push(plant);
+      }
     }
   }
-  land.append(shore);
+  land.append(shore, ...bankPlants);
   bridgePathElement.replaceChildren(puddle, land, ...footprints, mud, log, postcard);
 }
 addEventListener('resize', renderBridgePath);
