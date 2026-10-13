@@ -265,7 +265,10 @@ function renderBridgePath() {
   postcard.style.bottom = `calc(4% + ${viewH * 3.79}px)`;
   const land = document.createElement('div');
   land.className = 'bridge-land';
-  land.replaceChildren(...segments);
+  const ground = document.createElement('div');
+  ground.className = 'bridge-ground';
+  ground.replaceChildren(...segments);
+  land.append(ground);
   // Draw only the exposed perimeter of the joined land; intersections stay open.
   const shore = document.createElement('canvas');
   shore.className = 'bridge-shore';
@@ -291,6 +294,30 @@ function renderBridgePath() {
       });
     }
   }
+  // Carve the soil itself into a quiet, uneven shoreline, rather than adding a stripe.
+  const originalCells = cells.slice();
+  const originalSolid = (c, r) => c >= 0 && r >= 0 && c < cols && r < rows && originalCells[r * cols + c];
+  const mask = document.createElement('canvas');
+  mask.width = cols; mask.height = rows;
+  const maskCtx = mask.getContext('2d');
+  const maskPixels = maskCtx.createImageData(cols, rows);
+  for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < cols; col++) {
+      const index = row * cols + col;
+      if (!cells[index]) continue;
+      const erosion = Math.max(0, Math.min(2, Math.floor(1.2 + .8 * Math.sin(col / 5.3 + row / 8.7) + .6 * Math.sin(row / 3.7 - col / 9.1))));
+      for (let distance = 1; distance <= erosion; distance++) {
+        if (!originalSolid(col - distance, row) || !originalSolid(col + distance, row) ||
+          !originalSolid(col, row - distance) || !originalSolid(col, row + distance)) {
+          cells[index] = 0;
+          break;
+        }
+      }
+      maskPixels.data[index * 4 + 3] = cells[index] ? 255 : 0;
+    }
+  }
+  maskCtx.putImageData(maskPixels, 0, 0);
+  ground.style.maskImage = `url(${mask.toDataURL()})`;
   const bankPlants = [];
   const planted = [];
   const bankNoise = (a, b) => { const n = Math.sin(a * 127.1 + b * 311.7) * 43758.5453; return n - Math.floor(n); };
@@ -302,21 +329,9 @@ function renderBridgePath() {
       if (!edge) continue;
       const seed = (col * 31 + row * 17) % 13;
       const exposedBottom = !solid(col, row + 1);
-      const soilWidth = 1 + Math.floor(bankNoise(Math.floor(col / 4), Math.floor(row / 4)) * 3);
-      const inwardX = !solid(col - 1, row) ? 1 : !solid(col + 1, row) ? -1 : 0;
-      const inwardY = !solid(col, row - 1) ? 1 : exposedBottom ? -1 : 0;
-      for (let layer = soilWidth; layer >= 0; layer--) {
-        const sx = col + inwardX * layer, sy = row + inwardY * layer;
-        if (!solid(sx, sy)) continue;
-        ctx.fillStyle = layer === 0 ? (exposedBottom ? '#584832' : '#746044') : '#806444';
-        ctx.fillRect(sx, sy, 1, 1);
-      }
-      if (exposedBottom && bankNoise(col + 71, row) < .025) {
-        ctx.fillStyle = '#615039';
-        ctx.fillRect(col, row + 1, 1, seed === 0 ? 2 : 1);
-      }
-      if (seed === 8) {
-        ctx.fillStyle = '#ad9268';
+      // A broken, narrow contact edge keeps the soil texture visible.
+      if (exposedBottom || seed < 5) {
+        ctx.fillStyle = exposedBottom ? '#65503bbb' : '#78604577';
         ctx.fillRect(col, row, 1, 1);
       }
       const px = col * pixel, py = row * pixel;
