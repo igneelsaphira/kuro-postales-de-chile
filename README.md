@@ -39,3 +39,5 @@ Para revisar directamente la subida del puente, abre `index.html?preview=bridge`
 ## Estado
 
 Prototipo temprano. El arte y las mecánicas todavía están en desarrollo.
+
+La subida bajo el Puente Pedro de Valdivia incluye una islita opcional separada por agua: al empujar el tronco se puede cruzar y recoger la postal secreta del humedal para el álbum. La ruta principal hacia los coipos sigue por tierra.

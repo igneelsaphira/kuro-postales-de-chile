@@ -303,7 +303,8 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .bridge-reeds { position: absolute; z-index: 1; width: 130px; height: 74px; border-radius: 45%; background: repeating-linear-gradient(73deg, transparent 0 8px, #405b37 9px 12px, transparent 13px 20px), repeating-linear-gradient(105deg, transparent 0 11px, #9cad63 12px 15px, transparent 16px 25px); filter: drop-shadow(0 4px 2px #34564077); }
 .bridge-reeds.reeds-low { left: 87%; bottom: 72%; }.bridge-reeds.reeds-high { left: 40%; bottom: 83%; width: 160px; }
 .bridge-earth-path { position: absolute; inset: 0; z-index: 2; filter: drop-shadow(0 8px 0 #415b4680); }
-.bridge-path-segment { position: absolute; border-radius: 12px; background: radial-gradient(circle at 22% 35%, #755f46 0 3px, transparent 4px) 0 0 / 57px 63px, radial-gradient(circle at 69% 66%, #d2b68a 0 6px, transparent 7px) 0 0 / 89px 81px, #b59a72; box-shadow: inset 0 0 0 5px #816f5299, inset 0 0 26px #d4ba8a55; }
+.bridge-path-segment { z-index: 1; position: absolute; border-radius: 12px; background: radial-gradient(circle at 22% 35%, #755f46 0 3px, transparent 4px) 0 0 / 57px 63px, radial-gradient(circle at 69% 66%, #d2b68a 0 6px, transparent 7px) 0 0 / 89px 81px, #b59a72; box-shadow: inset 0 0 0 5px #816f5299, inset 0 0 26px #d4ba8a55; }
+.bridge-path-segment.island { border-radius: 48% 43% 46% 39%; box-shadow: inset 0 0 0 7px #726a4c, 0 3px 0 #345f5f88; }
 .bridge-path-segment.clearing { border-radius: 24px 17px 27px 20px; background-color: #bba17b; }
 .bridge-path-segment.trail { border-radius: 20px 13px 18px 16px; }
 .bridge-path-segment.stage-2 { background-color: #a98e6c; }
@@ -314,14 +315,17 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .bridge-footprints.faint { opacity: .25; }
 .bridge-footprints::before, .bridge-footprints::after { content: ''; position: absolute; width: 12px; height: 17px; border-radius: 55% 55% 45% 45%; background: radial-gradient(circle at 20% 11%, #70593f 0 2px, transparent 3px), radial-gradient(circle at 52% 4%, #70593f 0 2px, transparent 3px), radial-gradient(circle at 82% 13%, #70593f 0 2px, transparent 3px), radial-gradient(ellipse at 50% 69%, #70593f 0 5px, transparent 6px); }
 .bridge-footprints::before { left: 1px; bottom: 0; rotate: -20deg; }.bridge-footprints::after { right: 1px; top: 0; rotate: 18deg; }
-.bridge-sinking-mud, .bridge-puddle, .bridge-crossing-log { position: absolute; pointer-events: none; }
+.bridge-sinking-mud, .bridge-puddle, .bridge-crossing-log, .bridge-secret-postcard { position: absolute; pointer-events: none; }
 .bridge-sinking-mud { z-index: 3; border-radius: 29% 18% 24% 32%; background: radial-gradient(circle at 24% 36%, #b69c7655 0 9px, transparent 11px), radial-gradient(circle at 73% 70%, #d1b48a66 0 6px, transparent 8px), radial-gradient(ellipse at 48% 50%, #534b3b 0 25%, #75634b 58%, #8e7858 82%, transparent 100%); box-shadow: inset 0 0 22px #3f3b2a88; animation: bridge-mud-breathe 1.7s ease-in-out infinite alternate; }
 .scene.bridge-mud-known .bridge-sinking-mud { filter: brightness(.83); }
 @keyframes bridge-mud-breathe { to { filter: brightness(1.13); } }
-.bridge-puddle { z-index: 3; border-radius: 30% 44% 34% 42%; background: radial-gradient(ellipse at 50% 35%, #a7b9a0 0 12%, #719c92 13% 59%, #4e7b7d 88%, #3d676a 100%); box-shadow: inset 0 0 0 7px #786a51, 0 3px 6px #284d4c88; }
+.bridge-puddle { z-index: 0; border-radius: 30% 44% 34% 42%; background: radial-gradient(ellipse at 50% 35%, #a7b9a0 0 12%, #719c92 13% 59%, #4e7b7d 88%, #3d676a 100%); box-shadow: inset 0 0 0 7px #786a51, 0 3px 6px #284d4c88; }
 .bridge-puddle::after { content: ''; position: absolute; inset: 20% 13%; border-top: 3px solid #d4d6b08a; border-bottom: 2px solid #c5d4af77; border-radius: 50%; }
 .bridge-crossing-log { z-index: 4; width: 34px; border: 4px solid #533d2d; border-radius: 18px; background: repeating-linear-gradient(0deg, #8b6945 0 16px, #a17a4f 17px 20px, #6d5139 22px 27px); box-shadow: 6px 5px 0 #31575777; transform-origin: center; transform: translate(80px, -20px) rotate(90deg); transition: transform .45s ease-out; }
 .scene.bridge-log-placed .bridge-crossing-log { transform: none; }
+.bridge-secret-postcard { z-index: 5; width: 36px; height: 26px; border: 3px solid #f5e8bb; border-bottom-width: 7px; border-radius: 2px; background: linear-gradient(145deg, #d0e6be 0 35%, #668e78 36% 62%, #397875 63%); box-shadow: 0 2px 0 #7b6448, 0 0 12px 3px #ffe5a2aa; rotate: -12deg; animation: postcard-glimmer 1.8s ease-in-out infinite alternate; }
+@keyframes postcard-glimmer { to { box-shadow: 0 2px 0 #7b6448, 0 0 22px 7px #fff1ae; } }
+.scene.bridge-postcard-collected .bridge-secret-postcard { display: none; }
 .bridge-crossing-log::after { content: ''; position: absolute; left: 6px; right: 6px; top: 12px; bottom: 12px; border-left: 2px solid #bc946477; border-right: 2px solid #4d3a2b99; border-radius: 30%; }
 .bridge-path-segment.zone-river { background-color: #bda27a; }
 .bridge-path-segment.zone-underpass { background-color: #9d896e; }
@@ -363,6 +367,9 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .island-family i::before { content: ''; position: absolute; right: -9px; top: -11px; width: 30px; height: 30px; border-radius: 50%; background: #927354; box-shadow: 7px 15px 0 -12px #252b28; }
 .island-family i:nth-child(2) { left: 45px; scale: .7; transform-origin: bottom left; }.island-family i:nth-child(3) { left: 83px; scale: .6; transform-origin: bottom left; }
 .scene.valdivia.valdivia-family-helped .island-shelter { box-shadow: inset 0 -15px #5e6d4f, 0 0 22px #f5dba0; }
+.bridge-photo { background: linear-gradient(#b5d3bd 0 33%, #669e96 34% 77%, #456e70 78%); }
+.bridge-photo::before { content: ''; position: absolute; left: 16%; right: 16%; bottom: 17%; height: 25%; border-radius: 48%; background: #a69870; box-shadow: 0 0 0 7px #577c6c; }
+.bridge-photo::after { content: 'La islita del humedal'; position: absolute; left: 0; right: 0; bottom: -27px; color: #76594d; text-align: center; font-size: 13px; font-style: italic; }
 .valdivia-photo { background: linear-gradient(#8cb9b7 0 53%, #5c8e92 54% 70%, #6d8d6a 71% 77%, #b7a582 78%); }
 .valdivia-photo::after { content: '♣  ♣  ♣'; position: absolute; left: 13%; bottom: 24%; color: #385f50; font-size: 42px; letter-spacing: 12px; }
 .valdivia-sky { inset: 0 0 47%; background: linear-gradient(#749ca7, #c5d6c8 68%, #e4d7ba); }

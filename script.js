@@ -14,6 +14,7 @@ const whaleAlbumPage = document.querySelector('#whale-album-page');
 const quintaPhotoPage = document.querySelector('#quinta-photo-page');
 const valparaisoAlbumPage = document.querySelector('#valparaiso-album-page');
 const valdiviaAlbumPage = document.querySelector('#valdivia-album-page');
+const bridgeAlbumPage = document.querySelector('#bridge-album-page');
 const valparaisoPostscript = document.querySelector('#valparaiso-postscript');
 const albumPageNumber = document.querySelector('#album-page-number');
 const albumPrev = document.querySelector('#album-prev');
@@ -99,6 +100,7 @@ let motaConversationComplete = false;
 let tizneConversationComplete = false;
 let whalePostcardCollected = localStorage.getItem('kuro-whale-postcard') === 'collected';
 let quintaPhotoCollected = localStorage.getItem('kuro-quinta-photo') === 'collected';
+let bridgePostcardCollected = localStorage.getItem('kuro-bridge-postcard-v1') === 'collected';
 let firstLetterSent = localStorage.getItem('kuro-first-letter') === 'sent';
 let returnedFromValparaiso = localStorage.getItem('kuro-returned-from-valparaiso') === 'yes';
 let grandmotherReplyRead = localStorage.getItem('kuro-grandmother-reply') === 'read';
@@ -176,7 +178,7 @@ const bridgePathLayout = [
   [.43, 1.94, 2.96, 3.37, 'clearing', 'mud'],
   [.25, .62, 3.26, 3.65, 'detour', 'mud'],
   [1.60, 1.96, 3.28, 4.13, 'trail', 'reeds'],
-  [.88, 1.23, 3.27, 4.10, 'detour', 'reeds'],
+  [.88, 1.23, 3.68, 3.88, 'island', 'reeds'],
   [.25, 1.95, 4.00, 4.38, 'clearing', 'reeds'],
   [.27, .63, 4.27, 5.07, 'trail', 'reeds'],
   [.27, 1.67, 4.92, 5.32, 'clearing', 'wetland'],
@@ -197,7 +199,7 @@ const bridgeClues = [
   [.30, .83, 'Bajo las vigas hay huellas que se desvían hacia el río. Quiero mirar un poco más.'],
   [1.65, 1.40, 'Ese sendero oscuro se ve blando. Quizá pueda rodearlo.'],
   [.42, 2.53, 'El barro conserva marcas frescas y pequeños tallos mordidos.'],
-  [1.05, 3.70, 'Entre los juncos encuentro un paso escondido. ¡Puedo acortar camino!'],
+  [1.05, 3.70, 'Esta islita estaba escondida entre los juncos. Menos mal traje el tronco.'],
   [1.89, 5.20, 'El agua está tranquila y hay totoras por todos lados. Los coipos deben estar cerca.']
 ];
 const bridgeCluesSeen = new Set();
@@ -209,15 +211,13 @@ function bridgeInMud(centerX, depth) {
   return centerX >= game.clientWidth * 1.28 + 8 && centerX <= game.clientWidth * 1.63 - 8 &&
     depth >= game.clientHeight * 1.58 && depth <= game.clientHeight * 2.08;
 }
-function bridgeInPuddle(centerX, depth) {
-  return centerX >= game.clientWidth * .88 && centerX <= game.clientWidth * 1.23 &&
-    depth >= game.clientHeight * 3.52 && depth <= game.clientHeight * 3.85;
-}
 function bridgeOnPath(nextX, nextDepth) {
   const centerX = nextX + 50;
   if (bridgeMudLearned && bridgeInMud(centerX, nextDepth)) return false;
-  if (bridgeInPuddle(centerX, nextDepth) &&
-    (!bridgeLogPlaced || Math.abs(centerX - game.clientWidth * 1.05) > 36)) return false;
+  const logCrossing = nextDepth >= game.clientHeight * 3.34 &&
+    nextDepth <= game.clientHeight * 3.69 &&
+    Math.abs(centerX - game.clientWidth * 1.05) <= 30;
+  if (logCrossing) return bridgeLogPlaced;
   return bridgePathLayout.some(([left, right, low, high]) =>
     centerX >= left * game.clientWidth + 8 && centerX <= right * game.clientWidth - 8 &&
     nextDepth >= low * game.clientHeight && nextDepth <= high * game.clientHeight
@@ -249,16 +249,20 @@ function renderBridgePath() {
   mud.style.height = `${game.clientHeight * .50}px`;
   const puddle = document.createElement('div');
   puddle.className = 'bridge-puddle';
-  puddle.style.left = `${game.clientWidth * .88}px`;
-  puddle.style.width = `${game.clientWidth * .35}px`;
-  puddle.style.bottom = `calc(4% + ${game.clientHeight * 3.52}px)`;
-  puddle.style.height = `${game.clientHeight * .33}px`;
+  puddle.style.left = `${game.clientWidth * .69}px`;
+  puddle.style.width = `${game.clientWidth * .72}px`;
+  puddle.style.bottom = `calc(4% + ${game.clientHeight * 3.38}px)`;
+  puddle.style.height = `${game.clientHeight * .60}px`;
   const log = document.createElement('div');
   log.className = 'bridge-crossing-log';
   log.style.left = `${game.clientWidth * 1.05 - 17}px`;
-  log.style.bottom = `calc(4% + ${game.clientHeight * 3.46}px)`;
+  log.style.bottom = `calc(4% + ${game.clientHeight * 3.30}px)`;
   log.style.height = `${game.clientHeight * .45}px`;
-  bridgePathElement.replaceChildren(...segments, ...footprints, mud, puddle, log);
+  const postcard = document.createElement('div');
+  postcard.className = 'bridge-secret-postcard';
+  postcard.style.left = `${game.clientWidth * 1.05 - 18}px`;
+  postcard.style.bottom = `calc(4% + ${game.clientHeight * 3.79}px)`;
+  bridgePathElement.replaceChildren(puddle, ...segments, ...footprints, mud, log, postcard);
 }
 addEventListener('resize', renderBridgePath);
 renderBridgePath();
@@ -1160,6 +1164,7 @@ function renderAlbum() {
   if (whalePostcardCollected) pages.push({ element: whaleAlbumPage, number: 'Santiago · 01' });
   if (quintaPhotoCollected) pages.push({ element: quintaPhotoPage, number: 'Santiago · 02' });
   if (tizneResponse) pages.push({ element: valparaisoAlbumPage, number: 'Valparaíso · 01' });
+  if (bridgePostcardCollected) pages.push({ element: bridgeAlbumPage, number: 'Valdivia · ★' });
   if (valdiviaFamilyHelped) pages.push({ element: valdiviaAlbumPage, number: 'Valdivia · 01' });
   albumPageIndex = Math.max(0, Math.min(albumPageIndex, pages.length - 1));
   albumEmpty.hidden = pages.length > 0;
@@ -1167,6 +1172,7 @@ function renderAlbum() {
   quintaPhotoPage.hidden = true;
   valparaisoAlbumPage.hidden = true;
   valdiviaAlbumPage.hidden = true;
+  bridgeAlbumPage.hidden = true;
   if (tizneResponse) valparaisoPostscript.textContent = tizneResponses[tizneResponse].postscript;
   albumPrev.hidden = pages.length < 2;
   albumNext.hidden = pages.length < 2;
@@ -1179,7 +1185,7 @@ function renderAlbum() {
 }
 
 function changeAlbumPage(direction) {
-  const pageCount = Number(whalePostcardCollected) + Number(quintaPhotoCollected) + Number(Boolean(tizneResponse)) + Number(valdiviaFamilyHelped);
+  const pageCount = Number(whalePostcardCollected) + Number(quintaPhotoCollected) + Number(Boolean(tizneResponse)) + Number(valdiviaFamilyHelped) + Number(bridgePostcardCollected);
   if (pageCount < 2) return;
   albumPageIndex = (albumPageIndex + direction + pageCount) % pageCount;
   renderAlbum();
@@ -1381,8 +1387,10 @@ function currentInteraction() {
   if (currentPlace === 'bridge' && bridgeDepth <= 24) return 'leave-bridge';
   if (currentPlace === 'bridge' && !bridgeLogPlaced &&
     Math.abs(x + 50 - game.clientWidth * 1.05) < 85 &&
-    ((bridgeDepth > game.clientHeight * 3.27 && bridgeDepth < game.clientHeight * 3.52) ||
-      (bridgeDepth > game.clientHeight * 3.85 && bridgeDepth < game.clientHeight * 4.10))) return 'bridge-log';
+    bridgeDepth > game.clientHeight * 3.20 && bridgeDepth < game.clientHeight * 3.40) return 'bridge-log';
+  if (currentPlace === 'bridge' && !bridgePostcardCollected && bridgeLogPlaced &&
+    Math.abs(x + 50 - game.clientWidth * 1.05) < 55 &&
+    bridgeDepth > game.clientHeight * 3.68 && bridgeDepth < game.clientHeight * 3.90) return 'bridge-postcard';
   if (currentPlace === 'bridge') {
     const clueIndex = bridgeClues.findIndex(([left, depth], index) => !bridgeCluesSeen.has(index) &&
       Math.abs(x + 50 - left * game.clientWidth) < 58 &&
@@ -1597,7 +1605,14 @@ addEventListener('keydown', (event) => {
     if (interaction === 'bridge-log') {
       bridgeLogPlaced = true;
       scene.classList.add('bridge-log-placed');
-      startDialogue([['Kuro', 'Si empujo este tronco sobre el charco, podré cruzar por el atajo. ¡Ahí va!']]);
+      startDialogue([['Kuro', 'Si empujo este tronco sobre el agua, podré llegar a esa islita. ¡Ahí va!']]);
+    }
+    if (interaction === 'bridge-postcard') {
+      bridgePostcardCollected = true;
+      localStorage.setItem('kuro-bridge-postcard-v1', 'collected');
+      scene.classList.add('bridge-postcard-collected');
+      renderAlbum();
+      startDialogue([['Kuro', '¡Una postal escondida entre los juncos! El tronco me trajo hasta aquí.'], ['Álbum de Viaje', 'Nueva postal secreta: La islita del humedal.']]);
     }
     if (interaction?.startsWith('bridge-clue-')) {
       const clueIndex = Number(interaction.slice('bridge-clue-'.length));
@@ -1853,6 +1868,7 @@ function loop(time) {
     'leave-bridge': 'Volver a la feria',
     'cross-bridge': 'Cruzar hacia los coipos',
     'bridge-log': 'Empujar el tronco',
+    'bridge-postcard': 'Recoger la postal',
     'bridge-clue-0': 'Examinar las pisadas',
     'bridge-clue-1': 'Mirar el barro',
     'bridge-clue-2': 'Mirar el barro',
@@ -1924,6 +1940,7 @@ requestAnimationFrame(loop);
 
 if (whalePostcardCollected) scene.classList.add('postcard-collected');
 if (quintaPhotoCollected) scene.classList.add('quinta-photo-collected');
+if (bridgePostcardCollected) scene.classList.add('bridge-postcard-collected');
 if (firstLetterSent) scene.classList.add('letter-sent');
 if (tizneResponse) scene.classList.add('valparaiso-complete');
 renderAlbum();
