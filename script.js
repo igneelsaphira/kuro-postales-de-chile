@@ -305,7 +305,7 @@ function renderBridgePath() {
     for (let col = 0; col < cols; col++) {
       const index = row * cols + col;
       if (!cells[index]) continue;
-      const erosion = Math.max(0, Math.min(2, Math.floor(1.2 + .8 * Math.sin(col / 5.3 + row / 8.7) + .6 * Math.sin(row / 3.7 - col / 9.1))));
+      const erosion = Math.max(2, Math.min(7, Math.floor(4.5 + 1.5 * Math.sin(col / 7.3 + row / 13.7) + 1.3 * Math.sin(row / 5.7 - col / 12.1))));
       for (let distance = 1; distance <= erosion; distance++) {
         if (!originalSolid(col - distance, row) || !originalSolid(col + distance, row) ||
           !originalSolid(col, row - distance) || !originalSolid(col, row + distance)) {
