@@ -205,15 +205,32 @@ const bridgeCluesSeen = new Set();
 let bridgeMudSeconds = 0;
 let bridgeMudLearned = false;
 let bridgeLogPlaced = false;
-let bridgeLogPushes = 0;
-let bridgePushPoseTimer = null;
-const bridgeLogPushesNeeded = 5;
+let bridgeLogTouched = false;
+let bridgeLogProgress = 0;
+let bridgeLogReadyAt = 0;
+let bridgePushPoseUntil = 0;
 const bridgeLogPositions = [[.18, .16, 0], [.175, .14, -5], [.155, .11, -16], [.12, .055, -35], [.07, .018, -62], [0, 0, -90]];
 function positionBridgeLog(log) {
-  const [offsetX, offsetY, angle] = bridgeLogPositions[bridgeLogPushes];
+  const segment = Math.min(bridgeLogPositions.length - 2, Math.floor(bridgeLogProgress * (bridgeLogPositions.length - 1)));
+  const fraction = bridgeLogProgress * (bridgeLogPositions.length - 1) - segment;
+  const [offsetX, offsetY, angle] = bridgeLogPositions[segment].map((start, index) =>
+    start + (bridgeLogPositions[segment + 1][index] - start) * fraction);
   log.style.setProperty('--log-x', `${offsetX * game.clientHeight}px`);
   log.style.setProperty('--log-y', `${offsetY * game.clientHeight}px`);
   log.style.setProperty('--log-angle', `${angle}deg`);
+}
+function advanceBridgeLog(amount, fromTap = false) {
+  if (bridgeLogPlaced || amount <= 0) return;
+  const previousStep = Math.floor(bridgeLogProgress * 5);
+  bridgeLogProgress = Math.min(1, bridgeLogProgress + amount);
+  positionBridgeLog(bridgePathElement.querySelector('.bridge-crossing-log'));
+  bridgePushPoseUntil = performance.now() + 250;
+  if (fromTap || Math.floor(bridgeLogProgress * 5) > previousStep) playLogPushSound();
+  if (bridgeLogProgress === 1) {
+    bridgeLogPlaced = true;
+    scene.classList.add('bridge-log-placed');
+    startDialogue([['Kuro', '¡Uf! Pesaba mucho, pero ya quedó firme. Ahora puedo cruzar hasta la islita.']]);
+  }
 }
 function bridgeTop() { return game.clientHeight * 5.92; }
 function bridgeInMud(centerX, depth) {
@@ -1754,20 +1771,7 @@ addEventListener('keydown', (event) => {
       changeLocation('valdivia', 'at-island');
     }
     if (interaction === 'bridge-log') {
-      bridgeLogPushes += 1;
-      const log = bridgePathElement.querySelector('.bridge-crossing-log');
-      positionBridgeLog(log);
-      kuro.classList.remove('pushing-log');
-      void kuro.offsetWidth;
-      kuro.classList.add('pushing-log');
-      clearTimeout(bridgePushPoseTimer);
-      bridgePushPoseTimer = setTimeout(() => kuro.classList.remove('pushing-log'), 1100);
-      playLogPushSound();
-      if (bridgeLogPushes === bridgeLogPushesNeeded) {
-        bridgeLogPlaced = true;
-        scene.classList.add('bridge-log-placed');
-        startDialogue([['Kuro', '¡Uf! Pesaba mucho, pero ya quedó firme. Ahora puedo cruzar hasta la islita.']]);
-      }
+      if (bridgeLogTouched && performance.now() >= bridgeLogReadyAt) advanceBridgeLog(.065, true);
     }
     if (interaction === 'bridge-postcard') {
       bridgePostcardCollected = true;
@@ -1999,6 +2003,18 @@ function loop(time) {
   kuro.style.setProperty('--jump-y', `${y}px`);
   kuro.style.setProperty('--bridge-depth', `${bridgeDepth}px`);
   const interaction = currentInteraction();
+  if (interaction === 'bridge-log' && !bridgeLogTouched) {
+    bridgeLogTouched = true;
+    bridgeLogProgress = .10;
+    bridgeLogReadyAt = time + 600;
+    bridgePushPoseUntil = time + 500;
+    positionBridgeLog(bridgePathElement.querySelector('.bridge-crossing-log'));
+  }
+  if (interaction === 'bridge-log' && bridgeLogTouched && time >= bridgeLogReadyAt && controlsEnabled && (keys.has('e') || keys.has('enter'))) {
+    advanceBridgeLog(dt / 3.4);
+  }
+  kuro.classList.toggle('pushing-log', currentPlace === 'bridge' && (time < bridgePushPoseUntil ||
+    (interaction === 'bridge-log' && time >= bridgeLogReadyAt && (keys.has('e') || keys.has('enter')))));
   const interactionLabels = {
     'enter-house': 'Entrar a casa',
     'exit-house': 'Salir a Barrio Yungay',
@@ -2029,7 +2045,7 @@ function loop(time) {
     'inspect-passage': valdiviaPassageFound ? 'Entrar a la subida' : 'Investigar bajo el puente',
     'leave-bridge': 'Volver a la feria',
     'cross-bridge': 'Cruzar hacia los coipos',
-    'bridge-log': bridgeLogPushes ? `Seguir empujando el tronco (${bridgeLogPushes}/${bridgeLogPushesNeeded})` : 'Empujar el tronco',
+    'bridge-log': `Mantén E para empujar · ${Math.round(bridgeLogProgress * 100)}%`,
     'bridge-postcard': 'Recoger la postal',
     'bridge-clue-0': 'Examinar las pisadas',
     'bridge-clue-1': 'Mirar el barro',
@@ -2049,7 +2065,7 @@ function loop(time) {
   interactionPrompt.classList.toggle('mirador-action', ['take-photo', 'view-mirador', 'go-station', 'station-locked'].includes(interaction));
   interactionPrompt.classList.toggle('station-action', ['use-estafeta', 'take-train'].includes(interaction));
   interactionPrompt.classList.toggle('train-action', interaction === 'take-train');
-  interactionPrompt.hidden = !interaction || !dialogue.hidden;
+  interactionPrompt.hidden = !interaction || !dialogue.hidden || (interaction === 'bridge-log' && time < bridgeLogReadyAt);
 
   const viewportWidth = game.clientWidth;
   const activeWorldWidth = currentPlace === 'valparaiso' ? viewportWidth * 3.2875 : currentPlace === 'cave' ? viewportWidth * 6 : currentPlace === 'street' ? viewportWidth * 1.6875 : currentPlace === 'valdivia' ? viewportWidth * 4 : currentPlace === 'bridge' ? viewportWidth * 2.4 : currentPlace === 'house' || currentPlace === 'museum' || currentPlace === 'plaza' || currentPlace === 'quinta' || currentPlace === 'station' ? viewportWidth : worldWidth;
