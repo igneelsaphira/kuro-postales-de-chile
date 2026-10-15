@@ -206,8 +206,9 @@ let bridgeMudSeconds = 0;
 let bridgeMudLearned = false;
 let bridgeLogPlaced = false;
 let bridgeLogPushes = 0;
+let bridgePushPoseTimer = null;
 const bridgeLogPushesNeeded = 5;
-const bridgeLogPositions = [[.18, .13, 0], [.175, .11, -5], [.155, .085, -16], [.12, .055, -35], [.07, .018, -62], [0, 0, -90]];
+const bridgeLogPositions = [[.18, .16, 0], [.175, .14, -5], [.155, .11, -16], [.12, .055, -35], [.07, .018, -62], [0, 0, -90]];
 function positionBridgeLog(log) {
   const [offsetX, offsetY, angle] = bridgeLogPositions[bridgeLogPushes];
   log.style.setProperty('--log-x', `${offsetX * game.clientHeight}px`);
@@ -1756,6 +1757,11 @@ addEventListener('keydown', (event) => {
       bridgeLogPushes += 1;
       const log = bridgePathElement.querySelector('.bridge-crossing-log');
       positionBridgeLog(log);
+      kuro.classList.remove('pushing-log');
+      void kuro.offsetWidth;
+      kuro.classList.add('pushing-log');
+      clearTimeout(bridgePushPoseTimer);
+      bridgePushPoseTimer = setTimeout(() => kuro.classList.remove('pushing-log'), 1100);
       playLogPushSound();
       if (bridgeLogPushes === bridgeLogPushesNeeded) {
         bridgeLogPlaced = true;
