@@ -424,3 +424,52 @@ El tema de fondo no tendrá una única respuesta: prevenir el peligro y atrevers
 - Plaza Yungay y Quinta Normal ya no usan una transición de pantalla: el monumento, el sendero arbolado y el museo aparecen dentro de la misma panorámica 3:1.
 - Hablar con Mota es completamente opcional. Su conversación aporta historia y personalidad, pero nunca bloquea el camino hacia Quinta Normal.
 - El museo, el rincón fotográfico y la salida hacia Estación Mapocho conservan sus interacciones dentro del recorrido unificado.
+
+## Enfoque de jugabilidad: una aventura completa antes de ampliar Chile
+
+La exploración debe resultar entretenida por lo que hace el jugador: descubrir, superar obstáculos pequeños, ayudar y encontrar recuerdos. Se conservan la aventura cozy, los lugares chilenos y el vínculo con la abuelita. Cartas y postales acompañan las acciones; no sustituyen el recorrido jugable. Antes de cambiar historia, arte o dificultad, revisar lo existente, probar el tramo actual y acordar la propuesta concreta con María Paz.
+
+### 1. Pulir Valdivia primero
+
+**Base ya presente:** la investigación de huellas une la Feria Fluvial con el puente y los coipos; bajo el puente hay barro, ruta principal por tierra, tronco que requiere cinco empujones con `E` e islita opcional con postal secreta. El tronco apenas cede al principio, avanza más en los últimos empujones y suena en cada uno para comunicar su peso. Ayudar a la familia guarda el progreso, da una postal, cambia la apariencia del refugio y habilita diálogo posterior con Copo. Evaluar en juego si esos cambios visuales se perciben con claridad.
+
+**Mejoras por validar:** presentar un objetivo inicial comprensible; orientar con huellas, terreno y elementos visuales sin explicarlo todo; hacer atractivo el desvío sin hacerlo parecer obligatorio; dar una respuesta visual y sonora clara al mover el tronco o descubrir algo; cerrar la aventura local con despedida y postal; acortar o variar los regresos vacíos. Reutilizar los estados, interacciones, álbum y sonidos existentes antes de añadir sistemas.
+
+**Prueba externa:** pedir a alguien que no conozca el proyecto que juegue sin instrucciones externas. Observar si entiende el objetivo y la dirección, descubre cómo usar el tronco, distingue obstáculos de decoración, siente curiosidad, encuentra tramos vacíos, reconoce el final y señala su momento favorito y el más tedioso. Registrar hechos observados antes de elegir una mejora pequeña.
+
+### 2. Afinar movimiento e interacciones
+
+Revisar respuesta de movimiento y salto, superficies transitables, cámara, indicaciones de interacción, tiempo perdido al fallar y posibles bloqueos. Los errores deben entenderse y permitir reintentar cerca; no se debe perder una postal por fallar un salto. Enseñar habilidades en un lugar seguro antes de exigirlas. Evitar obstáculos difíciles solo porque los controles sean confusos.
+
+### 3. Fotografías ligadas a descubrimientos
+
+**Base ya presente:** el rincón fotográfico de Quinta Normal tiene destello, polaroid y recuerdo persistente en el álbum. Probar una sola escena adicional con ese sistema: un personaje que pose tras recibir ayuda, un animal que aparezca con una pista legible, un rincón escondido o una escena que cambie al resolver un problema. La foto debe recordar algo que Kuro encontró o hizo. No añadir todavía cámara libre ni puntuación, ni secretos basados en esperas arbitrarias.
+
+### 4. Consecuencias locales visibles
+
+Evaluar primero el refugio y los diálogos posteriores ya existentes. Si la prueba muestra que pasan inadvertidos, mejorar su lectura. Otras opciones pequeñas son cambiar la actividad de un personaje, añadir una frase al regresar o desbloquear una escena fotográfica. Evitar un sistema amplio de decisiones ramificadas.
+
+### 5. Correspondencia con la abuelita
+
+**Base ya presente:** Kuro envía una carta desde la Estafeta; tras Valparaíso recibe una respuesta que puede releer, y una elección de personalidad modifica la posdata de la postal de esa ciudad. Extenderlo, cuando corresponda, a una respuesta escrita por ciudad relacionada con lo vivido. Guardarla para releerla y entregarla al ritmo del jugador, sin interrumpir a menudo la exploración. No usar generación mediante IA ni conversaciones infinitas.
+
+### 6. Orientación amable
+
+Comprobar si el álbum u otra interfaz ya cubre la necesidad. Si la prueba muestra desorientación, considerar una sección breve «¿Qué tenía pendiente?» en la voz de Kuro, por ejemplo: «Copo vio unas huellas cerca del puente. Podría acompañarlo». Evitar listas largas, flechas permanentes y pistas que revelen secretos opcionales.
+
+### 7. Aventura cozy y Cueva del Chivato
+
+Revisar claridad de ataques y persecuciones, aprendizaje seguro del zarpazo, puntos de reintento y contraste entre la primera visita y el regreso con criaturas reveladas. Considerar una opción de dificultad suave después de observar jugadores. Mantener la tensión mediante ambiente y comportamiento, sin depender solo de la dificultad.
+
+### Por ahora, fuera de alcance
+
+No priorizar ciudades nuevas, tiendas, monedas, economía, crafting, misiones diarias, premios por entrar, inventarios grandes ni más combate como respuesta automática a la falta de entretenimiento. Reconsiderarlos solo si las pruebas muestran una necesidad concreta.
+
+### Próximo ciclo de trabajo
+
+1. Probar el recorrido actual de Valdivia y anotar dónde el jugador disfruta, se pierde o se aburre.
+2. Elegir una mejora pequeña basada en esa observación y revisar si ya existe una mecánica reutilizable.
+3. Consultar con María Paz cualquier cambio de historia, arte o dificultad antes de implementarlo.
+4. Implementar la mejora acordada y repetir la prueba.
+
+El avance se mide por un recorrido más claro, variado y satisfactorio, no por la cantidad de funciones.
