@@ -1756,9 +1756,6 @@ addEventListener('keydown', (event) => {
       bridgeLogPushes += 1;
       const log = bridgePathElement.querySelector('.bridge-crossing-log');
       positionBridgeLog(log);
-      log.classList.remove('just-pushed');
-      void log.offsetWidth;
-      log.classList.add('just-pushed');
       playLogPushSound();
       if (bridgeLogPushes === bridgeLogPushesNeeded) {
         bridgeLogPlaced = true;
