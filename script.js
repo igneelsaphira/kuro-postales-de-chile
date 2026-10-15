@@ -240,10 +240,16 @@ function bridgeInMud(centerX, depth) {
 function bridgeOnPath(nextX, nextDepth) {
   const centerX = nextX + 50;
   if (bridgeMudLearned && bridgeInMud(centerX, nextDepth)) return false;
+  const logCenterX = game.clientWidth * 1.05;
+  const closeToLog = Math.abs(centerX - logCenterX) <= 20;
   const logCrossing = nextDepth >= game.clientHeight * 3.34 &&
     nextDepth <= game.clientHeight * 3.69 &&
-    Math.abs(centerX - game.clientWidth * 1.05) <= 30;
+    closeToLog;
   if (logCrossing) return bridgeLogPlaced;
+  // The broad rectangular clearing extends beyond its painted shoreline here.
+  // Keep Kuro on dry ground unless their feet are centered on the log.
+  if (nextDepth > game.clientHeight * 3.29 && nextDepth < game.clientHeight * 3.68 &&
+    centerX > game.clientWidth * .63 && centerX < game.clientWidth * 1.59 && !closeToLog) return false;
   return bridgePathLayout.some(([left, right, low, high]) =>
     centerX >= left * game.clientWidth + 8 && centerX <= right * game.clientWidth - 8 &&
     nextDepth >= low * game.clientHeight && nextDepth <= high * game.clientHeight
