@@ -207,7 +207,7 @@ let bridgeMudLearned = false;
 let bridgeLogPlaced = false;
 let bridgeLogPushes = 0;
 const bridgeLogPushesNeeded = 5;
-const bridgeLogPositions = [[.225, -.056, 0], [.208, -.053, -5], [.177, -.048, -16], [.132, -.037, -35], [.073, -.020, -62], [0, 0, -90]];
+const bridgeLogPositions = [[.18, .13, 0], [.175, .11, -5], [.155, .085, -16], [.12, .055, -35], [.07, .018, -62], [0, 0, -90]];
 function positionBridgeLog(log) {
   const [offsetX, offsetY, angle] = bridgeLogPositions[bridgeLogPushes];
   log.style.setProperty('--log-x', `${offsetX * game.clientHeight}px`);
