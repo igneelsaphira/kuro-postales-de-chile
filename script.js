@@ -301,9 +301,8 @@ function renderBridgePath() {
   const family = document.createElement('div');
   family.className = 'bridge-coipo-family';
   family.setAttribute('aria-label', 'Una familia de coipos junto al refugio');
-  family.style.left = `${viewW * 1.35}px`;
+  family.style.left = `${viewW * 1.31}px`;
   family.style.bottom = `calc(4% + ${viewH * 5.46}px)`;
-  family.replaceChildren(...Array.from({ length: 3 }, () => document.createElement('i')));
   const land = document.createElement('div');
   land.className = 'bridge-land';
   const ground = document.createElement('div');
@@ -412,22 +411,7 @@ function renderBridgePath() {
       }
     }
   }
-  const stoneSpots = [
-    [.39, .39, 38], [1.31, .68, 42], [2.09, 1.54, 40],
-    [.33, 2.30, 33], [.73, 2.99, 34], [.94, 3.30, 45],
-    [1.15, 3.79, 30], [1.89, 4.08, 38], [.36, 4.98, 34], [1.64, 5.28, 38]
-  ];
-  const stones = stoneSpots.map(([left, depth, width], index) => {
-    const stone = document.createElement('i');
-    stone.className = 'bridge-bank-stones';
-    stone.style.width = `${width}px`;
-    stone.style.height = `${width * .7}px`;
-    stone.style.left = `${left * viewW - width / 2}px`;
-    stone.style.bottom = `calc(4% + ${depth * viewH - 5}px)`;
-    stone.style.transform = `rotate(${index % 3 * 5 - 5}deg) scaleX(${index % 2 ? -1 : 1})`;
-    return stone;
-  });
-  land.append(shore, ...stones, ...bankPlants);
+  land.append(shore, ...bankPlants);
   bridgePathElement.replaceChildren(land, ...footprints, mud, log, postcard, refuge, family);
 }
 addEventListener('resize', renderBridgePath);
