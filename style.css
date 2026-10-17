@@ -321,9 +321,9 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .bridge-crossing-log { z-index: 4; background: url('assets/bridge-fallen-log-v4.png') center / contain no-repeat; transform-origin: center; transform: translate(var(--log-x, 80px), var(--log-y, -20px)) rotate(var(--log-angle, 0deg)); transition: transform .16s ease-out; }
 .bridge-secret-postcard { z-index: 5; width: 36px; height: 26px; border: 3px solid #f5e8bb; border-bottom-width: 7px; border-radius: 2px; background: linear-gradient(145deg, #d0e6be 0 35%, #668e78 36% 62%, #397875 63%); box-shadow: 0 2px 0 #7b6448, 0 0 12px 3px #ffe5a2aa; rotate: -12deg; animation: postcard-glimmer 1.8s ease-in-out infinite alternate; }
 .bridge-coipo-refuge, .bridge-coipo-family { position: absolute; pointer-events: none; }
-.bridge-coipo-refuge { z-index: 4; width: 250px; height: 125px; background: url('assets/coipo-refuge-before-v1.png') center bottom / contain no-repeat; filter: drop-shadow(0 5px 3px #31523d55); }
+.bridge-coipo-refuge { z-index: 4; width: 220px; height: 110px; background: url('assets/coipo-refuge-before-v1.png') center bottom / contain no-repeat; filter: drop-shadow(0 5px 3px #31523d55); }
 .scene.valdivia-family-helped .bridge-coipo-refuge { background-image: url('assets/coipo-refuge-sheltered-v1.png'); }
-.bridge-coipo-family { z-index: 5; width: 150px; height: 85px; background: url('assets/coipo-family-v1.png') center bottom / contain no-repeat; filter: drop-shadow(0 3px 2px #3e4c3266); }
+.bridge-coipo-family { z-index: 5; width: 130px; height: 75px; background: url('assets/coipo-family-v1.png') center bottom / contain no-repeat; filter: drop-shadow(0 3px 2px #3e4c3266); }
 @keyframes postcard-glimmer { to { box-shadow: 0 2px 0 #7b6448, 0 0 22px 7px #fff1ae; } }
 .scene.bridge-postcard-collected .bridge-secret-postcard { display: none; }
 .bridge-path-segment.zone-river { background-color: #bda27a; }
