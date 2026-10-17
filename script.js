@@ -183,7 +183,8 @@ const bridgePathLayout = [
   [.27, .63, 4.27, 5.07, 'trail', 'reeds'],
   [.27, 1.67, 4.92, 5.32, 'clearing', 'wetland'],
   [1.48, 2.16, 5.05, 5.37, 'detour', 'wetland'],
-  [1.35, 1.74, 5.23, 5.96, 'trail', 'wetland']
+  [1.35, 1.74, 5.23, 5.96, 'trail', 'wetland'],
+  [1.30, 1.80, 5.72, 6.22, 'clearing', 'wetland']
 ];
 const bridgeFootprintLayout = [
   [.50, .24], [.82, .53], [1.12, .55], [1.34, .91],
@@ -232,7 +233,7 @@ function advanceBridgeLog(amount, fromTap = false) {
     startDialogue([['Kuro', '¡Uf! Pesaba mucho, pero ya quedó firme. Ahora puedo cruzar hasta la islita.']]);
   }
 }
-function bridgeTop() { return game.clientHeight * 5.92; }
+function bridgeTop() { return game.clientHeight * 6.18; }
 function bridgeInMud(centerX, depth) {
   return centerX >= game.clientWidth * 1.28 + 8 && centerX <= game.clientWidth * 1.63 - 8 &&
     depth >= game.clientHeight * 1.58 && depth <= game.clientHeight * 2.08;
@@ -297,12 +298,12 @@ function renderBridgePath() {
   refuge.setAttribute('role', 'img');
   refuge.setAttribute('aria-label', 'Madriguera de coipos entre juncos, junto al sendero');
   refuge.style.left = `${viewW * 1.33}px`;
-  refuge.style.bottom = `calc(4% + ${viewH * 5.45}px)`;
+  refuge.style.bottom = `calc(4% + ${viewH * 5.75}px)`;
   const family = document.createElement('div');
   family.className = 'bridge-coipo-family';
   family.setAttribute('aria-label', 'Una familia de coipos junto al refugio');
   family.style.left = `${viewW * 1.31}px`;
-  family.style.bottom = `calc(4% + ${viewH * 5.46}px)`;
+  family.style.bottom = `calc(4% + ${viewH * 5.76}px)`;
   const land = document.createElement('div');
   land.className = 'bridge-land';
   const ground = document.createElement('div');
@@ -1563,7 +1564,7 @@ function currentInteraction() {
     bridgeDepth > game.clientHeight * 3.68 && bridgeDepth < game.clientHeight * 3.90) return 'bridge-postcard';
   if (currentPlace === 'bridge' &&
     Math.abs(x + 50 - game.clientWidth * 1.53) < 105 &&
-    bridgeDepth > game.clientHeight * 5.33 && bridgeDepth < game.clientHeight * 5.76) return 'help-family';
+    bridgeDepth > game.clientHeight * 5.60 && bridgeDepth < game.clientHeight * 5.99) return 'help-family';
   if (currentPlace === 'bridge') {
     const clueIndex = bridgeClues.findIndex(([left, depth], index) => !bridgeCluesSeen.has(index) &&
       Math.abs(x + 50 - left * game.clientWidth) < 58 &&
@@ -1641,7 +1642,7 @@ function changeLocation(nextLocation, entry = 'default') {
     velocityY = 0;
     grounded = true;
     jumpsUsed = 0;
-    bridgeDepth = atBridge && entry === 'at-log' ? game.clientHeight * 3.28 : atBridge && entry === 'at-refuge' ? game.clientHeight * 5.55 : 0;
+    bridgeDepth = atBridge && entry === 'at-log' ? game.clientHeight * 3.28 : atBridge && entry === 'at-refuge' ? game.clientHeight * 5.79 : 0;
     bridgeDirection = 'back';
     autoEscapingCave = false;
     if (['at-neighborhood', 'at-seam', 'at-plaza', 'at-mota', 'at-quinta', 'at-museum', 'from-museum'].includes(entry) && atStreet) cameraX = Math.max(0, Math.min(game.clientWidth * 0.6875, x - game.clientWidth * 0.45));
@@ -2048,7 +2049,7 @@ function loop(time) {
     'inspect-tracks': valdiviaTracksFound ? 'Mirar las huellas' : 'Investigar huellitas',
     'inspect-passage': valdiviaPassageFound ? 'Entrar a la subida' : 'Investigar bajo el puente',
     'leave-bridge': 'Volver a la feria',
-    'cross-bridge': 'Cruzar hacia los coipos',
+    'cross-bridge': 'Continuar a Isla Teja',
     'bridge-log': `Mantén E para empujar · ${Math.round(bridgeLogProgress * 100)}%`,
     'bridge-postcard': 'Recoger la postal',
     'bridge-clue-0': 'Examinar las pisadas',
