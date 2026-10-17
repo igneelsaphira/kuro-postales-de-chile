@@ -360,12 +360,12 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .island-tree { bottom: 18%; width: 20px; height: 43%; background: #594f3d; }
 .island-tree::before { content: ''; position: absolute; left: -100px; top: -80px; width: 220px; height: 180px; border-radius: 49%; background: radial-gradient(circle at 30% 30%, #97b587, #467461 70%); box-shadow: 15px 20px 0 #45705c; }
 .tree-a { left: 23%; }.tree-b { left: 82%; scale: .9; }
-.island-shelter { left: 52%; bottom: 18%; width: 215px; height: 100px; border: 9px solid #66533e; border-radius: 48% 48% 5px 5px; background: repeating-linear-gradient(30deg, #90744d 0 16px, #b39867 17px 27px); box-shadow: inset 0 -15px #5e6d4f; }
-.island-family { left: 65%; bottom: 18%; width: 145px; height: 75px; z-index: 4; }
+.island-shelter { left: 48%; bottom: 17%; width: 280px; height: 140px; background: url('assets/coipo-refuge-before-v1.png') center bottom / contain no-repeat; filter: drop-shadow(0 5px 3px #31523d55); pointer-events: none; }
+.island-family { left: 49%; bottom: 18%; width: 145px; height: 75px; z-index: 4; }
 .island-family i { position: absolute; bottom: 0; width: 66px; height: 45px; border-radius: 55% 45% 34% 35%; background: #816349; box-shadow: inset -11px -8px #644c3b; }
 .island-family i::before { content: ''; position: absolute; right: -9px; top: -11px; width: 30px; height: 30px; border-radius: 50%; background: #927354; box-shadow: 7px 15px 0 -12px #252b28; }
 .island-family i:nth-child(2) { left: 45px; scale: .7; transform-origin: bottom left; }.island-family i:nth-child(3) { left: 83px; scale: .6; transform-origin: bottom left; }
-.scene.valdivia.valdivia-family-helped .island-shelter { box-shadow: inset 0 -15px #5e6d4f, 0 0 22px #f5dba0; }
+.scene.valdivia.valdivia-family-helped .island-shelter { background-image: url('assets/coipo-refuge-sheltered-v1.png'); }
 .bridge-photo { background: linear-gradient(#b5d3bd 0 33%, #669e96 34% 77%, #456e70 78%); }
 .bridge-photo::before { content: ''; position: absolute; left: 16%; right: 16%; bottom: 17%; height: 25%; border-radius: 48%; background: #a69870; box-shadow: 0 0 0 7px #577c6c; }
 .bridge-photo::after { content: 'La islita del humedal'; position: absolute; left: 0; right: 0; bottom: -27px; color: #76594d; text-align: center; font-size: 13px; font-style: italic; }

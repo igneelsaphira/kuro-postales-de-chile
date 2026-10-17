@@ -1836,7 +1836,7 @@ addEventListener('keydown', (event) => {
         renderAlbum();
         startDialogue([
           ['Kuro', '¡Eran coipos de verdad! Los pequeños están temblando bajo la lluvia.'],
-          ['Copo', 'Hay ramas secas y un techo junto al jardín. Podemos acomodarles un refugio.'],
+          ['Copo', 'Hay juncos y ramas secas junto al jardín. Podemos cubrir la entrada de su refugio.'],
           ['Kuro', 'Listo. Ya tienen un lugar calentito donde quedarse.'],
           ['Copo', 'Mi gorro les manda saludos.'],
           ['Álbum de Viaje', 'Nueva postal: Un refugio junto al río.']
