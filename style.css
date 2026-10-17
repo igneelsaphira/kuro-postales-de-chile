@@ -323,6 +323,10 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 @keyframes bridge-mud-breathe { to { filter: brightness(1.13); } }
 .bridge-crossing-log { z-index: 4; background: url('assets/bridge-fallen-log-v4.png') center / contain no-repeat; transform-origin: center; transform: translate(var(--log-x, 80px), var(--log-y, -20px)) rotate(var(--log-angle, 0deg)); transition: transform .16s ease-out; }
 .bridge-secret-postcard { z-index: 5; width: 36px; height: 26px; border: 3px solid #f5e8bb; border-bottom-width: 7px; border-radius: 2px; background: linear-gradient(145deg, #d0e6be 0 35%, #668e78 36% 62%, #397875 63%); box-shadow: 0 2px 0 #7b6448, 0 0 12px 3px #ffe5a2aa; rotate: -12deg; animation: postcard-glimmer 1.8s ease-in-out infinite alternate; }
+.bridge-coipo-refuge, .bridge-coipo-family { position: absolute; pointer-events: none; }
+.bridge-coipo-refuge { z-index: 4; width: 250px; height: 125px; background: url('assets/coipo-refuge-before-v1.png') center bottom / contain no-repeat; filter: drop-shadow(0 5px 3px #31523d55); }
+.scene.valdivia-family-helped .bridge-coipo-refuge { background-image: url('assets/coipo-refuge-sheltered-v1.png'); }
+.bridge-coipo-family { z-index: 5; width: 145px; height: 75px; }
 @keyframes postcard-glimmer { to { box-shadow: 0 2px 0 #7b6448, 0 0 22px 7px #fff1ae; } }
 .scene.bridge-postcard-collected .bridge-secret-postcard { display: none; }
 .bridge-path-segment.zone-river { background-color: #bda27a; }
@@ -360,12 +364,9 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .island-tree { bottom: 18%; width: 20px; height: 43%; background: #594f3d; }
 .island-tree::before { content: ''; position: absolute; left: -100px; top: -80px; width: 220px; height: 180px; border-radius: 49%; background: radial-gradient(circle at 30% 30%, #97b587, #467461 70%); box-shadow: 15px 20px 0 #45705c; }
 .tree-a { left: 23%; }.tree-b { left: 82%; scale: .9; }
-.island-shelter { left: 48%; bottom: 17%; width: 280px; height: 140px; background: url('assets/coipo-refuge-before-v1.png') center bottom / contain no-repeat; filter: drop-shadow(0 5px 3px #31523d55); pointer-events: none; }
-.island-family { left: 49%; bottom: 18%; width: 145px; height: 75px; z-index: 4; }
-.island-family i { position: absolute; bottom: 0; width: 66px; height: 45px; border-radius: 55% 45% 34% 35%; background: #816349; box-shadow: inset -11px -8px #644c3b; }
-.island-family i::before { content: ''; position: absolute; right: -9px; top: -11px; width: 30px; height: 30px; border-radius: 50%; background: #927354; box-shadow: 7px 15px 0 -12px #252b28; }
-.island-family i:nth-child(2) { left: 45px; scale: .7; transform-origin: bottom left; }.island-family i:nth-child(3) { left: 83px; scale: .6; transform-origin: bottom left; }
-.scene.valdivia.valdivia-family-helped .island-shelter { background-image: url('assets/coipo-refuge-sheltered-v1.png'); }
+.bridge-coipo-family i { position: absolute; bottom: 0; width: 66px; height: 45px; border-radius: 55% 45% 34% 35%; background: #816349; box-shadow: inset -11px -8px #644c3b; }
+.bridge-coipo-family i::before { content: ''; position: absolute; right: -9px; top: -11px; width: 30px; height: 30px; border-radius: 50%; background: #927354; box-shadow: 7px 15px 0 -12px #252b28; }
+.bridge-coipo-family i:nth-child(2) { left: 45px; scale: .7; transform-origin: bottom left; }.bridge-coipo-family i:nth-child(3) { left: 83px; scale: .6; transform-origin: bottom left; }
 .bridge-photo { background: linear-gradient(#b5d3bd 0 33%, #669e96 34% 77%, #456e70 78%); }
 .bridge-photo::before { content: ''; position: absolute; left: 16%; right: 16%; bottom: 17%; height: 25%; border-radius: 48%; background: #a69870; box-shadow: 0 0 0 7px #577c6c; }
 .bridge-photo::after { content: 'La islita del humedal'; position: absolute; left: 0; right: 0; bottom: -27px; color: #76594d; text-align: center; font-size: 13px; font-style: italic; }

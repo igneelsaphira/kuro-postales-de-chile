@@ -292,6 +292,18 @@ function renderBridgePath() {
   postcard.className = 'bridge-secret-postcard';
   postcard.style.left = `${viewW * 1.05 - 18}px`;
   postcard.style.bottom = `calc(4% + ${viewH * 3.79}px)`;
+  const refuge = document.createElement('div');
+  refuge.className = 'bridge-coipo-refuge';
+  refuge.setAttribute('role', 'img');
+  refuge.setAttribute('aria-label', 'Madriguera de coipos entre juncos, junto al sendero');
+  refuge.style.left = `${viewW * 1.33}px`;
+  refuge.style.bottom = `calc(4% + ${viewH * 5.45}px)`;
+  const family = document.createElement('div');
+  family.className = 'bridge-coipo-family';
+  family.setAttribute('aria-label', 'Una familia de coipos junto al refugio');
+  family.style.left = `${viewW * 1.35}px`;
+  family.style.bottom = `calc(4% + ${viewH * 5.46}px)`;
+  family.replaceChildren(...Array.from({ length: 3 }, () => document.createElement('i')));
   const land = document.createElement('div');
   land.className = 'bridge-land';
   const ground = document.createElement('div');
@@ -416,7 +428,7 @@ function renderBridgePath() {
     return stone;
   });
   land.append(shore, ...stones, ...bankPlants);
-  bridgePathElement.replaceChildren(land, ...footprints, mud, log, postcard);
+  bridgePathElement.replaceChildren(land, ...footprints, mud, log, postcard, refuge, family);
 }
 addEventListener('resize', renderBridgePath);
 renderBridgePath();
@@ -1565,13 +1577,15 @@ function currentInteraction() {
   if (currentPlace === 'bridge' && !bridgePostcardCollected && bridgeLogPlaced &&
     Math.abs(x + 50 - game.clientWidth * 1.05) < 55 &&
     bridgeDepth > game.clientHeight * 3.68 && bridgeDepth < game.clientHeight * 3.90) return 'bridge-postcard';
+  if (currentPlace === 'bridge' &&
+    Math.abs(x + 50 - game.clientWidth * 1.53) < 105 &&
+    bridgeDepth > game.clientHeight * 5.33 && bridgeDepth < game.clientHeight * 5.76) return 'help-family';
   if (currentPlace === 'bridge') {
     const clueIndex = bridgeClues.findIndex(([left, depth], index) => !bridgeCluesSeen.has(index) &&
       Math.abs(x + 50 - left * game.clientWidth) < 58 &&
       Math.abs(bridgeDepth - depth * game.clientHeight) < 54);
     if (clueIndex !== -1) return `bridge-clue-${clueIndex}`;
   }
-  if (currentPlace === 'valdivia' && x >= game.clientWidth * 3.52 && x <= game.clientWidth * 3.83) return 'help-family';
   if (currentPlace === 'valdivia' && x >= game.clientWidth * 1.80 && x <= game.clientWidth * 2.03) return 'look-river';
   if (currentPlace === 'valparaiso' && x >= game.clientWidth * 1.24 && x <= game.clientWidth * 1.56) return 'talk-tizne';
   if (currentPlace === 'valparaiso' && x >= game.clientWidth * 2.60 && x <= game.clientWidth * 2.90) return 'talk-bruma';
@@ -1636,14 +1650,14 @@ function changeLocation(nextLocation, entry = 'default') {
     else if (atStation) x = entry === 'at-estafeta' ? game.clientWidth * 0.23 : entry === 'at-train' ? game.clientWidth * 0.58 : entry === 'from-route' ? game.clientWidth - 150 : 120;
     else if (atValparaiso) x = entry === 'at-train' ? 95 : entry === 'from-map' ? game.clientWidth * 0.24 : entry === 'at-tizne' ? game.clientWidth * 1.34 : entry === 'at-hills' ? game.clientWidth * 1.60 : entry === 'at-lower-hills' ? game.clientWidth * 2.07 : entry === 'at-mid-hills' ? game.clientWidth * 2.44 : entry === 'at-bruma' ? game.clientWidth * 2.62 : entry === 'at-cave' ? game.clientWidth * 3.12 : entry === 'at-connector' ? game.clientWidth * 0.82 : entry === 'at-station-seam' ? game.clientWidth * 0.56 : entry === 'at-plaza-seam' ? game.clientWidth * 1.12 : 160;
     else if (atValdivia) x = entry === 'at-coipo' ? game.clientWidth * 1.13 : entry === 'at-pier' ? game.clientWidth * 1.83 : entry === 'at-market' ? game.clientWidth * 2.32 : entry === 'at-passage' ? game.clientWidth * 2.82 : entry === 'at-island' ? game.clientWidth * 3.63 : game.clientWidth * 0.22;
-    else if (atBridge) x = entry === 'at-log' ? game.clientWidth * 1.05 - 50 : game.clientWidth * .50 - 50;
+    else if (atBridge) x = entry === 'at-log' ? game.clientWidth * 1.05 - 50 : entry === 'at-refuge' ? game.clientWidth * 1.55 - 50 : game.clientWidth * .50 - 50;
     else if (atCave) x = entry === 'at-goat' ? game.clientWidth * (caveBellCollected ? 3.08 : 2.72) : entry === 'at-sea-lion' ? game.clientWidth * 4.65 : entry === 'at-dog' ? game.clientWidth * 1.05 : entry === 'at-middle' ? game.clientWidth * 3.75 : entry === 'at-bird' ? game.clientWidth * .54 : entry === 'at-bell' ? game.clientWidth * 5.67 : 185;
     else x = entry === 'from-quinta' ? game.clientWidth * 1.6875 - 150 : entry === 'from-museum' ? game.clientWidth * 1.29 : entry === 'at-museum' ? game.clientWidth * 1.40 : entry === 'at-quinta' ? game.clientWidth * 1.20 : entry === 'at-mota' ? game.clientWidth * 0.36 : entry === 'at-plaza' ? game.clientWidth * 0.86 : entry === 'at-neighborhood' ? game.clientWidth * 0.46 : entry === 'at-seam' ? game.clientWidth * 0.90 : game.clientWidth * 0.14;
     y = 0;
     velocityY = 0;
     grounded = true;
     jumpsUsed = 0;
-    bridgeDepth = atBridge && entry === 'at-log' ? game.clientHeight * 3.28 : 0;
+    bridgeDepth = atBridge && entry === 'at-log' ? game.clientHeight * 3.28 : atBridge && entry === 'at-refuge' ? game.clientHeight * 5.55 : 0;
     bridgeDirection = 'back';
     autoEscapingCave = false;
     if (['at-neighborhood', 'at-seam', 'at-plaza', 'at-mota', 'at-quinta', 'at-museum', 'from-museum'].includes(entry) && atStreet) cameraX = Math.max(0, Math.min(game.clientWidth * 0.6875, x - game.clientWidth * 0.45));
@@ -1801,7 +1815,7 @@ addEventListener('keydown', (event) => {
     if (interaction === 'talk-copo') startDialogue([
       ['Copo', valdiviaFamilyHelped ? '¡La familia ya tiene dónde refugiarse! Gracias por ayudarme, Kuro.' : 'Soy Copo. ¿Ves mi gorro? Me gustan tanto los coipos que lo hice yo mismo.'],
       ['Kuro', valdiviaFamilyHelped ? 'Me alegra haber seguido esas huellitas.' : 'Me gusta. ¿Me acompañas a conocer la feria?'],
-      ['Copo', valdiviaFamilyHelped ? 'Cuando llueva, estarán calentitos bajo el techo.' : 'Claro. Hay unas huellas raras por ahí y todos bromean con que son mías.']
+      ['Copo', valdiviaFamilyHelped ? 'Cuando llueva, estarán protegidos bajo los juncos.' : 'Claro. Hay unas huellas raras por ahí y todos bromean con que son mías.']
     ]);
     if (interaction === 'look-river') startDialogue([['Kuro', 'Desde este muelle se ve hasta la otra orilla. Me pregunto qué habrá más allá.']]);
     if (interaction === 'inspect-tracks') {
@@ -2148,8 +2162,8 @@ if (['street', 'house', 'plaza', 'quinta', 'museum', 'station', 'valparaiso', 'v
       ? `at-${previewSpot}`
     : previewPlace === 'cave' && ['goat', 'sea-lion', 'dog', 'middle', 'bird', 'bell'].includes(previewSpot)
       ? `at-${previewSpot}`
-    : previewPlace === 'bridge' && previewSpot === 'log'
-      ? 'at-log'
+    : previewPlace === 'bridge' && ['log', 'refuge'].includes(previewSpot)
+      ? `at-${previewSpot}`
       : 'default';
   requestAnimationFrame(() => changeLocation(previewPlace, previewEntry));
 }
