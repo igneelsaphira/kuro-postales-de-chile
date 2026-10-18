@@ -368,7 +368,7 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .island-tree { bottom: 18%; width: 20px; height: 43%; background: #594f3d; }
 .island-tree::before { content: ''; position: absolute; left: -100px; top: -80px; width: 220px; height: 180px; border-radius: 49%; background: radial-gradient(circle at 30% 30%, #97b587, #467461 70%); box-shadow: 15px 20px 0 #45705c; }
 .tree-a { left: 23%; }.tree-b { left: 82%; scale: .9; }
-.bridge-photo { background: #69a59a url('assets/bridge-islet-kuro-view-v1.webp') center / cover no-repeat; }
+.bridge-photo { background: #69a59a url('assets/bridge-islet-kuro-view-v2.webp') center / cover no-repeat; }
 .album-photo.bridge-photo::after { content: 'La islita del humedal'; }
 .valdivia-photo { background: linear-gradient(#8cb9b7 0 53%, #5c8e92 54% 70%, #6d8d6a 71% 77%, #b7a582 78%); }
 .valdivia-photo::after { content: '♣  ♣  ♣'; position: absolute; left: 13%; bottom: 24%; color: #385f50; font-size: 42px; letter-spacing: 12px; }
