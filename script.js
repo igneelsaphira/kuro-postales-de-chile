@@ -1123,7 +1123,7 @@ const portraitSheets = {
     neutral: 'assets/dona-bruma-dialogue-frames-v1.png'
   },
   Copo: {
-    neutral: 'assets/copo-dialogue-v1.png'
+    neutral: 'assets/copo-dialogue-v2.png'
   }
 };
 const npcPortraits = {
