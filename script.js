@@ -1121,12 +1121,16 @@ const portraitSheets = {
   },
   'Doña Bruma': {
     neutral: 'assets/dona-bruma-dialogue-frames-v1.png'
+  },
+  Copo: {
+    neutral: 'assets/copo-dialogue-v1.png'
   }
 };
 const npcPortraits = {
   Mota: portraitSheets.Mota.neutral,
   Tizne: portraitSheets.Tizne.neutral,
-  'Doña Bruma': portraitSheets['Doña Bruma'].neutral
+  'Doña Bruma': portraitSheets['Doña Bruma'].neutral,
+  Copo: portraitSheets.Copo.neutral
 };
 
 const portraitEmotionState = {
