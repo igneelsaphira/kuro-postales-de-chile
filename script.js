@@ -196,6 +196,16 @@ const bridgeFootprintLayout = [
   [.30, .83], [1.44, 1.76], [.42, 2.53], [1.05, 3.70]
 ];
 const bridgePathElement = document.querySelector('.bridge-earth-path');
+const bridgeWaterGlintsElement = document.querySelector('.bridge-water-glints');
+const bridgeWaterGlintLayout = [
+  [.12, .15], [1.77, .27], [2.21, .49], [.96, .82], [.13, 1.13], [.86, 1.39],
+  [2.27, 1.19], [1.05, 1.73], [.55, 1.88], [2.22, 2.08], [.15, 2.28],
+  [1.02, 2.62], [2.20, 2.74], [.13, 2.98], [1.16, 3.18], [2.25, 3.33],
+  [.24, 3.61], [.76, 3.78], [2.17, 3.95], [.11, 4.19], [1.19, 4.43],
+  [2.16, 4.59], [.84, 4.74], [1.95, 4.95], [.12, 5.12], [.87, 5.34],
+  [2.24, 5.45], [1.06, 5.57], [1.18, 5.49], [.76, 5.70], [1.08, 5.72],
+  [2.05, 5.82], [1.17, 5.88], [.91, 6.04], [1.02, 6.15], [2.22, 6.13], [.55, 6.19]
+];
 const bridgeClues = [
   [.30, .83, 'Bajo las vigas hay huellas que se desvían hacia el río. Quiero mirar un poco más.'],
   [1.65, 1.40, 'Ese sendero oscuro se ve blando. Quizá pueda rodearlo.'],
@@ -258,6 +268,17 @@ function bridgeOnPath(nextX, nextDepth) {
 }
 function renderBridgePath() {
   const viewW = game.clientWidth, viewH = game.clientHeight;
+  const glints = bridgeWaterGlintLayout.map(([left, depth], index) => {
+    const glint = document.createElement('i');
+    glint.className = 'bridge-water-glint';
+    glint.style.left = `${left * viewW}px`;
+    glint.style.bottom = `calc(4% + ${depth * viewH}px)`;
+    glint.style.setProperty('--glint-scale', (.7 + (index * 7 % 9) / 18).toFixed(2));
+    glint.style.setProperty('--glint-duration', `${3.2 + (index * 5 % 8) * .35}s`);
+    glint.style.animationDelay = `${-index * .73}s`;
+    return glint;
+  });
+  bridgeWaterGlintsElement.replaceChildren(...glints);
   const segments = bridgePathLayout.map(([left, right, low, high, kind, zone]) => {
     const segment = document.createElement('div');
     segment.className = `bridge-path-segment ${kind} zone-${zone}`;

@@ -291,6 +291,15 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 }
 .bridge-climb-layer { display: none; position: absolute; inset: 0; z-index: 1; overflow: hidden; background: #708d64; }
 .bridge-river { position: absolute; inset: 0; background: #6fa99b url('assets/bridge-wetland-golden-v2.webp') 0 0 / 900px 900px repeat; image-rendering: auto; }
+.bridge-water-glints { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.bridge-water-glint { position: absolute; width: 36px; height: 12px; opacity: .35; transform: scale(var(--glint-scale, 1)); animation: bridge-water-twinkle var(--glint-duration, 4.2s) ease-in-out infinite; }
+.bridge-water-glint::before, .bridge-water-glint::after { content: ''; position: absolute; height: 2px; border-radius: 50%; background: linear-gradient(90deg, transparent, #fff2bc 27%, #fffdf1 50%, #fff2bc 73%, transparent); filter: drop-shadow(0 0 3px #ffe7a5); }
+.bridge-water-glint::before { top: 2px; left: 1px; width: 33px; }
+.bridge-water-glint::after { top: 8px; left: 10px; width: 16px; opacity: .7; }
+@keyframes bridge-water-twinkle {
+  0%, 100% { opacity: .17; transform: translateY(1px) scale(var(--glint-scale, 1)); }
+  50% { opacity: .78; transform: translateY(-1px) scale(var(--glint-scale, 1)); }
+}
 .bridge-column { position: absolute; top: 2%; bottom: 0; width: 5%; background: linear-gradient(90deg, #314f4d55, #7da69a44 45%, #294f4b55); border-inline: 2px solid #31545155; box-shadow: 12px 0 22px #234c4740; opacity: .55; }
 .column-left { left: 3%; }.column-right { right: 3%; }
 .bridge-boat { position: absolute; z-index: 1; left: 76%; bottom: 28%; width: 122px; height: 28px; border-radius: 14% 12% 55% 55%; background: #33565d; box-shadow: 0 7px 0 #28494f55; rotate: -8deg; }
@@ -623,7 +632,7 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
   .game.cave-active .cave-claw:not([hidden]) { display: block; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .street-atmosphere i, .plaza-atmosphere i, .window-sunbeam, .window-petals i, .dust-motes i, .album-sparkle, .zone-node, .bell-awakening, .kuro.double-jump::before, .soot-dog, .soot-bird { animation: none; }
+  .street-atmosphere i, .plaza-atmosphere i, .window-sunbeam, .window-petals i, .dust-motes i, .album-sparkle, .zone-node, .bell-awakening, .kuro.double-jump::before, .soot-dog, .soot-bird, .bridge-water-glint { animation: none; }
 }
 
 /* Illustrated atlas: art and destination controls share the same map surface. */
