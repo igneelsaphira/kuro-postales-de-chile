@@ -209,8 +209,7 @@ const bridgeWaterGlintLayout = [
 const bridgeClues = [
   [.30, .83, 'Bajo las vigas hay huellas que se desvían hacia el río. Quiero mirar un poco más.'],
   [1.65, 1.40, 'Ese sendero oscuro se ve blando. Quizá pueda rodearlo.'],
-  [.42, 2.53, 'El barro conserva marcas frescas y pequeños tallos mordidos.'],
-  [1.05, 3.70, 'Esta islita estaba escondida entre los juncos. Menos mal traje el tronco.']
+  [.42, 2.53, 'El barro conserva marcas frescas y pequeños tallos mordidos.']
 ];
 const bridgeCluesSeen = new Set();
 let bridgeMudSeconds = 0;
@@ -1355,13 +1354,17 @@ function talkToBruma() {
   }
 }
 
-function renderAlbum() {
+function renderAlbum(focusPage = null) {
   const pages = [];
   if (whalePostcardCollected) pages.push({ element: whaleAlbumPage, number: 'Santiago · 01' });
   if (quintaPhotoCollected) pages.push({ element: quintaPhotoPage, number: 'Santiago · 02' });
   if (tizneResponse) pages.push({ element: valparaisoAlbumPage, number: 'Valparaíso · 01' });
   if (bridgePostcardCollected) pages.push({ element: bridgeAlbumPage, number: 'Valdivia · ★' });
   if (valdiviaFamilyHelped) pages.push({ element: valdiviaAlbumPage, number: 'Valdivia · 01' });
+  if (focusPage) {
+    const focusedIndex = pages.findIndex(({ element }) => element === focusPage);
+    if (focusedIndex !== -1) albumPageIndex = focusedIndex;
+  }
   albumPageIndex = Math.max(0, Math.min(albumPageIndex, pages.length - 1));
   albumEmpty.hidden = pages.length > 0;
   whaleAlbumPage.hidden = true;
@@ -1387,9 +1390,9 @@ function changeAlbumPage(direction) {
   renderAlbum();
 }
 
-function openAlbum() {
+function openAlbum(focusPage = null) {
   keys.clear();
-  renderAlbum();
+  renderAlbum(focusPage);
   travelAlbum.hidden = false;
 }
 
@@ -1807,8 +1810,7 @@ addEventListener('keydown', (event) => {
       bridgePostcardCollected = true;
       localStorage.setItem('kuro-bridge-postcard-v1', 'collected');
       scene.classList.add('bridge-postcard-collected');
-      renderAlbum();
-      startDialogue([['Kuro', '¡Una postal escondida entre los juncos! El tronco me trajo hasta aquí.'], ['Álbum de Viaje', 'Nueva postal secreta: La islita del humedal.']]);
+      openAlbum(bridgeAlbumPage);
     }
     if (interaction?.startsWith('bridge-clue-')) {
       const clueIndex = Number(interaction.slice('bridge-clue-'.length));
@@ -2080,7 +2082,6 @@ function loop(time) {
     'bridge-clue-0': 'Examinar las pisadas',
     'bridge-clue-1': 'Mirar el barro',
     'bridge-clue-2': 'Mirar el barro',
-    'bridge-clue-3': 'Explorar los juncos',
     'help-family': valdiviaFamilyHelped ? 'Visitar a los coipos' : 'Ayudar a los coipos',
     'collect-bell': 'Recoger el cascabel',
     'exit-museum': 'Salir a Quinta Normal',
