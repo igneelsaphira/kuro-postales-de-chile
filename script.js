@@ -239,7 +239,6 @@ function advanceBridgeLog(amount, fromTap = false) {
   if (bridgeLogProgress === 1) {
     bridgeLogPlaced = true;
     scene.classList.add('bridge-log-placed');
-    startDialogue([['Kuro', '¡Uf! Pesaba mucho, pero ya quedó firme. Ahora puedo cruzar hasta la islita.']]);
   }
 }
 function bridgeTop() { return game.clientHeight * 6.18; }
