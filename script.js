@@ -186,6 +186,7 @@ const bridgePathLayout = [
   [1.35, 1.74, 5.23, 5.96, 'trail', 'wetland'],
   [1.30, 1.80, 5.56, 6.22, 'clearing', 'wetland']
 ];
+let bridgeWalkableMask = null;
 const bridgeFootprintLayout = [
   [.50, .24], [.82, .53], [1.12, .55], [1.34, .91],
   [1.40, 1.30], [1.75, 1.40], [2.00, 1.78], [1.73, 2.26],
@@ -255,14 +256,16 @@ function bridgeOnPath(nextX, nextDepth) {
     nextDepth <= game.clientHeight * 3.69 &&
     closeToLog;
   if (logCrossing) return bridgeLogPlaced;
-  // The broad rectangular clearing extends beyond its painted shoreline here.
-  // Keep Kuro on dry ground unless their feet are centered on the log.
-  if (nextDepth > game.clientHeight * 3.29 && nextDepth < game.clientHeight * 3.68 &&
-    centerX > game.clientWidth * .63 && centerX < game.clientWidth * 1.59 && !closeToLog) return false;
-  return bridgePathLayout.some(([left, right, low, high]) =>
-    centerX >= left * game.clientWidth + 8 && centerX <= right * game.clientWidth - 8 &&
-    nextDepth >= low * game.clientHeight && nextDepth <= high * game.clientHeight
-  );
+  if (!bridgeWalkableMask) return false;
+  const { cells, cols, rows, pixel, originDepth } = bridgeWalkableMask;
+  const onLand = (px, depth) => {
+    const col = Math.floor(px / pixel);
+    const row = Math.floor((originDepth - depth) / pixel);
+    return col >= 0 && row >= 0 && col < cols && row < rows && cells[row * cols + col] === 1;
+  };
+  // Keep Kuro's visible body over the bank, not only the center of their paws.
+  return [-34, 0, 34].every(offsetX =>
+    onLand(centerX + offsetX, nextDepth - 12) && onLand(centerX + offsetX, nextDepth + 12));
 }
 function renderBridgePath() {
   const viewW = game.clientWidth, viewH = game.clientHeight;
@@ -386,6 +389,7 @@ function renderBridgePath() {
   }
   maskCtx.putImageData(maskPixels, 0, 0);
   ground.style.maskImage = `url(${mask.toDataURL()})`;
+  bridgeWalkableMask = { cells, cols, rows, pixel, originDepth: worldH * .96 };
   const bankPlants = [];
   const planted = [];
   const bankNoise = (a, b) => { const n = Math.sin(a * 127.1 + b * 311.7) * 43758.5453; return n - Math.floor(n); };
