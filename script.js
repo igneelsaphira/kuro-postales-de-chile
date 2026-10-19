@@ -197,6 +197,7 @@ const bridgeFootprintLayout = [
   [.30, .83], [1.44, 1.76], [.42, 2.53], [1.05, 3.70]
 ];
 const bridgePathElement = document.querySelector('.bridge-earth-path');
+const bridgeMudHint = document.querySelector('#bridge-mud-hint');
 const bridgeWaterGlintsElement = document.querySelector('.bridge-water-glints');
 const bridgeWaterGlintLayout = [
   [.12, .15], [1.77, .27], [2.21, .49], [.96, .82], [.13, 1.13], [.86, 1.39],
@@ -215,6 +216,10 @@ const bridgeClues = [
 const bridgeCluesSeen = new Set();
 let bridgeMudSeconds = 0;
 let bridgeMudLearned = false;
+let bridgeMudRecoverUntil = 0;
+let bridgeMudHintUntil = 0;
+let bridgeMudReturn = null;
+const bridgeMudSinkDuration = 1;
 let bridgeLogPlaced = false;
 let bridgeLogTouched = false;
 let bridgeLogProgress = 0;
@@ -244,8 +249,8 @@ function advanceBridgeLog(amount, fromTap = false) {
 }
 function bridgeTop() { return game.clientHeight * 6.18; }
 function bridgeInMud(centerX, depth) {
-  return centerX >= game.clientWidth * 1.28 + 8 && centerX <= game.clientWidth * 1.63 - 8 &&
-    depth >= game.clientHeight * 1.58 && depth <= game.clientHeight * 2.08;
+  return centerX >= game.clientWidth * 1.31 && centerX <= game.clientWidth * 1.60 &&
+    depth >= game.clientHeight * 1.64 && depth <= game.clientHeight * 2.02;
 }
 function bridgeOnPath(nextX, nextDepth) {
   const centerX = nextX + 50;
@@ -304,6 +309,11 @@ function renderBridgePath() {
   mud.style.width = `${viewW * .35}px`;
   mud.style.bottom = `calc(4% + ${viewH * 1.58}px)`;
   mud.style.height = `${viewH * .50}px`;
+  mud.replaceChildren(...[0, 1, 2].map(index => {
+    const bubble = document.createElement('i');
+    bubble.className = `bridge-mud-bubble bubble-${index + 1}`;
+    return bubble;
+  }));
   const log = document.createElement('div');
   log.className = 'bridge-crossing-log';
   log.style.left = `${viewW * 1.05 - viewH * .25}px`;
@@ -487,6 +497,26 @@ function playLogPushSound() {
   gain.connect(audioContext.destination);
   oscillator.start(now);
   oscillator.stop(now + .23);
+}
+
+function playMudSquelch() {
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextClass) return;
+  audioContext ||= new AudioContextClass();
+  if (audioContext.state === 'suspended') audioContext.resume();
+  const now = audioContext.currentTime;
+  const oscillator = audioContext.createOscillator();
+  const gain = audioContext.createGain();
+  oscillator.type = 'triangle';
+  oscillator.frequency.setValueAtTime(135, now);
+  oscillator.frequency.exponentialRampToValueAtTime(58, now + .2);
+  gain.gain.setValueAtTime(.0001, now);
+  gain.gain.exponentialRampToValueAtTime(.045, now + .02);
+  gain.gain.exponentialRampToValueAtTime(.0001, now + .24);
+  oscillator.connect(gain);
+  gain.connect(audioContext.destination);
+  oscillator.start(now);
+  oscillator.stop(now + .25);
 }
 
 function awakenBell() {
@@ -1666,14 +1696,14 @@ function changeLocation(nextLocation, entry = 'default') {
     else if (atStation) x = entry === 'at-estafeta' ? game.clientWidth * 0.23 : entry === 'at-train' ? game.clientWidth * 0.58 : entry === 'from-route' ? game.clientWidth - 150 : 120;
     else if (atValparaiso) x = entry === 'at-train' ? 95 : entry === 'from-map' ? game.clientWidth * 0.24 : entry === 'at-tizne' ? game.clientWidth * 1.34 : entry === 'at-hills' ? game.clientWidth * 1.60 : entry === 'at-lower-hills' ? game.clientWidth * 2.07 : entry === 'at-mid-hills' ? game.clientWidth * 2.44 : entry === 'at-bruma' ? game.clientWidth * 2.62 : entry === 'at-cave' ? game.clientWidth * 3.12 : entry === 'at-connector' ? game.clientWidth * 0.82 : entry === 'at-station-seam' ? game.clientWidth * 0.56 : entry === 'at-plaza-seam' ? game.clientWidth * 1.12 : 160;
     else if (atValdivia) x = entry === 'at-coipo' ? game.clientWidth * 1.13 : entry === 'at-pier' ? game.clientWidth * 1.83 : entry === 'at-market' ? game.clientWidth * 2.32 : entry === 'at-passage' ? game.clientWidth * 2.82 : entry === 'at-island' ? game.clientWidth * 3.63 : game.clientWidth * 0.22;
-    else if (atBridge) x = entry === 'at-log' ? game.clientWidth * 1.05 - 50 : entry === 'at-refuge' ? game.clientWidth * 1.56 - 50 : game.clientWidth * .50 - 50;
+    else if (atBridge) x = entry === 'at-log' ? game.clientWidth * 1.05 - 50 : entry === 'at-mud' ? game.clientWidth * 1.45 - 50 : entry === 'at-refuge' ? game.clientWidth * 1.56 - 50 : game.clientWidth * .50 - 50;
     else if (atCave) x = entry === 'at-goat' ? game.clientWidth * (caveBellCollected ? 3.08 : 2.72) : entry === 'at-sea-lion' ? game.clientWidth * 4.65 : entry === 'at-dog' ? game.clientWidth * 1.05 : entry === 'at-middle' ? game.clientWidth * 3.75 : entry === 'at-bird' ? game.clientWidth * .54 : entry === 'at-bell' ? game.clientWidth * 5.67 : 185;
     else x = entry === 'from-quinta' ? game.clientWidth * 1.6875 - 150 : entry === 'from-museum' ? game.clientWidth * 1.29 : entry === 'at-museum' ? game.clientWidth * 1.40 : entry === 'at-quinta' ? game.clientWidth * 1.20 : entry === 'at-mota' ? game.clientWidth * 0.36 : entry === 'at-plaza' ? game.clientWidth * 0.86 : entry === 'at-neighborhood' ? game.clientWidth * 0.46 : entry === 'at-seam' ? game.clientWidth * 0.90 : game.clientWidth * 0.14;
     y = 0;
     velocityY = 0;
     grounded = true;
     jumpsUsed = 0;
-    bridgeDepth = atBridge && entry === 'at-log' ? game.clientHeight * 3.28 : atBridge && entry === 'at-refuge' ? game.clientHeight * 5.61 : 0;
+    bridgeDepth = atBridge && entry === 'at-log' ? game.clientHeight * 3.28 : atBridge && entry === 'at-mud' ? game.clientHeight * 2.06 : atBridge && entry === 'at-refuge' ? game.clientHeight * 5.61 : 0;
     bridgeDirection = 'back';
     autoEscapingCave = false;
     if (['at-neighborhood', 'at-seam', 'at-plaza', 'at-mota', 'at-quinta', 'at-museum', 'from-museum'].includes(entry) && atStreet) cameraX = Math.max(0, Math.min(game.clientWidth * 0.6875, x - game.clientWidth * 0.45));
@@ -1937,7 +1967,7 @@ function loop(time) {
       changeLocation('valparaiso', 'at-cave');
     }
   }
-  if (controlsEnabled && (keys.has('arrowright') || keys.has('d'))) {
+  if (controlsEnabled && !(currentPlace === 'bridge' && bridgeMudReturn) && (keys.has('arrowright') || keys.has('d'))) {
     const activeWorldWidth = currentPlace === 'valparaiso' ? game.clientWidth * 3.2875 : currentPlace === 'cave' ? game.clientWidth * 6 : currentPlace === 'street' ? game.clientWidth * 1.6875 : currentPlace === 'valdivia' ? game.clientWidth * 4 : currentPlace === 'bridge' ? game.clientWidth * 2.4 : currentPlace === 'house' || currentPlace === 'museum' || currentPlace === 'plaza' || currentPlace === 'quinta' || currentPlace === 'station' ? game.clientWidth : worldWidth;
     const nextX = Math.min(activeWorldWidth - 110, x + speed * dt);
     if (currentPlace !== 'bridge' || bridgeOnPath(nextX, bridgeDepth)) x = nextX;
@@ -1946,14 +1976,14 @@ function loop(time) {
     facing = 1;
     kuro.style.setProperty('--facing', facing);
   }
-  if (controlsEnabled && (keys.has('arrowleft') || keys.has('a'))) {
+  if (controlsEnabled && !(currentPlace === 'bridge' && bridgeMudReturn) && (keys.has('arrowleft') || keys.has('a'))) {
     const nextX = Math.max(10, x - speed * dt);
     if (currentPlace !== 'bridge' || bridgeOnPath(nextX, bridgeDepth)) x = nextX;
     if (currentPlace === 'bridge') bridgeDirection = 'side';
     facing = -1;
     kuro.style.setProperty('--facing', facing);
   }
-  if (controlsEnabled && currentPlace === 'bridge') {
+  if (controlsEnabled && currentPlace === 'bridge' && !bridgeMudReturn) {
     if (keys.has('arrowup') || keys.has('w')) {
       const nextDepth = Math.min(bridgeTop(), bridgeDepth + speed * .86 * dt);
       if (bridgeOnPath(x, nextDepth)) bridgeDepth = nextDepth;
@@ -1964,19 +1994,44 @@ function loop(time) {
       bridgeDirection = 'front';
     }
   }
-  if (currentPlace === 'bridge' && controlsEnabled && grounded && !bridgeMudLearned && bridgeInMud(x + 50, bridgeDepth)) {
+  const sinkingInMud = currentPlace === 'bridge' && controlsEnabled && grounded && !bridgeMudLearned && !bridgeMudReturn && bridgeInMud(x + 50, bridgeDepth);
+  scene.classList.toggle('bridge-mud-disturbed', sinkingInMud || time < bridgeMudRecoverUntil);
+  bridgeMudHint.classList.toggle('is-visible', currentPlace === 'bridge' && time < bridgeMudHintUntil);
+  if (sinkingInMud) {
+    if (bridgeMudSeconds === 0) playMudSquelch();
     bridgeMudSeconds += dt;
-    if (bridgeMudSeconds >= .65) {
+    kuro.style.setProperty('--mud-sink', `${Math.min(20, bridgeMudSeconds / bridgeMudSinkDuration * 20)}px`);
+    const mud = bridgePathElement.querySelector('.bridge-sinking-mud');
+    mud.style.setProperty('--mud-contact-x', `${(x + 50 - game.clientWidth * 1.28) / (game.clientWidth * .35) * 100}%`);
+    mud.style.setProperty('--mud-contact-y', `${(game.clientHeight * 2.08 - bridgeDepth) / (game.clientHeight * .50) * 100}%`);
+    if (bridgeMudSeconds >= bridgeMudSinkDuration) {
       const returnAbove = bridgeDepth > game.clientHeight * 1.84;
-      bridgeDepth = game.clientHeight * (returnAbove ? 2.28 : 1.40);
+      bridgeMudReturn = { from: bridgeDepth, to: game.clientHeight * (returnAbove ? 2.28 : 1.40), startedAt: time };
       x = game.clientWidth * 1.45 - 50;
       bridgeMudLearned = true;
       bridgeMudSeconds = 0;
+      bridgeMudRecoverUntil = time + 600;
+      bridgeMudHintUntil = time + 2400;
       scene.classList.add('bridge-mud-known');
+      bridgeMudHint.textContent = '¡Barro blando! Mejor rodearlo.';
+      bridgeMudHint.classList.add('is-visible');
       keys.clear();
-      startDialogue([['Kuro', '¡Ay, estoy demasiado atascado! Mejor me devuelvo y busco tierra firme.']]);
     }
-  } else bridgeMudSeconds = 0;
+  } else {
+    bridgeMudSeconds = 0;
+    kuro.style.setProperty('--mud-sink', '0px');
+  }
+  if (bridgeMudReturn) {
+    const progress = Math.min(1, (time - bridgeMudReturn.startedAt) / 420);
+    const eased = 1 - (1 - progress) ** 3;
+    bridgeDepth = bridgeMudReturn.from + (bridgeMudReturn.to - bridgeMudReturn.from) * eased;
+    kuro.style.setProperty('--mud-sink', `${18 * (1 - progress) - 14 * Math.sin(Math.PI * progress)}px`);
+    if (progress === 1) bridgeMudReturn = null;
+  }
+  if (currentPlace === 'bridge' && time < bridgeMudHintUntil) {
+    bridgeMudHint.style.left = `${x + 50}px`;
+    bridgeMudHint.style.bottom = `calc(4% + ${bridgeDepth + 80}px)`;
+  }
   if (controlsEnabled && !transitioning && currentPlace === 'valparaiso' && x >= game.clientWidth * 3.2875 - 110) {
     changeLocation('cave');
   }
@@ -2176,7 +2231,7 @@ if (['street', 'house', 'plaza', 'quinta', 'museum', 'station', 'valparaiso', 'v
       ? `at-${previewSpot}`
     : previewPlace === 'cave' && ['goat', 'sea-lion', 'dog', 'middle', 'bird', 'bell'].includes(previewSpot)
       ? `at-${previewSpot}`
-    : previewPlace === 'bridge' && ['log', 'refuge'].includes(previewSpot)
+    : previewPlace === 'bridge' && ['log', 'mud', 'refuge'].includes(previewSpot)
       ? `at-${previewSpot}`
       : 'default';
   requestAnimationFrame(() => changeLocation(previewPlace, previewEntry));
