@@ -390,9 +390,10 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .valdivia-rail::after { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(90deg, transparent 0 125px, #3d625e 126px 132px); height: 69px; }
 .valdivia-station { left: 3%; bottom: 24%; width: 15%; height: 27%; padding-top: 17%; border: 8px solid #645f53; border-bottom: 0; background: repeating-linear-gradient(90deg, #b79673 0 34px, #c6a886 35px 43px); color: #433e37; text-align: center; font: bold clamp(9px, 1.2vw, 17px) Georgia, serif; letter-spacing: .04em; box-shadow: 10px 9px 0 #374a4866; }
 .valdivia-station::before { content: ''; position: absolute; left: -8px; right: -8px; top: -24px; height: 20px; background: #5a5c53; clip-path: polygon(0 100%, 12% 0, 88% 0, 100% 100%); }
-.valdivia-tree { bottom: 18%; width: 18px; height: 32%; background: #564e3e; z-index: 2; }
-.valdivia-tree i { position: absolute; bottom: 37%; left: -105px; width: 225px; height: 190px; border-radius: 49% 51% 42% 48%; background: radial-gradient(circle at 30% 30%, #82a47e, #426b61 70%); box-shadow: 28px 28px 0 #496f62; }
-.tree-one { left: 28%; }.tree-two { left: 63%; scale: .8; }.tree-three { left: 91%; scale: 1.1; }
+.valdivia-tree { bottom: 18%; z-index: 2; background: center bottom / contain no-repeat; transform: translateX(-50%); filter: drop-shadow(4px 5px 3px #254b4255); pointer-events: none; }
+.tree-one { left: 28%; width: 250px; height: 355px; background-image: url('assets/valdivia-riverside-tree-wide-v1.webp'); }
+.tree-two { left: 54%; width: 220px; height: 330px; background-image: url('assets/valdivia-riverside-tree-slender-v1.webp'); }
+.tree-three { left: 77%; width: 265px; height: 370px; background-image: url('assets/valdivia-riverside-tree-wide-v1.webp'); transform: translateX(-50%) scaleX(-1); }
 .valdivia-lamp { bottom: 18%; width: 8px; height: 29%; background: #3c514d; z-index: 3; }
 .valdivia-lamp::before { content: ''; position: absolute; left: -16px; top: -21px; width: 40px; height: 28px; border: 4px solid #3c514d; border-radius: 15px 15px 4px 4px; background: #f2d8a7; box-shadow: 0 0 22px #f4dea988; }
 .lamp-one { left: 45%; }.lamp-two { left: 82%; }
