@@ -264,7 +264,8 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .scene.valparaiso .kuro { --kuro-scale: .76; bottom: calc(var(--valpo-ground, 24%) + var(--run-lift, 0px) + var(--jump-y, 0px)); }
 .scene.cave .kuro { --kuro-scale: .76; bottom: calc(15% + var(--run-lift, 0px) + var(--jump-y, 0px)); }
 .scene.valdivia { width: calc(min(100vw, 1100px) * 4); overflow: visible; }
-.valdivia-layer { display: none; position: absolute; inset: 0; z-index: 1; overflow: hidden; background: #a5c6c1; }
+.valdivia-layer { display: none; position: absolute; inset: 0; z-index: 1; overflow: hidden; background: #89aeb0 url('assets/valdivia-riverside-background-v1.webp') left 38% / 50% auto no-repeat; }
+.valdivia-layer::before { content: ''; position: absolute; left: 50%; top: 0; width: 50%; height: 100%; background: url('assets/valdivia-riverside-background-v1.webp') center 38% / 100% auto no-repeat; transform: scaleX(-1); pointer-events: none; }
 .scene.valdivia > :not(.valdivia-layer):not(.kuro) { display: none; }
 .scene.valdivia .exterior-layer, .scene.valdivia .interior-layer, .scene.valdivia .plaza-layer, .scene.valdivia .quinta-layer, .scene.valdivia .museum-layer, .scene.valdivia .station-layer, .scene.valdivia .valparaiso-layer, .scene.valdivia .cave-layer { display: none; }
 .scene.valdivia .valdivia-layer { display: block; }
@@ -352,12 +353,12 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .bridge-start-sign { position: absolute; z-index: 5; left: .5%; bottom: 5.0%; width: 205px; height: 80px; background: url('assets/bridge-pedro-de-valdivia-sign-v1.webp') center / contain no-repeat; color: #3b5d52; text-align: center; filter: drop-shadow(0 4px 4px #21443c66); pointer-events: none; }
 .bridge-start-sign span { position: absolute; left: 12%; right: 12%; top: 27%; height: 42%; display: grid; place-items: center; font: bold 12px/1.1 Georgia, serif; letter-spacing: .35px; text-shadow: 0 1px #fff8dc; }
 .valdivia-layer > div { position: absolute; }
-.valdivia-start { left: 0; top: 0; width: 50%; height: 100%; background: #89aeb0 url('assets/valdivia-riverside-background-v1.webp') center 38% / 100% auto no-repeat; }
+.valdivia-start { left: 0; top: 0; width: 50%; height: 100%; }
 .valdivia-start .valdivia-sky, .valdivia-start .valdivia-hills, .valdivia-start .valdivia-river { display: none; }
 .valdivia-start > div, .valdivia-market > div, .valdivia-island > div { position: absolute; }
-.valdivia-market { left: 50%; top: 0; width: 25%; height: 100%; background: linear-gradient(#87aeb2 0 54%, #618f91 55% 74%, #a99b80 75%); overflow: hidden; }
-.valdivia-island { left: 75%; top: 0; width: 25%; height: 100%; background: linear-gradient(#8fb7b5 0 48%, #5c877b 49% 73%, #b6a586 74%); overflow: hidden; }
-.market-river, .island-river { left: 0; right: 0; top: 55%; height: 21%; background: repeating-linear-gradient(176deg, #629396 0 21px, #8db6ad 23px 27px, #5b858a 29px 52px); }
+.valdivia-market { left: 50%; top: 0; width: 25%; height: 100%; overflow: hidden; }
+.valdivia-island { left: 75%; top: 0; width: 25%; height: 100%; overflow: hidden; }
+.market-river, .island-river { display: none; }
 .market-walkway, .island-walkway { left: 0; right: 0; bottom: 0; height: 18%; }
 .market-rail { left: 0; right: 0; bottom: 25%; height: 5px; background: #3d625e; box-shadow: 0 15px #557e75; }
 .market-rail::after { content: ''; position: absolute; inset: 0; height: 69px; background: repeating-linear-gradient(90deg, transparent 0 125px, #3d625e 126px 132px); }
