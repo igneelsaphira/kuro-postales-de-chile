@@ -269,7 +269,7 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .scene.valdivia > :not(.valdivia-layer):not(.kuro) { display: none; }
 .scene.valdivia .exterior-layer, .scene.valdivia .interior-layer, .scene.valdivia .plaza-layer, .scene.valdivia .quinta-layer, .scene.valdivia .museum-layer, .scene.valdivia .station-layer, .scene.valdivia .valparaiso-layer, .scene.valdivia .cave-layer { display: none; }
 .scene.valdivia .valdivia-layer { display: block; }
-.scene.valdivia .kuro { --kuro-scale: .76; bottom: calc(15% + var(--run-lift, 0px) + var(--jump-y, 0px)); }
+.scene.valdivia .kuro { --kuro-scale: .76; bottom: calc(15% - 15px + var(--run-lift, 0px) + var(--jump-y, 0px)); }
 .scene.bridge { width: calc(min(100vw, 1100px) * 2.4); height: 650%; bottom: auto; overflow: hidden; }
 .scene.bridge > :not(.bridge-climb-layer):not(.kuro) { display: none; }
 .scene.bridge .bridge-climb-layer { display: block; }
@@ -356,17 +356,15 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .valdivia-start { left: 0; top: 0; width: 50%; height: 100%; }
 .valdivia-start .valdivia-sky, .valdivia-start .valdivia-hills, .valdivia-start .valdivia-river { display: none; }
 .valdivia-start > div, .valdivia-market > div, .valdivia-island > div { position: absolute; }
+.valdivia-promenade-rail { left: 0; right: 25%; bottom: 25%; height: 5px; z-index: 1; pointer-events: none; background: linear-gradient(#a8bda9 0 1px, #37645a 2px 5px); box-shadow: 0 14px 0 #426e63; filter: drop-shadow(0 2px 1px #24483d55); }
+.valdivia-promenade-rail::before { content: ''; position: absolute; inset: -4px 0 auto; height: 9px; background: radial-gradient(ellipse at center, #9ab6a5 0 3px, #305c51 4px 5px, transparent 6px) 118px 0 / 143px 9px repeat-x; }
+.valdivia-promenade-rail::after { content: ''; position: absolute; left: 0; right: 0; top: 0; height: calc(min(100vw, 1100px) * .04); background: repeating-linear-gradient(90deg, transparent 0 118px, #31564d 119px 125px, #73998c 126px 127px, transparent 128px 143px); }
 .valdivia-market { left: 50%; top: 0; width: 25%; height: 100%; overflow: hidden; }
 .valdivia-island { left: 75%; top: 0; width: 25%; height: 100%; overflow: hidden; }
 .market-river, .island-river { display: none; }
 .market-walkway, .island-walkway { left: 0; right: 0; bottom: 0; height: 18%; }
-.market-rail { left: 0; right: 0; bottom: 25%; height: 5px; background: #3d625e; box-shadow: 0 15px #557e75; }
-.market-rail::after { content: ''; position: absolute; inset: 0; height: 69px; background: repeating-linear-gradient(90deg, transparent 0 125px, #3d625e 126px 132px); }
-.market-stall { bottom: 18%; width: 170px; height: 155px; border: 7px solid #6e5142; border-top: 0; background: repeating-linear-gradient(90deg, #d3ad7b 0 25px, #c99b69 26px 50px); z-index: 2; }
-.market-stall::before { content: ''; position: absolute; left: -12px; right: -12px; top: -32px; height: 30px; background: repeating-linear-gradient(90deg, #bf705a 0 26px, #f0d5a0 27px 53px); clip-path: polygon(3% 0, 97% 0, 100% 100%, 0 100%); }
-.market-stall span { position: absolute; bottom: 13px; left: 6px; right: 6px; padding: 5px 0; background: #f1d9a6; color: #654937; text-align: center; font: bold 12px Georgia, serif; }
-.stall-one { left: 7%; }.stall-two { left: 32%; }
-.market-tracks { z-index: 3; left: 47%; bottom: 18%; width: 230px; height: 22px; background: radial-gradient(ellipse, #694d3b 0 5px, transparent 6px) 0 0 / 38px 20px repeat-x; transform: rotate(-5deg); opacity: .8; }
+.market-stalls { left: 4%; bottom: calc(18% - 16px); z-index: 2; width: min(64%, 500px); aspect-ratio: 2 / 1; background: url('assets/valdivia-market-stalls-v1.png') center bottom / contain no-repeat; filter: drop-shadow(3px 5px 3px #324a3b66); pointer-events: none; }
+.market-tracks { z-index: 3; left: 47%; bottom: 13%; width: 230px; height: 22px; background: radial-gradient(ellipse, #694d3b 0 5px, transparent 6px) 0 0 / 38px 20px repeat-x; transform: rotate(-5deg); opacity: .8; }
 .market-bridge { left: 69%; top: 34%; width: 33%; height: 43%; border-left: 18px solid #596964; border-right: 18px solid #596964; border-top: 20px solid #435c5c; background: linear-gradient(#789d96aa, #355c6266); z-index: 2; }
 .market-bridge::before { content: ''; position: absolute; left: -150px; right: -100px; top: -40px; height: 20px; background: #405b5c; box-shadow: 0 -11px #72928b; }
 .market-bridge span { position: absolute; left: -68px; top: -13px; color: #f0dfb6; font: bold 10px Georgia, serif; white-space: nowrap; }
@@ -388,8 +386,6 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .valdivia-bank { left: 0; right: 0; bottom: 17%; height: 7%; background: linear-gradient(#718d7c, #8b9b80 58%, #a39f7d); border-top: 4px solid #b1ad87; box-shadow: inset 0 5px 8px #355b5266; }
 .valdivia-walkway { left: 0; right: 0; bottom: 0; height: 18%; }
 .valdivia-walkway, .market-walkway, .island-walkway { background: #cab890 url('assets/valdivia-riverside-paving-v1.webp') left top / min(100vw, 1100px) 100% repeat-x; }
-.valdivia-rail { left: 0; right: 0; bottom: 25%; height: 5px; background: #3d625e; box-shadow: 0 15px #557e75; }
-.valdivia-rail::after { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(90deg, transparent 0 125px, #3d625e 126px 132px); height: 69px; }
 .valdivia-station { left: 3%; bottom: 18%; width: min(42vw, 460px); height: min(18.5vw, 203px); z-index: 2; background: url('assets/valdivia-station-building-v1.webp') center bottom / contain no-repeat; filter: drop-shadow(4px 6px 4px #324a4477); pointer-events: none; }
 .valdivia-station span { position: absolute; left: 27.5%; right: 27.5%; top: 27%; height: 13%; display: grid; place-items: center; white-space: nowrap; border: 2px solid #315855; border-radius: 5px; background: #f5e5b9; color: #315855; font: bold clamp(10px, 1vw, 12px) Georgia, serif; letter-spacing: .01em; text-shadow: 0 1px #fff8e2; }
 .valdivia-tree { bottom: 15%; z-index: 2; background: center bottom / contain no-repeat; transform: translateX(-50%); filter: drop-shadow(4px 5px 3px #254b4255); pointer-events: none; }
