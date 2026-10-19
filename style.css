@@ -352,7 +352,8 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .bridge-start-sign { position: absolute; z-index: 5; left: .5%; bottom: 5.0%; width: 205px; height: 80px; background: url('assets/bridge-pedro-de-valdivia-sign-v1.webp') center / contain no-repeat; color: #3b5d52; text-align: center; filter: drop-shadow(0 4px 4px #21443c66); pointer-events: none; }
 .bridge-start-sign span { position: absolute; left: 12%; right: 12%; top: 27%; height: 42%; display: grid; place-items: center; font: bold 12px/1.1 Georgia, serif; letter-spacing: .35px; text-shadow: 0 1px #fff8dc; }
 .valdivia-layer > div { position: absolute; }
-.valdivia-start { left: 0; top: 0; width: 50%; height: 100%; }
+.valdivia-start { left: 0; top: 0; width: 50%; height: 100%; background: #89aeb0 url('assets/valdivia-riverside-background-v1.webp') center 38% / 100% auto no-repeat; }
+.valdivia-start .valdivia-sky, .valdivia-start .valdivia-hills, .valdivia-start .valdivia-river { display: none; }
 .valdivia-start > div, .valdivia-market > div, .valdivia-island > div { position: absolute; }
 .valdivia-market { left: 50%; top: 0; width: 25%; height: 100%; background: linear-gradient(#87aeb2 0 54%, #618f91 55% 74%, #a99b80 75%); overflow: hidden; }
 .valdivia-island { left: 75%; top: 0; width: 25%; height: 100%; background: linear-gradient(#8fb7b5 0 48%, #5c877b 49% 73%, #b6a586 74%); overflow: hidden; }
