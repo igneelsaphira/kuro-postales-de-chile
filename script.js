@@ -247,7 +247,7 @@ function advanceBridgeLog(amount, fromTap = false) {
     scene.classList.add('bridge-log-placed');
   }
 }
-function bridgeTop() { return game.clientHeight * 6.18; }
+function bridgeTop() { return game.clientHeight * 6.05; }
 function bridgeInMud(centerX, depth) {
   return centerX >= game.clientWidth * 1.31 && centerX <= game.clientWidth * 1.60 &&
     depth >= game.clientHeight * 1.64 && depth <= game.clientHeight * 2.02;
@@ -268,9 +268,9 @@ function bridgeOnPath(nextX, nextDepth) {
     const row = Math.floor((originDepth - depth) / pixel);
     return col >= 0 && row >= 0 && col < cols && row < rows && cells[row * cols + col] === 1;
   };
-  // Keep Kuro's visible body over the bank, not only the center of their paws.
-  return [-34, 0, 34].every(offsetX =>
-    onLand(centerX + offsetX, nextDepth - 12) && onLand(centerX + offsetX, nextDepth + 12));
+  // Check the paws against the bank; reeds and leaves can overlap Kuro's body.
+  return [-16, 0, 16].every(offsetX =>
+    onLand(centerX + offsetX, nextDepth - 8) && onLand(centerX + offsetX, nextDepth + 8));
 }
 function renderBridgePath() {
   const viewW = game.clientWidth, viewH = game.clientHeight;
@@ -1615,8 +1615,10 @@ function currentInteraction() {
   if (currentPlace === 'valdivia' && x >= game.clientWidth * 1.12 && x <= game.clientWidth * 1.43) return 'talk-copo';
   if (currentPlace === 'valdivia' && x >= game.clientWidth * 2.2 && x <= game.clientWidth * 2.52) return 'inspect-tracks';
   if (currentPlace === 'valdivia' && x >= game.clientWidth * 2.72 && x <= game.clientWidth * 3.05) return 'inspect-passage';
+  if (currentPlace === 'valdivia' && valdiviaBridgeCrossed &&
+    x >= game.clientWidth * 3.48 && x <= game.clientWidth * 3.76) return 'return-bridge';
   if (currentPlace === 'bridge' && bridgeDepth >= bridgeTop() - 24) return 'cross-bridge';
-  if (currentPlace === 'bridge' && bridgeDepth <= 24) return 'leave-bridge';
+  if (currentPlace === 'bridge' && bridgeDepth <= game.clientHeight * .28) return 'leave-bridge';
   if (currentPlace === 'bridge' && !bridgeLogPlaced &&
     Math.abs(x + 50 - game.clientWidth * 1.05) < 85 &&
     bridgeDepth > game.clientHeight * 3.20 && bridgeDepth < game.clientHeight * 3.40) return 'bridge-log';
@@ -1696,15 +1698,15 @@ function changeLocation(nextLocation, entry = 'default') {
     else if (atStation) x = entry === 'at-estafeta' ? game.clientWidth * 0.23 : entry === 'at-train' ? game.clientWidth * 0.58 : entry === 'from-route' ? game.clientWidth - 150 : 120;
     else if (atValparaiso) x = entry === 'at-train' ? 95 : entry === 'from-map' ? game.clientWidth * 0.24 : entry === 'at-tizne' ? game.clientWidth * 1.34 : entry === 'at-hills' ? game.clientWidth * 1.60 : entry === 'at-lower-hills' ? game.clientWidth * 2.07 : entry === 'at-mid-hills' ? game.clientWidth * 2.44 : entry === 'at-bruma' ? game.clientWidth * 2.62 : entry === 'at-cave' ? game.clientWidth * 3.12 : entry === 'at-connector' ? game.clientWidth * 0.82 : entry === 'at-station-seam' ? game.clientWidth * 0.56 : entry === 'at-plaza-seam' ? game.clientWidth * 1.12 : 160;
     else if (atValdivia) x = entry === 'at-coipo' ? game.clientWidth * 1.13 : entry === 'at-pier' ? game.clientWidth * 1.83 : entry === 'at-market' ? game.clientWidth * 2.32 : entry === 'at-passage' ? game.clientWidth * 2.82 : entry === 'at-island' ? game.clientWidth * 3.63 : game.clientWidth * 0.22;
-    else if (atBridge) x = entry === 'at-log' ? game.clientWidth * 1.05 - 50 : entry === 'at-mud' ? game.clientWidth * 1.45 - 50 : entry === 'at-refuge' ? game.clientWidth * 1.56 - 50 : game.clientWidth * .50 - 50;
+    else if (atBridge) x = entry === 'at-log' ? game.clientWidth * 1.05 - 50 : entry === 'at-mud' ? game.clientWidth * 1.45 - 50 : entry === 'at-refuge' ? game.clientWidth * 1.56 - 50 : entry === 'from-island' ? game.clientWidth * 1.54 - 50 : game.clientWidth * .50 - 50;
     else if (atCave) x = entry === 'at-goat' ? game.clientWidth * (caveBellCollected ? 3.08 : 2.72) : entry === 'at-sea-lion' ? game.clientWidth * 4.65 : entry === 'at-dog' ? game.clientWidth * 1.05 : entry === 'at-middle' ? game.clientWidth * 3.75 : entry === 'at-bird' ? game.clientWidth * .54 : entry === 'at-bell' ? game.clientWidth * 5.67 : 185;
     else x = entry === 'from-quinta' ? game.clientWidth * 1.6875 - 150 : entry === 'from-museum' ? game.clientWidth * 1.29 : entry === 'at-museum' ? game.clientWidth * 1.40 : entry === 'at-quinta' ? game.clientWidth * 1.20 : entry === 'at-mota' ? game.clientWidth * 0.36 : entry === 'at-plaza' ? game.clientWidth * 0.86 : entry === 'at-neighborhood' ? game.clientWidth * 0.46 : entry === 'at-seam' ? game.clientWidth * 0.90 : game.clientWidth * 0.14;
     y = 0;
     velocityY = 0;
     grounded = true;
     jumpsUsed = 0;
-    bridgeDepth = atBridge && entry === 'at-log' ? game.clientHeight * 3.28 : atBridge && entry === 'at-mud' ? game.clientHeight * 2.06 : atBridge && entry === 'at-refuge' ? game.clientHeight * 5.61 : 0;
-    bridgeDirection = 'back';
+    bridgeDepth = atBridge && entry === 'at-log' ? game.clientHeight * 3.28 : atBridge && entry === 'at-mud' ? game.clientHeight * 2.06 : atBridge && entry === 'at-refuge' ? game.clientHeight * 5.61 : atBridge && entry === 'from-island' ? game.clientHeight * 5.98 : atBridge ? game.clientHeight * .16 : 0;
+    bridgeDirection = entry === 'from-island' ? 'front' : 'back';
     autoEscapingCave = false;
     if (['at-neighborhood', 'at-seam', 'at-plaza', 'at-mota', 'at-quinta', 'at-museum', 'from-museum'].includes(entry) && atStreet) cameraX = Math.max(0, Math.min(game.clientWidth * 0.6875, x - game.clientWidth * 0.45));
     else if (entry === 'from-quinta') cameraX = atStreet ? game.clientWidth * 0.6875 : atPlaza ? 0 : Math.max(0, worldWidth - game.clientWidth);
@@ -1831,6 +1833,7 @@ addEventListener('keydown', (event) => {
     if (interaction === 'take-train') openWorldMap();
     if (interaction === 'take-return-train') openWorldMap();
     if (interaction === 'leave-bridge') changeLocation('valdivia', 'at-passage');
+    if (interaction === 'return-bridge') changeLocation('bridge', 'from-island');
     if (interaction === 'cross-bridge') {
       valdiviaBridgeCrossed = true;
       localStorage.setItem('kuro-valdivia-bridge-v1', 'crossed');
@@ -2133,6 +2136,7 @@ function loop(time) {
     'look-river': 'Mirar el río',
     'inspect-tracks': valdiviaTracksFound ? 'Mirar las huellas' : 'Investigar huellitas',
     'inspect-passage': valdiviaPassageFound ? 'Entrar a la subida' : 'Investigar bajo el puente',
+    'return-bridge': 'Volver al puente',
     'leave-bridge': 'Volver a la feria',
     'cross-bridge': 'Continuar a Isla Teja',
     'bridge-log': `Mantén E para empujar · ${Math.round(bridgeLogProgress * 100)}%`,
