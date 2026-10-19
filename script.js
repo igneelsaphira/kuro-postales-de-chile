@@ -248,12 +248,17 @@ function advanceBridgeLog(amount, fromTap = false) {
   }
 }
 function bridgeTop() { return game.clientHeight * 6.05; }
+function bridgeExitDepth() { return -game.clientHeight * .20; }
 function bridgeInMud(centerX, depth) {
   return centerX >= game.clientWidth * 1.31 && centerX <= game.clientWidth * 1.60 &&
     depth >= game.clientHeight * 1.64 && depth <= game.clientHeight * 2.02;
 }
 function bridgeOnPath(nextX, nextDepth) {
   const centerX = nextX + 50;
+  // The stone bridge continues below the earth path's mask.
+  if (nextDepth <= game.clientHeight * .10) {
+    return centerX >= game.clientWidth * .35 + 8 && centerX <= game.clientWidth * .76 - 8;
+  }
   if (bridgeMudLearned && bridgeInMud(centerX, nextDepth)) return false;
   const logCenterX = game.clientWidth * 1.05;
   const closeToLog = Math.abs(centerX - logCenterX) <= 20;
@@ -268,9 +273,23 @@ function bridgeOnPath(nextX, nextDepth) {
     const row = Math.floor((originDepth - depth) / pixel);
     return col >= 0 && row >= 0 && col < cols && row < rows && cells[row * cols + col] === 1;
   };
-  // Check the paws against the bank; reeds and leaves can overlap Kuro's body.
-  return [-16, 0, 16].every(offsetX =>
-    onLand(centerX + offsetX, nextDepth - 8) && onLand(centerX + offsetX, nextDepth + 8));
+  // Keep the paws on the visible soil while letting the sprite overlap shore plants.
+  return [-7, 0, 7].every(offsetX => onLand(centerX + offsetX, nextDepth));
+}
+function stepAlongBridgeShore(nextX) {
+  if (bridgeOnPath(nextX, bridgeDepth)) {
+    x = nextX;
+    return;
+  }
+  // Follow small shoreline bends without making the player align to a pixel edge.
+  for (const offset of [3, -3, 6, -6, 9, -9, 12, -12]) {
+    const nextDepth = Math.max(bridgeExitDepth(), Math.min(bridgeTop(), bridgeDepth + offset));
+    if (bridgeOnPath(x, nextDepth) && bridgeOnPath(nextX, nextDepth)) {
+      x = nextX;
+      bridgeDepth = nextDepth;
+      return;
+    }
+  }
 }
 function renderBridgePath() {
   const viewW = game.clientWidth, viewH = game.clientHeight;
@@ -1618,7 +1637,6 @@ function currentInteraction() {
   if (currentPlace === 'valdivia' && valdiviaBridgeCrossed &&
     x >= game.clientWidth * 3.48 && x <= game.clientWidth * 3.76) return 'return-bridge';
   if (currentPlace === 'bridge' && bridgeDepth >= bridgeTop() - 24) return 'cross-bridge';
-  if (currentPlace === 'bridge' && bridgeDepth <= game.clientHeight * .28) return 'leave-bridge';
   if (currentPlace === 'bridge' && !bridgeLogPlaced &&
     Math.abs(x + 50 - game.clientWidth * 1.05) < 85 &&
     bridgeDepth > game.clientHeight * 3.20 && bridgeDepth < game.clientHeight * 3.40) return 'bridge-log';
@@ -1832,7 +1850,6 @@ addEventListener('keydown', (event) => {
     }
     if (interaction === 'take-train') openWorldMap();
     if (interaction === 'take-return-train') openWorldMap();
-    if (interaction === 'leave-bridge') changeLocation('valdivia', 'at-passage');
     if (interaction === 'return-bridge') changeLocation('bridge', 'from-island');
     if (interaction === 'cross-bridge') {
       valdiviaBridgeCrossed = true;
@@ -1973,7 +1990,8 @@ function loop(time) {
   if (controlsEnabled && !(currentPlace === 'bridge' && bridgeMudReturn) && (keys.has('arrowright') || keys.has('d'))) {
     const activeWorldWidth = currentPlace === 'valparaiso' ? game.clientWidth * 3.2875 : currentPlace === 'cave' ? game.clientWidth * 6 : currentPlace === 'street' ? game.clientWidth * 1.6875 : currentPlace === 'valdivia' ? game.clientWidth * 4 : currentPlace === 'bridge' ? game.clientWidth * 2.4 : currentPlace === 'house' || currentPlace === 'museum' || currentPlace === 'plaza' || currentPlace === 'quinta' || currentPlace === 'station' ? game.clientWidth : worldWidth;
     const nextX = Math.min(activeWorldWidth - 110, x + speed * dt);
-    if (currentPlace !== 'bridge' || bridgeOnPath(nextX, bridgeDepth)) x = nextX;
+    if (currentPlace === 'bridge') stepAlongBridgeShore(nextX);
+    else x = nextX;
     if (currentPlace === 'valdivia' && !valdiviaBridgeCrossed) x = Math.min(x, game.clientWidth * 3.02);
     if (currentPlace === 'bridge') bridgeDirection = 'side';
     facing = 1;
@@ -1981,7 +1999,8 @@ function loop(time) {
   }
   if (controlsEnabled && !(currentPlace === 'bridge' && bridgeMudReturn) && (keys.has('arrowleft') || keys.has('a'))) {
     const nextX = Math.max(10, x - speed * dt);
-    if (currentPlace !== 'bridge' || bridgeOnPath(nextX, bridgeDepth)) x = nextX;
+    if (currentPlace === 'bridge') stepAlongBridgeShore(nextX);
+    else x = nextX;
     if (currentPlace === 'bridge') bridgeDirection = 'side';
     facing = -1;
     kuro.style.setProperty('--facing', facing);
@@ -1992,10 +2011,14 @@ function loop(time) {
       if (bridgeOnPath(x, nextDepth)) bridgeDepth = nextDepth;
       bridgeDirection = 'back';
     } else if (keys.has('arrowdown') || keys.has('s')) {
-      const nextDepth = Math.max(0, bridgeDepth - speed * .86 * dt);
+      const nextDepth = Math.max(bridgeExitDepth(), bridgeDepth - speed * .86 * dt);
       if (bridgeOnPath(x, nextDepth)) bridgeDepth = nextDepth;
       bridgeDirection = 'front';
     }
+  }
+  if (currentPlace === 'bridge' && controlsEnabled && !transitioning && bridgeDepth <= bridgeExitDepth()) {
+    keys.clear();
+    changeLocation('valdivia', 'at-passage');
   }
   const sinkingInMud = currentPlace === 'bridge' && controlsEnabled && grounded && !bridgeMudLearned && !bridgeMudReturn && bridgeInMud(x + 50, bridgeDepth);
   scene.classList.toggle('bridge-mud-disturbed', sinkingInMud || time < bridgeMudRecoverUntil);
@@ -2137,7 +2160,6 @@ function loop(time) {
     'inspect-tracks': valdiviaTracksFound ? 'Mirar las huellas' : 'Investigar huellitas',
     'inspect-passage': valdiviaPassageFound ? 'Entrar a la subida' : 'Investigar bajo el puente',
     'return-bridge': 'Volver al puente',
-    'leave-bridge': 'Volver a la feria',
     'cross-bridge': 'Continuar a Isla Teja',
     'bridge-log': `Mantén E para empujar · ${Math.round(bridgeLogProgress * 100)}%`,
     'bridge-postcard': 'Recoger la postal',
