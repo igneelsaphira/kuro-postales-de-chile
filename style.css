@@ -268,7 +268,7 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .scene.valdivia > :not(.valdivia-layer):not(.kuro) { display: none; }
 .scene.valdivia .exterior-layer, .scene.valdivia .interior-layer, .scene.valdivia .plaza-layer, .scene.valdivia .quinta-layer, .scene.valdivia .museum-layer, .scene.valdivia .station-layer, .scene.valdivia .valparaiso-layer, .scene.valdivia .cave-layer { display: none; }
 .scene.valdivia .valdivia-layer { display: block; }
-.scene.valdivia .kuro { --kuro-scale: .76; bottom: calc(18% + var(--run-lift, 0px) + var(--jump-y, 0px)); }
+.scene.valdivia .kuro { --kuro-scale: .76; bottom: calc(15% + var(--run-lift, 0px) + var(--jump-y, 0px)); }
 .scene.bridge { width: calc(min(100vw, 1100px) * 2.4); height: 650%; bottom: auto; overflow: hidden; }
 .scene.bridge > :not(.bridge-climb-layer):not(.kuro) { display: none; }
 .scene.bridge .bridge-climb-layer { display: block; }
@@ -358,7 +358,7 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .valdivia-market { left: 50%; top: 0; width: 25%; height: 100%; background: linear-gradient(#87aeb2 0 54%, #618f91 55% 74%, #a99b80 75%); overflow: hidden; }
 .valdivia-island { left: 75%; top: 0; width: 25%; height: 100%; background: linear-gradient(#8fb7b5 0 48%, #5c877b 49% 73%, #b6a586 74%); overflow: hidden; }
 .market-river, .island-river { left: 0; right: 0; top: 55%; height: 21%; background: repeating-linear-gradient(176deg, #629396 0 21px, #8db6ad 23px 27px, #5b858a 29px 52px); }
-.market-walkway, .island-walkway { left: 0; right: 0; bottom: 0; height: 18%; border-top: 9px solid #d2c09e; background: repeating-linear-gradient(90deg, #ac9b80 0 91px, #897961 92px 96px); }
+.market-walkway, .island-walkway { left: 0; right: 0; bottom: 0; height: 18%; }
 .market-rail { left: 0; right: 0; bottom: 25%; height: 5px; background: #3d625e; box-shadow: 0 15px #557e75; }
 .market-rail::after { content: ''; position: absolute; inset: 0; height: 69px; background: repeating-linear-gradient(90deg, transparent 0 125px, #3d625e 126px 132px); }
 .market-stall { bottom: 18%; width: 170px; height: 155px; border: 7px solid #6e5142; border-top: 0; background: repeating-linear-gradient(90deg, #d3ad7b 0 25px, #c99b69 26px 50px); z-index: 2; }
@@ -384,11 +384,12 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .valdivia-sky::after { content: ''; position: absolute; left: 8%; top: 12%; width: 24%; height: 12%; border-radius: 50%; background: #e2e5dcaa; box-shadow: 370px 22px 0 6px #e4e8dc99, 860px -6px 0 12px #dce6db99, 1450px 35px 0 4px #e8ebddaa; }
 .valdivia-hills { inset: 39% 0 31%; background: radial-gradient(ellipse at 8% 95%, #517c6c 0 34%, transparent 35%), radial-gradient(ellipse at 38% 95%, #5c806d 0 31%, transparent 32%), radial-gradient(ellipse at 73% 105%, #4c756b 0 38%, transparent 39%), #7da092; }
 .valdivia-river { inset: 57% 0 18%; background: repeating-linear-gradient(174deg, #709ea0 0 18px, #8ab0ac 20px 24px, #598b92 27px 48px); }
-.valdivia-bank { left: 0; right: 0; bottom: 17%; height: 7%; background: #7d8b75; border-top: 7px solid #c0aa80; }
-.valdivia-walkway { left: 0; right: 0; bottom: 0; height: 18%; background: repeating-linear-gradient(90deg, #aa9a7d 0 94px, #8b7c67 95px 99px), #aa9a7d; border-top: 10px solid #d6c4a0; box-shadow: inset 0 12px #c0aa89; }
+.valdivia-bank { left: 0; right: 0; bottom: 17%; height: 7%; background: linear-gradient(#718d7c, #8b9b80 58%, #a39f7d); border-top: 4px solid #b1ad87; box-shadow: inset 0 5px 8px #355b5266; }
+.valdivia-walkway { left: 0; right: 0; bottom: 0; height: 18%; }
+.valdivia-walkway, .market-walkway, .island-walkway { background: #cab890 url('assets/valdivia-riverside-paving-v1.webp') left top / min(100vw, 1100px) 100% repeat-x; }
 .valdivia-rail { left: 0; right: 0; bottom: 25%; height: 5px; background: #3d625e; box-shadow: 0 15px #557e75; }
 .valdivia-rail::after { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(90deg, transparent 0 125px, #3d625e 126px 132px); height: 69px; }
-.valdivia-station { left: 3%; bottom: 24%; width: 15%; height: 27%; padding-top: 17%; border: 8px solid #645f53; border-bottom: 0; background: repeating-linear-gradient(90deg, #b79673 0 34px, #c6a886 35px 43px); color: #433e37; text-align: center; font: bold clamp(9px, 1.2vw, 17px) Georgia, serif; letter-spacing: .04em; box-shadow: 10px 9px 0 #374a4866; }
+.valdivia-station { left: 3%; bottom: 18%; width: 15%; height: 27%; padding-top: 17%; border: 8px solid #645f53; border-bottom: 0; background: repeating-linear-gradient(90deg, #b79673 0 34px, #c6a886 35px 43px); color: #433e37; text-align: center; font: bold clamp(9px, 1.2vw, 17px) Georgia, serif; letter-spacing: .04em; box-shadow: 10px 9px 0 #374a4866; }
 .valdivia-station::before { content: ''; position: absolute; left: -8px; right: -8px; top: -24px; height: 20px; background: #5a5c53; clip-path: polygon(0 100%, 12% 0, 88% 0, 100% 100%); }
 .valdivia-tree { bottom: 18%; z-index: 2; background: center bottom / contain no-repeat; transform: translateX(-50%); filter: drop-shadow(4px 5px 3px #254b4255); pointer-events: none; }
 .tree-one { left: 28%; width: 250px; height: 355px; background-image: url('assets/valdivia-riverside-tree-wide-v1.webp'); }
@@ -399,7 +400,7 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .lamp-one { left: 45%; }.lamp-two { left: 82%; }
 .valdivia-bench { left: 48%; bottom: 17%; width: 110px; height: 26px; border: 5px solid #55483c; background: #9a7453; box-shadow: 0 -23px 0 -6px #9a7453; }
 .valdivia-pier { right: 3%; bottom: 18%; width: 14%; height: 11%; background: repeating-linear-gradient(90deg, #916e50 0 18px, #654c3d 19px 22px); transform: skewY(-5deg); border: 5px solid #654c3d; }
-.valdivia-copo { left: 62%; bottom: 21.1%; width: 72px; height: 86px; z-index: 4; background: url('assets/copo-idle-v2.png') center bottom / contain no-repeat; filter: drop-shadow(0 4px 2px #2d484888); transform-origin: center bottom; animation: copo-idle 3.4s ease-in-out infinite; }
+.valdivia-copo { left: 62%; bottom: 18%; width: 72px; height: 86px; z-index: 4; background: url('assets/copo-idle-v2.png') center bottom / contain no-repeat; filter: drop-shadow(0 4px 2px #2d484888); transform-origin: center bottom; animation: copo-idle 3.4s ease-in-out infinite; }
 @keyframes copo-idle { 50% { transform: translateY(-2px); } }
 .location-label { position: absolute; z-index: 7; top: 48px; left: 50%; translate: -50% 0; padding: 7px 16px; border-radius: 20px; background: #fff4d6d9; color: #6a4840; font-weight: bold; opacity: .9; }
 .road-sign, .plaza-sign, .location-label { display: none !important; }
