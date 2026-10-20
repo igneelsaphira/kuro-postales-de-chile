@@ -2260,6 +2260,7 @@ if (['street', 'house', 'plaza', 'quinta', 'museum', 'station', 'valparaiso', 'v
     : previewPlace === 'bridge' && ['log', 'mud', 'refuge'].includes(previewSpot)
       ? `at-${previewSpot}`
       : 'default';
+  if (previewPlace === 'valdivia' && previewEntry === 'at-island') valdiviaBridgeCrossed = true;
   requestAnimationFrame(() => changeLocation(previewPlace, previewEntry));
 }
 if (previewParams.get('postcard') === 'collected') whalePostcardCollected = true;

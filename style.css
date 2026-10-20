@@ -371,7 +371,7 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .market-passage { z-index: 1; left: 80%; bottom: 18%; width: 18%; height: 27%; border-radius: 48% 48% 3% 3%; overflow: hidden; background: radial-gradient(ellipse at 51% 62%, #768d7b 0 5%, #435a53 24%, #263d3d 58%, #142c31 100%); box-shadow: inset 0 0 22px #0c252b; pointer-events: none; }
 .market-passage::after { content: ''; position: absolute; left: 8%; right: 8%; bottom: 0; height: 43%; background: linear-gradient(#b89b6caa, #b89b6caa), url('assets/bridge-earth-pixel-v1.webp') center / 90px auto repeat; background-blend-mode: screen; clip-path: polygon(43% 0, 57% 0, 100% 100%, 0 100%); image-rendering: pixelated; }
 .market-bridge { z-index: 2; left: 18%; bottom: 0; width: 104%; aspect-ratio: 2 / 1; background: url('assets/valdivia-market-bridge-v1.png') center / contain no-repeat; image-rendering: pixelated; clip-path: inset(0 0 19% 0); pointer-events: none; }
-.island-arrayan { left: 20%; bottom: 18%; width: clamp(245px, 28vw, 320px); aspect-ratio: 1199 / 1312; z-index: 2; transform: translateX(-50%); background: url('assets/valdivia-arrayan-v1.png') center bottom / contain no-repeat; image-rendering: pixelated; filter: drop-shadow(2px 5px 3px #254b4366); pointer-events: none; }
+.island-arrayan { left: 20%; bottom: calc(18% - 8px); width: clamp(245px, 28vw, 320px); aspect-ratio: 1199 / 1312; z-index: 2; transform: translateX(-50%); background: url('assets/valdivia-arrayan-v1.png') center bottom / contain no-repeat; image-rendering: pixelated; filter: drop-shadow(2px 5px 3px #254b4366); pointer-events: none; }
 .bridge-photo { background: #69a59a url('assets/bridge-islet-kuro-view-v2.webp') center / cover no-repeat; }
 .album-photo.bridge-photo::after { content: 'La islita del humedal'; }
 .valdivia-photo { background: linear-gradient(#8cb9b7 0 53%, #5c8e92 54% 70%, #6d8d6a 71% 77%, #b7a582 78%); }
@@ -394,8 +394,8 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .lamp-one { left: 45%; }.lamp-two { left: 82%; }
 .valdivia-bench { left: 48%; bottom: 17%; width: 110px; height: 26px; border: 5px solid #55483c; background: #9a7453; box-shadow: 0 -23px 0 -6px #9a7453; }
 .valdivia-pier { right: 3%; bottom: 18%; width: 14%; height: 11%; background: repeating-linear-gradient(90deg, #916e50 0 18px, #654c3d 19px 22px); transform: skewY(-5deg); border: 5px solid #654c3d; }
-.valdivia-copo { left: 62%; bottom: 18%; width: 72px; height: 86px; z-index: 4; background: url('assets/copo-idle-v2.png') center bottom / contain no-repeat; filter: drop-shadow(0 4px 2px #2d484888); transform-origin: center bottom; animation: copo-idle 3.4s ease-in-out infinite; }
-@keyframes copo-idle { 50% { transform: translateY(-2px); } }
+.valdivia-copo { left: 62%; bottom: calc(18% - 8px); width: 72px; height: 86px; z-index: 4; background: url('assets/copo-idle-v2.png') center bottom / contain no-repeat; filter: drop-shadow(0 4px 2px #2d484888); transform-origin: center bottom; animation: copo-idle 3.4s ease-in-out infinite; }
+@keyframes copo-idle { 50% { transform: scaleY(1.015); } }
 .location-label { position: absolute; z-index: 7; top: 48px; left: 50%; translate: -50% 0; padding: 7px 16px; border-radius: 20px; background: #fff4d6d9; color: #6a4840; font-weight: bold; opacity: .9; }
 .road-sign, .plaza-sign, .location-label { display: none !important; }
 .kuro { position: absolute; z-index: 5; left: 22%; bottom: calc(31% + var(--run-lift, 0px) + var(--jump-y, 0px)); width: 100px; height: 133px; background-image: url('assets/kuro-idle-sprite-sheet.png'); background-repeat: no-repeat; background-size: 400px 133px; background-position: 0 0; image-rendering: pixelated; transform: scaleX(var(--facing, 1)) scale(var(--kuro-scale, 1)); transform-origin: center bottom; }
