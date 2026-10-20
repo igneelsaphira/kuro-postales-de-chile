@@ -1,6 +1,14 @@
 const kuro = document.querySelector('#kuro');
 const game = document.querySelector('.game');
 const scene = document.querySelector('#scene');
+const valdiviaBenches = {
+  promenade: document.querySelector('.valdivia-bench'),
+  island: document.querySelector('.island-bench')
+};
+function valdiviaBenchCenter(which) {
+  const bench = valdiviaBenches[which];
+  return bench.parentElement.offsetLeft + bench.offsetLeft + bench.offsetWidth / 2;
+}
 const dialogue = document.querySelector('#dialogue');
 const dialogueName = document.querySelector('#dialogue-name');
 const dialogueText = document.querySelector('#dialogue-text');
@@ -113,6 +121,7 @@ let valdiviaPassageFound = localStorage.getItem('kuro-valdivia-passage-v1') === 
 let valdiviaBridgeCrossed = localStorage.getItem('kuro-valdivia-bridge-v1') === 'crossed';
 let valdiviaFamilyHelped = localStorage.getItem('kuro-valdivia-family-v1') === 'helped';
 let sittingInChair = false;
+let sittingOnBench = null;
 let autoEscapingCave = false;
 let albumPageIndex = 0;
 let selectedMapZone = 'santiago';
@@ -1609,6 +1618,7 @@ worldMap.querySelectorAll('[data-travel]').forEach((button) => {
 function currentInteraction() {
   if (!grounded || transitioning || autoEscapingCave) return null;
   if (sittingInChair) return 'leave-chair';
+  if (sittingOnBench) return 'leave-bench';
   if (currentPlace === 'street' && x >= game.clientWidth * 0.07 && x <= game.clientWidth * 0.22) return 'enter-house';
   const motaX = game.clientWidth * 0.523;
   if (currentPlace === 'street' && x >= motaX - 180 && x <= motaX + 155) return 'talk-mota';
@@ -1631,11 +1641,13 @@ function currentInteraction() {
   if (currentPlace === 'station' && x >= game.clientWidth * 0.58 && x <= game.clientWidth - 125) return 'take-train';
   if (currentPlace === 'valparaiso' && x <= 145) return 'take-return-train';
   if (currentPlace === 'valdivia' && x <= 145) return 'take-return-train';
-  if (currentPlace === 'valdivia' && x >= game.clientWidth * 1.12 && x <= game.clientWidth * 1.43) return 'talk-copo';
+  if (currentPlace === 'valdivia' && Math.abs(x + 50 - valdiviaBenchCenter('promenade')) < 68) return 'sit-bench-promenade';
+  if (currentPlace === 'valdivia' && Math.abs(x + 50 - valdiviaBenchCenter('island')) < 68) return 'sit-bench-island';
+  if (currentPlace === 'valdivia' && x >= game.clientWidth * 1.32 && x <= game.clientWidth * 1.52) return 'talk-copo';
+  if (currentPlace === 'valdivia' && valdiviaBridgeCrossed &&
+    x >= game.clientWidth * 2.94 && x <= game.clientWidth * 3.04) return 'return-bridge';
   if (currentPlace === 'valdivia' && x >= game.clientWidth * 2.2 && x <= game.clientWidth * 2.52) return 'inspect-tracks';
   if (currentPlace === 'valdivia' && x >= game.clientWidth * 2.72 && x <= game.clientWidth * 3.05) return 'inspect-passage';
-  if (currentPlace === 'valdivia' && valdiviaBridgeCrossed &&
-    x >= game.clientWidth * 3.48 && x <= game.clientWidth * 3.76) return 'return-bridge';
   if (currentPlace === 'bridge' && bridgeDepth >= bridgeTop() - 24) return 'cross-bridge';
   if (currentPlace === 'bridge' && !bridgeLogPlaced &&
     Math.abs(x + 50 - game.clientWidth * 1.05) < 85 &&
@@ -1671,6 +1683,7 @@ function changeLocation(nextLocation, entry = 'default') {
   setTimeout(() => {
     currentPlace = nextLocation;
     sittingInChair = entry === 'at-chair';
+    sittingOnBench = null;
     const inside = currentPlace === 'house';
     const atStreet = currentPlace === 'street';
     const atPlaza = currentPlace === 'plaza';
@@ -1778,6 +1791,16 @@ addEventListener('keydown', (event) => {
     }
     return;
   }
+  if (sittingOnBench) {
+    if (['escape', 'e', 'enter', 'arrowleft', 'arrowright', 'a', 'd'].includes(pressedKey) && !event.repeat) {
+      const bench = sittingOnBench;
+      x = valdiviaBenchCenter(bench) - 50 + (pressedKey === 'arrowright' || pressedKey === 'd' ? 100 : pressedKey === 'arrowleft' || pressedKey === 'a' ? -100 : bench === 'island' ? 100 : -100);
+      sittingOnBench = null;
+      frame = 0;
+      event.preventDefault();
+    }
+    return;
+  }
   if (!photoMoment.hidden) {
     if ((pressedKey === 'escape' || pressedKey === 'e' || pressedKey === 'enter') && !event.repeat) closePhotoMoment();
     return;
@@ -1832,6 +1855,12 @@ addEventListener('keydown', (event) => {
       sittingInChair = true;
       x = game.clientWidth * 0.34;
       facing = 1;
+      frame = 0;
+    }
+    if (interaction === 'sit-bench-promenade' || interaction === 'sit-bench-island') {
+      keys.clear();
+      sittingOnBench = interaction === 'sit-bench-island' ? 'island' : 'promenade';
+      x = valdiviaBenchCenter(sittingOnBench) - 50;
       frame = 0;
     }
     if (interaction === 'talk-mota') {
@@ -1976,7 +2005,8 @@ function loop(time) {
   const propScale = Math.max(0.78, Math.min(1, game.clientWidth / 1100));
   scene.style.setProperty('--prop-scale', propScale.toFixed(3));
   if (sittingInChair) x = game.clientWidth * 0.34;
-  const controlsEnabled = dialogue.hidden && travelAlbum.hidden && photoMoment.hidden && worldMap.hidden && !sittingInChair && !autoEscapingCave;
+  if (sittingOnBench) x = valdiviaBenchCenter(sittingOnBench) - 50;
+  const controlsEnabled = dialogue.hidden && travelAlbum.hidden && photoMoment.hidden && worldMap.hidden && !sittingInChair && !sittingOnBench && !autoEscapingCave;
   const moving = autoEscapingCave || (controlsEnabled && (keys.has('arrowright') || keys.has('d') || keys.has('arrowleft') || keys.has('a') || (currentPlace === 'bridge' && (keys.has('arrowup') || keys.has('w') || keys.has('arrowdown') || keys.has('s')))));
   const sprinting = keys.has('shift');
   const speed = (sprinting ? 370 : 240) * (currentPlace === 'bridge' && bridgeInMud(x + 50, bridgeDepth) ? .18 : 1);
@@ -2138,6 +2168,9 @@ function loop(time) {
     'look-window': 'Mirar por la ventana',
     'sit-chair': 'Sentarse a leer',
     'leave-chair': 'Levantarse',
+    'sit-bench-promenade': 'Sentarse junto al río',
+    'sit-bench-island': 'Sentarse junto al arrayán',
+    'leave-bench': 'Levantarse',
     'return-street': 'Volver a Barrio Yungay',
     'return-plaza': 'Volver a Plaza Yungay',
     'talk-mota': 'Hablar con Mota',
@@ -2209,6 +2242,7 @@ function loop(time) {
   kuro.classList.toggle('running', grounded && moving);
   kuro.classList.toggle('interact', grounded && !moving && !dialogue.hidden);
   kuro.classList.toggle('chair-reading', sittingInChair);
+  kuro.classList.toggle('bench-sitting', Boolean(sittingOnBench));
 
   if (!grounded) {
     // Una sola secuencia por salto: impulso, subida, caída y aterrizaje.
