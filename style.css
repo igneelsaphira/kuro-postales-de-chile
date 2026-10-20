@@ -356,9 +356,7 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .valdivia-start { left: 0; top: 0; width: 50%; height: 100%; }
 .valdivia-start .valdivia-sky, .valdivia-start .valdivia-hills, .valdivia-start .valdivia-river { display: none; }
 .valdivia-start > div, .valdivia-market > div, .valdivia-island > div { position: absolute; }
-.valdivia-promenade-rail { left: 0; right: 25%; bottom: 25%; height: 5px; z-index: 1; pointer-events: none; background: linear-gradient(#a8bda9 0 1px, #37645a 2px 5px); box-shadow: 0 14px 0 #426e63; filter: drop-shadow(0 2px 1px #24483d55); }
-.valdivia-promenade-rail::before { content: ''; position: absolute; inset: -4px 0 auto; height: 9px; background: radial-gradient(ellipse at center, #9ab6a5 0 3px, #305c51 4px 5px, transparent 6px) 118px 0 / 143px 9px repeat-x; }
-.valdivia-promenade-rail::after { content: ''; position: absolute; left: 0; right: 0; top: 0; height: calc(min(100vw, 1100px) * .04); background: repeating-linear-gradient(90deg, transparent 0 118px, #31564d 119px 125px, #73998c 126px 127px, transparent 128px 143px); }
+.valdivia-promenade-rail { left: 0; right: 0; bottom: 18%; height: 48px; z-index: 1; pointer-events: none; background: url('assets/valdivia-riverside-railing-v1.png') left 28% / 210px auto repeat-x; image-rendering: pixelated; filter: drop-shadow(0 2px 1px #24483d55); }
 .valdivia-market { left: 50%; top: 0; width: 25%; height: 100%; overflow: visible; z-index: 2; }
 .valdivia-island { left: 75%; top: 0; width: 25%; height: 100%; overflow: hidden; z-index: 3; }
 .market-river, .island-river { display: none; }
@@ -393,7 +391,6 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .valdivia-lamp { bottom: calc(18% - 10px); width: 70px; height: 210px; z-index: 3; transform: translateX(-35%); background: url('assets/valdivia-riverside-lamp-v1.png') center bottom / contain no-repeat; image-rendering: pixelated; filter: drop-shadow(2px 4px 3px #254b4266); pointer-events: none; }
 .lamp-one { left: 45%; }.lamp-two { left: 82%; }
 .valdivia-bench { left: 48%; bottom: 17%; width: 110px; height: 26px; border: 5px solid #55483c; background: #9a7453; box-shadow: 0 -23px 0 -6px #9a7453; }
-.valdivia-railing { right: 3%; bottom: calc(18% - 3px); width: 16%; height: 53px; z-index: 1; transform: skewY(-6deg); background: url('assets/valdivia-riverside-railing-v1.png') center 33% / 115% auto no-repeat; image-rendering: pixelated; filter: drop-shadow(2px 3px 2px #254b4266); pointer-events: none; }
 .valdivia-copo { left: 62%; bottom: calc(18% - 12px); width: 72px; height: 86px; z-index: 4; background: url('assets/copo-idle-v2.png') center bottom / contain no-repeat; filter: drop-shadow(0 4px 2px #2d484888); transform-origin: center bottom; animation: copo-idle 3.4s ease-in-out infinite; }
 @keyframes copo-idle { 50% { transform: scaleY(1.015); } }
 .location-label { position: absolute; z-index: 7; top: 48px; left: 50%; translate: -50% 0; padding: 7px 16px; border-radius: 20px; background: #fff4d6d9; color: #6a4840; font-weight: bold; opacity: .9; }
