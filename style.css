@@ -363,7 +363,7 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .valdivia-island { left: 75%; top: 0; width: 25%; height: 100%; overflow: hidden; }
 .market-river, .island-river { display: none; }
 .market-walkway, .island-walkway { left: 0; right: 0; bottom: 0; height: 18%; }
-.market-stalls { left: 4%; bottom: calc(18% - 16px); z-index: 2; width: min(64%, 500px); aspect-ratio: 2 / 1; background: url('assets/valdivia-market-stalls-v3.png') center bottom / contain no-repeat; image-rendering: pixelated; filter: saturate(.9) drop-shadow(3px 5px 3px #324a3b66); pointer-events: none; }
+.market-stalls { left: 4%; bottom: calc(18% - 16px); z-index: 2; width: min(64%, 500px); aspect-ratio: 2 / 1; background: url('assets/valdivia-market-stalls-v4.png') center bottom / contain no-repeat; image-rendering: pixelated; filter: saturate(.9) drop-shadow(3px 5px 3px #324a3b66); pointer-events: none; }
 .market-tracks { z-index: 3; left: 47%; bottom: 13%; width: 230px; height: 22px; background: radial-gradient(ellipse, #694d3b 0 5px, transparent 6px) 0 0 / 38px 20px repeat-x; transform: rotate(-5deg); opacity: .8; }
 .market-bridge { left: 69%; top: 34%; width: 33%; height: 43%; border-left: 18px solid #596964; border-right: 18px solid #596964; border-top: 20px solid #435c5c; background: linear-gradient(#789d96aa, #355c6266); z-index: 2; }
 .market-bridge::before { content: ''; position: absolute; left: -150px; right: -100px; top: -40px; height: 20px; background: #405b5c; box-shadow: 0 -11px #72928b; }
