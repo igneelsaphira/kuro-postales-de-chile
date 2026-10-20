@@ -363,6 +363,7 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .valdivia-island { left: 75%; top: 0; width: 25%; height: 100%; overflow: hidden; z-index: 3; }
 .market-river, .island-river { display: none; }
 .market-walkway, .island-walkway { left: 0; right: 0; bottom: 0; height: 18%; }
+.valdivia-market::after { content: ''; position: absolute; z-index: 5; right: 0; bottom: 0; width: 8px; height: 18%; background: #cab890 url('assets/valdivia-riverside-paving-v1.webp') right top / min(100vw, 1100px) 100% no-repeat; pointer-events: none; }
 .market-stalls { left: 4%; bottom: calc(18% - 16px); z-index: 3; width: min(64%, 500px); aspect-ratio: 2 / 1; background: url('assets/valdivia-market-stalls-v4.png') center bottom / contain no-repeat; image-rendering: pixelated; filter: saturate(.9) drop-shadow(3px 5px 3px #324a3b66); pointer-events: none; }
 .market-tracks { z-index: 4; left: 37%; bottom: 8%; width: 26px; height: 32px; background: url('assets/coipo-track-hind-v1.svg') center / contain no-repeat; opacity: .66; transform: rotate(39deg); pointer-events: none; }
 .market-tracks::before, .market-tracks::after { content: ''; position: absolute; width: 20px; height: 26px; background: inherit; }
@@ -370,7 +371,7 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .market-tracks::after { left: 135px; top: -31px; transform: rotate(10deg); }
 .market-passage { z-index: 1; left: 80%; bottom: 18%; width: 18%; height: 27%; border-radius: 48% 48% 3% 3%; overflow: hidden; background: radial-gradient(ellipse at 51% 62%, #768d7b 0 5%, #435a53 24%, #263d3d 58%, #142c31 100%); box-shadow: inset 0 0 22px #0c252b; pointer-events: none; }
 .market-passage::after { content: ''; position: absolute; left: 8%; right: 8%; bottom: 0; height: 43%; background: linear-gradient(#b89b6caa, #b89b6caa), url('assets/bridge-earth-pixel-v1.webp') center / 90px auto repeat; background-blend-mode: screen; clip-path: polygon(43% 0, 57% 0, 100% 100%, 0 100%); image-rendering: pixelated; }
-.market-bridge { z-index: 2; left: 18%; bottom: 0; width: 104%; aspect-ratio: 2 / 1; background: url('assets/valdivia-market-bridge-v1.png') center / contain no-repeat; image-rendering: pixelated; clip-path: inset(0 0 19% 0); pointer-events: none; }
+.market-bridge { z-index: 2; left: 18%; bottom: -5px; width: 104%; aspect-ratio: 2 / 1; background: url('assets/valdivia-market-bridge-v1.png') center / contain no-repeat; image-rendering: pixelated; clip-path: inset(0 0 19% 0); pointer-events: none; }
 .island-arrayan { left: 20%; bottom: calc(18% - 8px); width: clamp(245px, 28vw, 320px); aspect-ratio: 1199 / 1312; z-index: 2; transform: translateX(-50%); background: url('assets/valdivia-arrayan-v1.png') center bottom / contain no-repeat; image-rendering: pixelated; filter: drop-shadow(2px 5px 3px #254b4366); pointer-events: none; }
 .bridge-photo { background: #69a59a url('assets/bridge-islet-kuro-view-v2.webp') center / cover no-repeat; }
 .album-photo.bridge-photo::after { content: 'La islita del humedal'; }
@@ -388,12 +389,12 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .valdivia-tree { bottom: 15%; z-index: 2; background: center bottom / contain no-repeat; transform: translateX(-50%); filter: drop-shadow(4px 5px 3px #254b4255); pointer-events: none; }
 .tree-one { left: 28%; width: 250px; height: 355px; background-image: url('assets/valdivia-riverside-tree-wide-v1.webp'); }
 .tree-two { left: 54%; width: 220px; height: 330px; background-image: url('assets/valdivia-riverside-tree-slender-v1.webp'); }
-.tree-three { left: 77%; width: 265px; height: 370px; background-image: url('assets/valdivia-riverside-tree-wide-v1.webp'); transform: translateX(-50%) scaleX(-1); }
+.tree-three { left: 77%; bottom: calc(15% - 5px); width: 265px; height: 370px; background-image: url('assets/valdivia-riverside-tree-wide-v1.webp'); transform: translateX(-50%) scaleX(-1); }
 .valdivia-lamp { bottom: 18%; width: 8px; height: 29%; background: #3c514d; z-index: 3; }
 .valdivia-lamp::before { content: ''; position: absolute; left: -16px; top: -21px; width: 40px; height: 28px; border: 4px solid #3c514d; border-radius: 15px 15px 4px 4px; background: #f2d8a7; box-shadow: 0 0 22px #f4dea988; }
 .lamp-one { left: 45%; }.lamp-two { left: 82%; }
 .valdivia-bench { left: 48%; bottom: 17%; width: 110px; height: 26px; border: 5px solid #55483c; background: #9a7453; box-shadow: 0 -23px 0 -6px #9a7453; }
-.valdivia-pier { right: 3%; bottom: 18%; width: 14%; height: 11%; background: repeating-linear-gradient(90deg, #916e50 0 18px, #654c3d 19px 22px); transform: skewY(-5deg); border: 5px solid #654c3d; }
+.valdivia-railing { right: 3%; bottom: calc(18% - 3px); width: 16%; height: 53px; background: url('assets/valdivia-riverside-railing-v1.png') center 33% / 115% auto no-repeat; image-rendering: pixelated; filter: drop-shadow(2px 3px 2px #254b4266); pointer-events: none; }
 .valdivia-copo { left: 62%; bottom: calc(18% - 8px); width: 72px; height: 86px; z-index: 4; background: url('assets/copo-idle-v2.png') center bottom / contain no-repeat; filter: drop-shadow(0 4px 2px #2d484888); transform-origin: center bottom; animation: copo-idle 3.4s ease-in-out infinite; }
 @keyframes copo-idle { 50% { transform: scaleY(1.015); } }
 .location-label { position: absolute; z-index: 7; top: 48px; left: 50%; translate: -50% 0; padding: 7px 16px; border-radius: 20px; background: #fff4d6d9; color: #6a4840; font-weight: bold; opacity: .9; }
