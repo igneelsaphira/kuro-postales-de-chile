@@ -360,7 +360,7 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .valdivia-promenade-rail::before { content: ''; position: absolute; inset: -4px 0 auto; height: 9px; background: radial-gradient(ellipse at center, #9ab6a5 0 3px, #305c51 4px 5px, transparent 6px) 118px 0 / 143px 9px repeat-x; }
 .valdivia-promenade-rail::after { content: ''; position: absolute; left: 0; right: 0; top: 0; height: calc(min(100vw, 1100px) * .04); background: repeating-linear-gradient(90deg, transparent 0 118px, #31564d 119px 125px, #73998c 126px 127px, transparent 128px 143px); }
 .valdivia-market { left: 50%; top: 0; width: 25%; height: 100%; overflow: visible; z-index: 2; }
-.valdivia-island { left: 75%; top: 0; width: 25%; height: 100%; overflow: hidden; }
+.valdivia-island { left: 75%; top: 0; width: 25%; height: 100%; overflow: hidden; z-index: 3; }
 .market-river, .island-river { display: none; }
 .market-walkway, .island-walkway { left: 0; right: 0; bottom: 0; height: 18%; }
 .market-stalls { left: 4%; bottom: calc(18% - 16px); z-index: 3; width: min(64%, 500px); aspect-ratio: 2 / 1; background: url('assets/valdivia-market-stalls-v4.png') center bottom / contain no-repeat; image-rendering: pixelated; filter: saturate(.9) drop-shadow(3px 5px 3px #324a3b66); pointer-events: none; }
@@ -371,10 +371,7 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .market-passage { z-index: 1; left: 80%; bottom: 18%; width: 18%; height: 27%; border-radius: 48% 48% 3% 3%; overflow: hidden; background: radial-gradient(ellipse at 51% 62%, #768d7b 0 5%, #435a53 24%, #263d3d 58%, #142c31 100%); box-shadow: inset 0 0 22px #0c252b; pointer-events: none; }
 .market-passage::after { content: ''; position: absolute; left: 8%; right: 8%; bottom: 0; height: 43%; background: linear-gradient(#b89b6caa, #b89b6caa), url('assets/bridge-earth-pixel-v1.webp') center / 90px auto repeat; background-blend-mode: screen; clip-path: polygon(43% 0, 57% 0, 100% 100%, 0 100%); image-rendering: pixelated; }
 .market-bridge { z-index: 2; left: 18%; bottom: 0; width: 104%; aspect-ratio: 2 / 1; background: url('assets/valdivia-market-bridge-v1.png') center / contain no-repeat; image-rendering: pixelated; clip-path: inset(0 0 19% 0); pointer-events: none; }
-.island-garden { left: 2%; right: 0; bottom: 18%; height: 34%; background: linear-gradient(transparent 0 68%, #57745c 69%), radial-gradient(ellipse at 34% 93%, #799873 0 32%, transparent 33%), radial-gradient(ellipse at 76% 92%, #668a6f 0 38%, transparent 39%); }
-.island-tree { bottom: 18%; width: 20px; height: 43%; background: #594f3d; }
-.island-tree::before { content: ''; position: absolute; left: -100px; top: -80px; width: 220px; height: 180px; border-radius: 49%; background: radial-gradient(circle at 30% 30%, #97b587, #467461 70%); box-shadow: 15px 20px 0 #45705c; }
-.tree-a { left: 50%; }.tree-b { left: 82%; scale: .9; }
+.island-arrayan { left: 20%; bottom: 18%; width: clamp(245px, 28vw, 320px); aspect-ratio: 1199 / 1312; z-index: 2; transform: translateX(-50%); background: url('assets/valdivia-arrayan-v1.png') center bottom / contain no-repeat; image-rendering: pixelated; filter: drop-shadow(2px 5px 3px #254b4366); pointer-events: none; }
 .bridge-photo { background: #69a59a url('assets/bridge-islet-kuro-view-v2.webp') center / cover no-repeat; }
 .album-photo.bridge-photo::after { content: 'La islita del humedal'; }
 .valdivia-photo { background: linear-gradient(#8cb9b7 0 53%, #5c8e92 54% 70%, #6d8d6a 71% 77%, #b7a582 78%); }
