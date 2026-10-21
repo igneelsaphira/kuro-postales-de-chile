@@ -129,6 +129,7 @@ let valdiviaFamilyHelped = localStorage.getItem('kuro-valdivia-family-v1') === '
 let copoFollowing = localStorage.getItem('kuro-valdivia-copo-following-v1') === 'yes' || valdiviaTracksFound;
 let copoWorldX = null;
 let copoChasing = false;
+let copoBenchSide = -1;
 let vendorAttentionTarget = null;
 let vendorFacing = 1;
 let sittingInChair = false;
@@ -1697,6 +1698,18 @@ function updateCopoFollower(dt) {
   if (!copoFollowing || (currentPlace !== 'valdivia' && currentPlace !== 'bridge')) return;
   const worldWidth = game.clientWidth * (currentPlace === 'bridge' ? 2.4 : 4);
   if (copoWorldX === null) copoWorldX = Math.max(10, x - 65);
+  if (sittingOnBench && currentPlace === 'valdivia') {
+    const benchCenter = valdiviaBenchCenter(sittingOnBench);
+    const target = Math.max(10, Math.min(worldWidth - 82, benchCenter + copoBenchSide * 120 - 36));
+    const gap = target - copoWorldX;
+    const step = Math.min(Math.abs(gap), 430 * dt);
+    copoWorldX += Math.sign(gap) * step;
+    copoChasing = false;
+    valdiviaCopo.style.left = `${copoWorldX}px`;
+    valdiviaCopo.style.setProperty('--copo-facing', step > 0.5 ? Math.sign(gap) : -copoBenchSide);
+    valdiviaCopo.classList.toggle('walking', step > 0.5);
+    return;
+  }
   const gap = x + 50 - (copoWorldX + 36);
   const distance = Math.abs(gap);
   if (distance > 145) copoChasing = true;
@@ -1930,7 +1943,9 @@ addEventListener('keydown', (event) => {
     if (interaction === 'sit-bench-promenade' || interaction === 'sit-bench-island') {
       keys.clear();
       sittingOnBench = interaction === 'sit-bench-island' ? 'island' : 'promenade';
-      x = valdiviaBenchCenter(sittingOnBench) - 50;
+      const benchCenter = valdiviaBenchCenter(sittingOnBench);
+      copoBenchSide = (copoWorldX ?? valdiviaCopo.offsetLeft) + 36 < benchCenter ? -1 : 1;
+      x = benchCenter - 50;
       frame = 0;
     }
     if (interaction === 'talk-mota') {
@@ -2093,7 +2108,6 @@ function loop(time) {
     const nextX = Math.min(activeWorldWidth - 110, x + speed * dt);
     if (currentPlace === 'bridge') stepAlongBridgeShore(nextX);
     else x = nextX;
-    if (currentPlace === 'valdivia' && !valdiviaBridgeCrossed) x = Math.min(x, game.clientWidth * 3.02);
     if (currentPlace === 'bridge') bridgeDirection = 'side';
     facing = 1;
     kuro.style.setProperty('--facing', facing);
