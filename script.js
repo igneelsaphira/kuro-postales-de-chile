@@ -8,6 +8,73 @@ const valdiviaBenches = {
 const valdiviaCopo = document.querySelector('.valdivia-copo');
 const valdiviaVendor = document.querySelector('.market-vendor');
 const valdiviaPassersby = [document.querySelector('.valdivia-traveler'), document.querySelector('.valdivia-cat-tourist')];
+const valdiviaCatTourist = document.querySelector('.valdivia-cat-tourist');
+const catSvgNamespace = 'http://www.w3.org/2000/svg';
+function catSvgElement(name, attributes) {
+  const element = document.createElementNS(catSvgNamespace, name);
+  Object.entries(attributes).forEach(([key, value]) => element.setAttribute(key, value));
+  return element;
+}
+function catLeg(group, hipX, footX, footY, color) {
+  const kneeX = Math.round(hipX + (footX - hipX) * .38);
+  const ankleY = footY - 23;
+  const leg = 'M ' + hipX + ' 471 C ' + kneeX + ' 516 ' + kneeX + ' 570 ' + footX + ' ' + ankleY;
+  group.appendChild(catSvgElement('path', { d: leg, fill: 'none', stroke: '#3a2924', 'stroke-width': 99, 'stroke-linecap': 'round' }));
+  group.appendChild(catSvgElement('path', { d: leg, fill: 'none', stroke: color, 'stroke-width': 84, 'stroke-linecap': 'round' }));
+  group.appendChild(catSvgElement('path', { d: leg, fill: 'none', stroke: '#c79d73', 'stroke-width': 72, 'stroke-dasharray': '16 105', 'stroke-dashoffset': 14, opacity: .56 }));
+  group.appendChild(catSvgElement('ellipse', { cx: footX + 15, cy: footY, rx: 46, ry: 25, fill: color, stroke: '#3a2924', 'stroke-width': 8 }));
+}
+function buildCatWalk() {
+  const svg = catSvgElement('svg', { viewBox: '0 0 543 724', 'aria-hidden': 'true' });
+  const defs = catSvgElement('defs', {});
+  const clip = catSvgElement('clipPath', { id: 'valdivia-cat-upper-clip' });
+  clip.appendChild(catSvgElement('rect', { x: 0, y: 0, width: 543, height: 512 }));
+  defs.appendChild(clip);
+  svg.appendChild(defs);
+  const keyPoses = [
+    [[445, 622], [205, 622], 0], [[399, 622], [255, 588], 3],
+    [[340, 622], [331, 570], -3], [[275, 622], [401, 590], -1],
+    [[205, 622], [445, 622], 0], [[255, 588], [399, 622], 3],
+    [[331, 570], [340, 622], -3], [[401, 590], [275, 622], -1]
+  ];
+  const poses = keyPoses.flatMap((pose, index) => {
+    const next = keyPoses[(index + 1) % keyPoses.length];
+    return [0, 1 / 3, 2 / 3].map(t => [
+      [Math.round(pose[0][0] + (next[0][0] - pose[0][0]) * t), Math.round(pose[0][1] + (next[0][1] - pose[0][1]) * t)],
+      [Math.round(pose[1][0] + (next[1][0] - pose[1][0]) * t), Math.round(pose[1][1] + (next[1][1] - pose[1][1]) * t)],
+      pose[2] + (next[2] - pose[2]) * t
+    ]);
+  });
+  const frames = poses.map(([near, far]) => {
+    const group = catSvgElement('g', {});
+    group.style.display = 'none';
+    catLeg(group, 261, far[0], far[1], '#cba47b');
+    catLeg(group, 361, near[0], near[1], '#f2cf9e');
+    svg.appendChild(group);
+    return group;
+  });
+  const body = catSvgElement('g', {});
+  body.appendChild(catSvgElement('image', {
+    href: 'assets/valdivia-cat-tourist-walk-v3.png', x: 0, y: 0,
+    width: 2172, height: 724, 'clip-path': 'url(#valdivia-cat-upper-clip)'
+  }));
+  svg.appendChild(body);
+  valdiviaCatTourist.appendChild(svg);
+  frames[0].style.display = '';
+  return { frames, body, poses, index: 0 };
+}
+const catWalk = buildCatWalk();
+function updateCatWalk() {
+  if (currentPlace !== 'valdivia') return;
+  const start = valdiviaCatTourist.parentElement.offsetWidth + 90;
+  const distance = Math.max(0, start - parseFloat(getComputedStyle(valdiviaCatTourist).left));
+  const index = Math.floor((distance % 72) / 3);
+  if (index === catWalk.index) return;
+  catWalk.frames[catWalk.index].style.display = 'none';
+  catWalk.frames[index].style.display = '';
+  catWalk.body.setAttribute('transform', 'translate(0 ' + catWalk.poses[index][2] + ')');
+  catWalk.index = index;
+}
 function valdiviaVendorCenter() {
   return valdiviaVendor.parentElement.offsetLeft + valdiviaVendor.offsetLeft + valdiviaVendor.offsetWidth / 2;
 }
@@ -135,6 +202,7 @@ let vendorFacing = 1;
 let vendorShownFacing = 1;
 let vendorTurnTarget = 1;
 let vendorTurningUntil = 0;
+let vendorTurnStartedAt = 0;
 let sittingInChair = false;
 let sittingOnBench = null;
 let autoEscapingCave = false;
@@ -1754,9 +1822,13 @@ function updateValdiviaVendor(time) {
   }
   if (!vendorTurningUntil && vendorFacing !== vendorShownFacing) {
     vendorTurnTarget = vendorFacing;
-    vendorTurningUntil = time + 220;
+    vendorTurnStartedAt = time;
+    vendorTurningUntil = time + 420;
   }
-  valdiviaVendor.classList.toggle('turning', vendorTurningUntil > time);
+  const turnProgress = vendorTurningUntil ? (time - vendorTurnStartedAt) / 420 : 1;
+  valdiviaVendor.classList.toggle('turning-quarter', vendorTurningUntil > time && (turnProgress < 1 / 3 || turnProgress >= 2 / 3));
+  valdiviaVendor.classList.toggle('turning-front', vendorTurningUntil > time && turnProgress >= 1 / 3 && turnProgress < 2 / 3);
+  valdiviaVendor.style.setProperty('--turn-facing', turnProgress < 1 / 3 ? vendorShownFacing : vendorTurnTarget);
   valdiviaVendor.style.setProperty('--vendor-facing', vendorShownFacing);
 }
 
@@ -2250,6 +2322,7 @@ function loop(time) {
   kuro.style.setProperty('--jump-y', `${y}px`);
   kuro.style.setProperty('--bridge-depth', `${bridgeDepth}px`);
   updateCopoFollower(dt);
+  updateCatWalk();
   updateValdiviaVendor(time);
   const interaction = currentInteraction();
   if (interaction === 'bridge-log' && !bridgeLogTouched) {
