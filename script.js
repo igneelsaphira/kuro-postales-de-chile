@@ -7,6 +7,7 @@ const valdiviaBenches = {
 };
 const valdiviaCopo = document.querySelector('.valdivia-copo');
 const valdiviaVendor = document.querySelector('.market-vendor');
+const valdiviaPassersby = [document.querySelector('.valdivia-traveler'), document.querySelector('.valdivia-cat-tourist')];
 function valdiviaVendorCenter() {
   return valdiviaVendor.parentElement.offsetLeft + valdiviaVendor.offsetLeft + valdiviaVendor.offsetWidth / 2;
 }
@@ -128,6 +129,8 @@ let valdiviaFamilyHelped = localStorage.getItem('kuro-valdivia-family-v1') === '
 let copoFollowing = localStorage.getItem('kuro-valdivia-copo-following-v1') === 'yes' || valdiviaTracksFound;
 let copoWorldX = null;
 let copoChasing = false;
+let vendorAttentionTarget = null;
+let vendorFacing = 1;
 let sittingInChair = false;
 let sittingOnBench = null;
 let autoEscapingCave = false;
@@ -1706,6 +1709,32 @@ function updateCopoFollower(dt) {
   if (currentPlace === 'bridge') valdiviaCopo.style.setProperty('--copo-depth', `${bridgeDepth + y}px`);
 }
 
+function updateValdiviaVendor() {
+  if (currentPlace !== 'valdivia') return;
+  const center = valdiviaVendorCenter();
+  const nearby = [
+    { id: 'kuro', center: x + 50 },
+    { id: 'copo', center: (copoWorldX ?? valdiviaCopo.offsetLeft) + valdiviaCopo.offsetWidth / 2 }
+  ];
+  valdiviaPassersby.forEach((passerby, index) => {
+    const passerbyCenter = passerby.offsetLeft + passerby.offsetWidth / 2;
+    if (Math.abs(passerbyCenter - center) < 270 && Number(getComputedStyle(passerby).opacity) > .5) {
+      nearby.push({ id: `passerby-${index}`, center: passerbyCenter });
+    }
+  });
+  const candidates = nearby.map(person => ({ ...person, distance: Math.abs(person.center - center) }))
+    .filter(person => person.distance < 230)
+    .sort((a, b) => a.distance - b.distance);
+  const current = candidates.find(person => person.id === vendorAttentionTarget);
+  const target = current && current.distance < (candidates[0]?.distance ?? Infinity) + 45 ? current : candidates[0];
+  vendorAttentionTarget = target?.id ?? null;
+  if (target) {
+    if (target.center < center - 18) vendorFacing = 1;
+    else if (target.center > center + 18) vendorFacing = -1;
+  } else vendorFacing = 1;
+  valdiviaVendor.style.setProperty('--vendor-facing', vendorFacing);
+}
+
 function changeLocation(nextLocation, entry = 'default') {
   if (transitioning) return;
   if (currentPlace === 'valparaiso' && nextLocation === 'street' && tizneResponse) {
@@ -2191,6 +2220,7 @@ function loop(time) {
   kuro.style.setProperty('--jump-y', `${y}px`);
   kuro.style.setProperty('--bridge-depth', `${bridgeDepth}px`);
   updateCopoFollower(dt);
+  updateValdiviaVendor();
   const interaction = currentInteraction();
   if (interaction === 'bridge-log' && !bridgeLogTouched) {
     bridgeLogTouched = true;
