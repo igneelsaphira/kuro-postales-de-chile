@@ -6,6 +6,10 @@ const valdiviaBenches = {
   island: document.querySelector('.island-bench')
 };
 const valdiviaCopo = document.querySelector('.valdivia-copo');
+const valdiviaVendor = document.querySelector('.market-vendor');
+function valdiviaVendorCenter() {
+  return valdiviaVendor.parentElement.offsetLeft + valdiviaVendor.offsetLeft + valdiviaVendor.offsetWidth / 2;
+}
 function valdiviaBenchCenter(which) {
   const bench = valdiviaBenches[which];
   return bench.parentElement.offsetLeft + bench.offsetLeft + bench.offsetWidth / 2;
@@ -1185,13 +1189,17 @@ const portraitSheets = {
   },
   Copo: {
     neutral: 'assets/copo-dialogue-v2.png'
+  },
+  'Pudú feriante': {
+    neutral: 'assets/valdivia-pudu-vendor-v1.png'
   }
 };
 const npcPortraits = {
   Mota: portraitSheets.Mota.neutral,
   Tizne: portraitSheets.Tizne.neutral,
   'Doña Bruma': portraitSheets['Doña Bruma'].neutral,
-  Copo: portraitSheets.Copo.neutral
+  Copo: portraitSheets.Copo.neutral,
+  'Pudú feriante': portraitSheets['Pudú feriante'].neutral
 };
 
 const portraitEmotionState = {
@@ -1647,6 +1655,7 @@ function currentInteraction() {
   if (currentPlace === 'valdivia' && Math.abs(x + 50 - (valdiviaCopo.parentElement.offsetLeft + valdiviaCopo.offsetLeft + valdiviaCopo.offsetWidth / 2)) < 85) return 'talk-copo';
   if (currentPlace === 'valdivia' && valdiviaBridgeCrossed &&
     x >= game.clientWidth * 2.94 && x <= game.clientWidth * 3.04) return 'return-bridge';
+  if (currentPlace === 'valdivia' && Math.abs(x + 50 - valdiviaVendorCenter()) < 80) return 'talk-vendor';
   if (currentPlace === 'valdivia' && x >= game.clientWidth * 2.2 && x <= game.clientWidth * 2.52) return 'inspect-tracks';
   if (currentPlace === 'valdivia' && x >= game.clientWidth * 2.72 && x <= game.clientWidth * 3.05) return 'inspect-passage';
   if (currentPlace === 'bridge' && bridgeDepth >= bridgeTop() - 24) return 'cross-bridge';
@@ -1729,7 +1738,7 @@ function changeLocation(nextLocation, entry = 'default') {
     else if (atMuseum) x = 170;
     else if (atStation) x = entry === 'at-estafeta' ? game.clientWidth * 0.23 : entry === 'at-train' ? game.clientWidth * 0.58 : entry === 'from-route' ? game.clientWidth - 150 : 120;
     else if (atValparaiso) x = entry === 'at-train' ? 95 : entry === 'from-map' ? game.clientWidth * 0.24 : entry === 'at-tizne' ? game.clientWidth * 1.34 : entry === 'at-hills' ? game.clientWidth * 1.60 : entry === 'at-lower-hills' ? game.clientWidth * 2.07 : entry === 'at-mid-hills' ? game.clientWidth * 2.44 : entry === 'at-bruma' ? game.clientWidth * 2.62 : entry === 'at-cave' ? game.clientWidth * 3.12 : entry === 'at-connector' ? game.clientWidth * 0.82 : entry === 'at-station-seam' ? game.clientWidth * 0.56 : entry === 'at-plaza-seam' ? game.clientWidth * 1.12 : 160;
-    else if (atValdivia) x = entry === 'at-coipo' ? game.clientWidth * 1.36 : entry === 'at-pier' ? game.clientWidth * 1.83 : entry === 'at-market' ? game.clientWidth * 2.32 : entry === 'at-passage' ? game.clientWidth * 2.82 : entry === 'at-island' ? game.clientWidth * 3.63 : game.clientWidth * 0.22;
+    else if (atValdivia) x = entry === 'at-coipo' ? game.clientWidth * 1.36 : entry === 'at-pier' ? game.clientWidth * 1.83 : entry === 'at-market' ? game.clientWidth * 2.32 : entry === 'at-vendor' ? valdiviaVendorCenter() - 125 : entry === 'at-passage' ? game.clientWidth * 2.82 : entry === 'at-island' ? game.clientWidth * 3.63 : game.clientWidth * 0.22;
     else if (atBridge) x = entry === 'at-log' ? game.clientWidth * 1.05 - 50 : entry === 'at-mud' ? game.clientWidth * 1.45 - 50 : entry === 'at-refuge' ? game.clientWidth * 1.56 - 50 : entry === 'from-island' ? game.clientWidth * 1.54 - 50 : game.clientWidth * .50 - 50;
     else if (atCave) x = entry === 'at-goat' ? game.clientWidth * (caveBellCollected ? 3.08 : 2.72) : entry === 'at-sea-lion' ? game.clientWidth * 4.65 : entry === 'at-dog' ? game.clientWidth * 1.05 : entry === 'at-middle' ? game.clientWidth * 3.75 : entry === 'at-bird' ? game.clientWidth * .54 : entry === 'at-bell' ? game.clientWidth * 5.67 : 185;
     else x = entry === 'from-quinta' ? game.clientWidth * 1.6875 - 150 : entry === 'from-museum' ? game.clientWidth * 1.29 : entry === 'at-museum' ? game.clientWidth * 1.40 : entry === 'at-quinta' ? game.clientWidth * 1.20 : entry === 'at-mota' ? game.clientWidth * 0.36 : entry === 'at-plaza' ? game.clientWidth * 0.86 : entry === 'at-neighborhood' ? game.clientWidth * 0.46 : entry === 'at-seam' ? game.clientWidth * 0.90 : game.clientWidth * 0.14;
@@ -1911,6 +1920,11 @@ addEventListener('keydown', (event) => {
       ['Copo', valdiviaFamilyHelped ? '¡La familia ya tiene dónde refugiarse! Gracias por ayudarme, Kuro.' : 'Soy Copo. ¿Ves mi gorro? Me gustan tanto los coipos que lo hice yo mismo.'],
       ['Kuro', valdiviaFamilyHelped ? 'Me alegra haber seguido esas huellitas.' : 'Me gusta. ¿Me acompañas a conocer la feria?'],
       ['Copo', valdiviaFamilyHelped ? 'Cuando llueva, estarán protegidos bajo los juncos.' : 'Claro. Hay unas huellas raras por ahí y todos bromean con que son mías.']
+    ]);
+    if (interaction === 'talk-vendor') startDialogue([
+      ['Pudú feriante', '¡Bienvenido a la feria! Tengo manzanas y flores. Si ves huellitas cerca del puesto, síguelas hacia el puente.'],
+      ['Kuro', 'Qué lindo gorrito. ¿Lo usas todos los días?'],
+      ['Pudú feriante', '¡Hasta cuando llueve! Así todos saben dónde encontrar mi puesto.']
     ]);
     if (interaction === 'look-river') startDialogue([['Kuro', 'Desde este muelle se ve hasta la otra orilla. Me pregunto qué habrá más allá.']]);
     if (interaction === 'inspect-tracks') {
@@ -2190,6 +2204,7 @@ function loop(time) {
     'talk-tizne': 'Hablar con Tizne',
     'talk-bruma': brumaBellReturned ? 'Hablar con Doña Bruma' : caveBellCollected ? 'Devolver el cascabel' : 'Hablar con Doña Bruma',
     'talk-copo': 'Hablar con Copo',
+    'talk-vendor': 'Hablar con el feriante',
     'look-river': 'Mirar el río',
     'inspect-tracks': valdiviaTracksFound ? 'Mirar las huellas' : 'Investigar huellitas',
     'inspect-passage': valdiviaPassageFound ? 'Entrar a la subida' : 'Investigar bajo el puente',
@@ -2288,7 +2303,7 @@ if (['street', 'house', 'plaza', 'quinta', 'museum', 'station', 'valparaiso', 'v
       ? `at-${previewSpot}`
     : previewPlace === 'valparaiso' && ['train', 'tizne', 'hills', 'lower-hills', 'mid-hills', 'bruma', 'cave', 'connector', 'station-seam', 'plaza-seam'].includes(previewSpot)
       ? `at-${previewSpot}`
-    : previewPlace === 'valdivia' && ['coipo', 'pier', 'market', 'passage', 'island'].includes(previewSpot)
+    : previewPlace === 'valdivia' && ['coipo', 'pier', 'market', 'vendor', 'passage', 'island'].includes(previewSpot)
       ? `at-${previewSpot}`
     : previewPlace === 'cave' && ['goat', 'sea-lion', 'dog', 'middle', 'bird', 'bell'].includes(previewSpot)
       ? `at-${previewSpot}`
