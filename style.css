@@ -291,6 +291,11 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
   50%, 74.9% { background-image: url('assets/kuro-front-walk-v1.png'); transform: scale(calc(-1 * var(--kuro-scale, .76)), var(--kuro-scale, .76)); }
   75%, 100% { background-image: url('assets/kuro-front-walk-v2.png'); transform: translateY(1px) scale(calc(-1 * var(--kuro-scale, .76)), var(--kuro-scale, .76)); }
 }
+.scene.bridge .kuro.diagonal-back, .scene.bridge .kuro.diagonal-front { bottom: calc(4% - 9px + var(--bridge-depth, 0px) + var(--jump-y, 0px) - var(--mud-sink, 0px)); background-size: 400% 100%; background-position: 0 0; transform: scaleX(var(--facing, 1)) scale(var(--kuro-scale, .76)); }
+.scene.bridge .kuro.diagonal-back { background-image: url('assets/kuro-diagonal-back-walk-v1.png'); }
+.scene.bridge .kuro.diagonal-front { background-image: url('assets/kuro-diagonal-front-walk-v1.png'); }
+.scene.bridge .kuro.diagonal-back.running, .scene.bridge .kuro.diagonal-front.running { animation: bridge-diagonal-walk .64s steps(1, end) infinite; }
+@keyframes bridge-diagonal-walk { 0%, 24.99% { background-position: 0 0; } 25%, 49.99% { background-position: 33.333% 0; } 50%, 74.99% { background-position: 66.667% 0; } 75%, 100% { background-position: 100% 0; } }
 .bridge-climb-layer { display: none; position: absolute; inset: 0; z-index: 1; overflow: hidden; background: #708d64; }
 .bridge-river { position: absolute; inset: 0; background: #6fa99b url('assets/bridge-wetland-golden-v2.webp') 0 0 / 900px 900px repeat; image-rendering: auto; }
 .bridge-water-glints { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
@@ -365,6 +370,7 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .valdivia-market::after { content: ''; position: absolute; z-index: 5; right: 0; bottom: 0; width: 8px; height: 18%; background: #cab890 url('assets/valdivia-riverside-paving-v1.webp') right top / min(100vw, 1100px) 100% no-repeat; pointer-events: none; }
 .market-stalls { left: 4%; bottom: calc(18% - 16px); z-index: 4; width: min(64%, 500px); aspect-ratio: 2 / 1; background: url('assets/valdivia-market-stalls-v8.png') center bottom / contain no-repeat; image-rendering: pixelated; filter: saturate(.9) drop-shadow(3px 5px 3px #324a3b66); pointer-events: none; }
 .market-vendor { left: 16%; bottom: calc(18% + 24px); z-index: 3; width: clamp(90px, 9.3vw, 105px); aspect-ratio: 384 / 512; background: url('assets/valdivia-pudu-vendor-sprite-v3.png') 0 0 / 400% 200% no-repeat; image-rendering: pixelated; filter: drop-shadow(1px 3px 0 #493b3266); transform: scaleX(var(--vendor-facing, 1)); transform-origin: center bottom; pointer-events: none; animation: market-vendor-serve 4s steps(1, end) infinite; }
+.market-vendor.turning { background: url('assets/valdivia-pudu-vendor-turn-v1.png') center bottom / 100% 100% no-repeat; transform: none; animation: none; }
 @keyframes market-vendor-serve { 0%, 37%, 67%, 100% { background-position: 0 0; } 40% { background-position: 33.333% 0; } 43% { background-position: 66.667% 0; } 46%, 52% { background-position: 100% 0; } 55% { background-position: 0 100%; } 58% { background-position: 33.333% 100%; } 61% { background-position: 66.667% 100%; } 64% { background-position: 100% 100%; } }
 .market-tracks { z-index: 4; left: 37%; bottom: 8%; width: 26px; height: 32px; background: url('assets/coipo-track-hind-v1.svg') center / contain no-repeat; opacity: .66; transform: rotate(39deg); pointer-events: none; }
 .market-tracks::before, .market-tracks::after { content: ''; position: absolute; width: 20px; height: 26px; background: inherit; }

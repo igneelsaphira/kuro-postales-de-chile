@@ -132,6 +132,9 @@ let copoChasing = false;
 let copoBenchSide = -1;
 let vendorAttentionTarget = null;
 let vendorFacing = 1;
+let vendorShownFacing = 1;
+let vendorTurnTarget = 1;
+let vendorTurningUntil = 0;
 let sittingInChair = false;
 let sittingOnBench = null;
 let autoEscapingCave = false;
@@ -1722,7 +1725,7 @@ function updateCopoFollower(dt) {
   if (currentPlace === 'bridge') valdiviaCopo.style.setProperty('--copo-depth', `${bridgeDepth + y}px`);
 }
 
-function updateValdiviaVendor() {
+function updateValdiviaVendor(time) {
   if (currentPlace !== 'valdivia') return;
   const center = valdiviaVendorCenter();
   const nearby = [
@@ -1745,7 +1748,16 @@ function updateValdiviaVendor() {
     if (target.center < center - 18) vendorFacing = 1;
     else if (target.center > center + 18) vendorFacing = -1;
   } else vendorFacing = 1;
-  valdiviaVendor.style.setProperty('--vendor-facing', vendorFacing);
+  if (vendorTurningUntil && time >= vendorTurningUntil) {
+    vendorShownFacing = vendorTurnTarget;
+    vendorTurningUntil = 0;
+  }
+  if (!vendorTurningUntil && vendorFacing !== vendorShownFacing) {
+    vendorTurnTarget = vendorFacing;
+    vendorTurningUntil = time + 220;
+  }
+  valdiviaVendor.classList.toggle('turning', vendorTurningUntil > time);
+  valdiviaVendor.style.setProperty('--vendor-facing', vendorShownFacing);
 }
 
 function changeLocation(nextLocation, entry = 'default') {
@@ -2096,6 +2108,9 @@ function loop(time) {
   const moving = autoEscapingCave || (controlsEnabled && (keys.has('arrowright') || keys.has('d') || keys.has('arrowleft') || keys.has('a') || (currentPlace === 'bridge' && (keys.has('arrowup') || keys.has('w') || keys.has('arrowdown') || keys.has('s')))));
   const sprinting = keys.has('shift');
   const speed = (sprinting ? 370 : 240) * (currentPlace === 'bridge' && bridgeInMud(x + 50, bridgeDepth) ? .18 : 1);
+  const bridgeHorizontal = Number(keys.has('arrowright') || keys.has('d')) - Number(keys.has('arrowleft') || keys.has('a'));
+  const bridgeVertical = Number(keys.has('arrowup') || keys.has('w')) - Number(keys.has('arrowdown') || keys.has('s'));
+  const bridgeMoveScale = currentPlace === 'bridge' && bridgeHorizontal && bridgeVertical ? 1 / Math.hypot(1, .86) : 1;
   if (autoEscapingCave) {
     x = Math.max(10, x - 520 * dt);
     if (x <= 12) {
@@ -2105,7 +2120,7 @@ function loop(time) {
   }
   if (controlsEnabled && !(currentPlace === 'bridge' && bridgeMudReturn) && (keys.has('arrowright') || keys.has('d'))) {
     const activeWorldWidth = currentPlace === 'valparaiso' ? game.clientWidth * 3.2875 : currentPlace === 'cave' ? game.clientWidth * 6 : currentPlace === 'street' ? game.clientWidth * 1.6875 : currentPlace === 'valdivia' ? game.clientWidth * 4 : currentPlace === 'bridge' ? game.clientWidth * 2.4 : currentPlace === 'house' || currentPlace === 'museum' || currentPlace === 'plaza' || currentPlace === 'quinta' || currentPlace === 'station' ? game.clientWidth : worldWidth;
-    const nextX = Math.min(activeWorldWidth - 110, x + speed * dt);
+    const nextX = Math.min(activeWorldWidth - 110, x + speed * bridgeMoveScale * dt);
     if (currentPlace === 'bridge') stepAlongBridgeShore(nextX);
     else x = nextX;
     if (currentPlace === 'bridge') bridgeDirection = 'side';
@@ -2113,7 +2128,7 @@ function loop(time) {
     kuro.style.setProperty('--facing', facing);
   }
   if (controlsEnabled && !(currentPlace === 'bridge' && bridgeMudReturn) && (keys.has('arrowleft') || keys.has('a'))) {
-    const nextX = Math.max(10, x - speed * dt);
+    const nextX = Math.max(10, x - speed * bridgeMoveScale * dt);
     if (currentPlace === 'bridge') stepAlongBridgeShore(nextX);
     else x = nextX;
     if (currentPlace === 'bridge') bridgeDirection = 'side';
@@ -2121,15 +2136,16 @@ function loop(time) {
     kuro.style.setProperty('--facing', facing);
   }
   if (controlsEnabled && currentPlace === 'bridge' && !bridgeMudReturn) {
-    if (keys.has('arrowup') || keys.has('w')) {
-      const nextDepth = Math.min(bridgeTop(), bridgeDepth + speed * .86 * dt);
+    if (bridgeVertical > 0) {
+      const nextDepth = Math.min(bridgeTop(), bridgeDepth + speed * .86 * bridgeMoveScale * dt);
       if (bridgeOnPath(x, nextDepth)) bridgeDepth = nextDepth;
       bridgeDirection = 'back';
-    } else if (keys.has('arrowdown') || keys.has('s')) {
-      const nextDepth = Math.max(bridgeExitDepth(), bridgeDepth - speed * .86 * dt);
+    } else if (bridgeVertical < 0) {
+      const nextDepth = Math.max(bridgeExitDepth(), bridgeDepth - speed * .86 * bridgeMoveScale * dt);
       if (bridgeOnPath(x, nextDepth)) bridgeDepth = nextDepth;
       bridgeDirection = 'front';
     }
+    if (bridgeHorizontal && bridgeVertical) bridgeDirection = bridgeVertical > 0 ? 'diagonal-back' : 'diagonal-front';
   }
   if (currentPlace === 'bridge' && controlsEnabled && !transitioning && bridgeDepth <= bridgeExitDepth()) {
     keys.clear();
@@ -2234,7 +2250,7 @@ function loop(time) {
   kuro.style.setProperty('--jump-y', `${y}px`);
   kuro.style.setProperty('--bridge-depth', `${bridgeDepth}px`);
   updateCopoFollower(dt);
-  updateValdiviaVendor();
+  updateValdiviaVendor(time);
   const interaction = currentInteraction();
   if (interaction === 'bridge-log' && !bridgeLogTouched) {
     bridgeLogTouched = true;
@@ -2326,6 +2342,8 @@ function loop(time) {
   kuro.classList.toggle('jumping', !grounded);
   kuro.classList.toggle('back-facing', currentPlace === 'bridge' && bridgeDirection === 'back');
   kuro.classList.toggle('front-facing', currentPlace === 'bridge' && bridgeDirection === 'front');
+  kuro.classList.toggle('diagonal-back', currentPlace === 'bridge' && bridgeDirection === 'diagonal-back');
+  kuro.classList.toggle('diagonal-front', currentPlace === 'bridge' && bridgeDirection === 'diagonal-front');
   kuro.classList.toggle('running', grounded && moving);
   kuro.classList.toggle('interact', grounded && !moving && !dialogue.hidden);
   kuro.classList.toggle('chair-reading', sittingInChair);
