@@ -125,6 +125,8 @@ let valdiviaTracksFound = localStorage.getItem('kuro-valdivia-tracks-v1') === 'f
 let valdiviaPassageFound = localStorage.getItem('kuro-valdivia-passage-v1') === 'found';
 let valdiviaBridgeCrossed = localStorage.getItem('kuro-valdivia-bridge-v1') === 'crossed';
 let valdiviaFamilyHelped = localStorage.getItem('kuro-valdivia-family-v1') === 'helped';
+let copoFollowing = localStorage.getItem('kuro-valdivia-copo-following-v1') === 'yes' || valdiviaTracksFound;
+let copoWorldX = null;
 let sittingInChair = false;
 let sittingOnBench = null;
 let autoEscapingCave = false;
@@ -1652,7 +1654,6 @@ function currentInteraction() {
   if (currentPlace === 'valdivia' && x <= 145) return 'take-return-train';
   if (currentPlace === 'valdivia' && Math.abs(x + 50 - valdiviaBenchCenter('promenade')) < 68) return 'sit-bench-promenade';
   if (currentPlace === 'valdivia' && Math.abs(x + 50 - valdiviaBenchCenter('island')) < 68) return 'sit-bench-island';
-  if (currentPlace === 'valdivia' && Math.abs(x + 50 - (valdiviaCopo.parentElement.offsetLeft + valdiviaCopo.offsetLeft + valdiviaCopo.offsetWidth / 2)) < 85) return 'talk-copo';
   if (currentPlace === 'valdivia' && valdiviaBridgeCrossed &&
     x >= game.clientWidth * 2.94 && x <= game.clientWidth * 3.04) return 'return-bridge';
   if (currentPlace === 'valdivia' && Math.abs(x + 50 - valdiviaVendorCenter()) < 80) return 'talk-vendor';
@@ -1675,11 +1676,34 @@ function currentInteraction() {
     if (clueIndex !== -1) return `bridge-clue-${clueIndex}`;
   }
   if (currentPlace === 'valdivia' && x >= game.clientWidth * 1.80 && x <= game.clientWidth * 2.03) return 'look-river';
+  if (currentPlace === 'valdivia' && Math.abs(x + 50 - (valdiviaCopo.offsetLeft + valdiviaCopo.offsetWidth / 2)) < 85) return 'talk-copo';
   if (currentPlace === 'valparaiso' && x >= game.clientWidth * 1.24 && x <= game.clientWidth * 1.56) return 'talk-tizne';
   if (currentPlace === 'valparaiso' && x >= game.clientWidth * 2.60 && x <= game.clientWidth * 2.90) return 'talk-bruma';
   const bellCenterX = game.clientWidth * 6 * 0.944 + 15;
   if (currentPlace === 'cave' && !caveBellCollected && Math.abs(x + 45 - bellCenterX) <= 115) return 'collect-bell';
   return null;
+}
+
+function startCopoFollowing(appearBesideKuro = false) {
+  if (copoFollowing) return;
+  copoFollowing = true;
+  localStorage.setItem('kuro-valdivia-copo-following-v1', 'yes');
+  scene.classList.add('copo-following');
+  copoWorldX = appearBesideKuro ? Math.max(10, x - 65) : valdiviaCopo.offsetLeft;
+  valdiviaCopo.style.left = `${copoWorldX}px`;
+}
+
+function updateCopoFollower(dt) {
+  if (!copoFollowing || (currentPlace !== 'valdivia' && currentPlace !== 'bridge')) return;
+  const worldWidth = game.clientWidth * (currentPlace === 'bridge' ? 2.4 : 4);
+  const targetX = Math.max(10, Math.min(worldWidth - 82, x + (facing === 1 ? -70 : 100)));
+  if (copoWorldX === null) copoWorldX = targetX;
+  const gap = targetX - copoWorldX;
+  const walking = Math.abs(gap) > 8;
+  if (walking) copoWorldX += Math.sign(gap) * Math.min(Math.abs(gap), 430 * dt);
+  valdiviaCopo.style.left = `${copoWorldX}px`;
+  valdiviaCopo.classList.toggle('walking', walking);
+  if (currentPlace === 'bridge') valdiviaCopo.style.setProperty('--copo-depth', `${bridgeDepth + y}px`);
 }
 
 function changeLocation(nextLocation, entry = 'default') {
@@ -1713,6 +1737,7 @@ function changeLocation(nextLocation, entry = 'default') {
     scene.classList.toggle('valparaiso', atValparaiso);
     scene.classList.toggle('valdivia', atValdivia);
     scene.classList.toggle('bridge', atBridge);
+    scene.classList.toggle('copo-following', copoFollowing);
     scene.classList.toggle('valdivia-passage-found', valdiviaPassageFound);
     scene.classList.toggle('valdivia-family-helped', valdiviaFamilyHelped);
     scene.classList.toggle('cave', atCave);
@@ -1738,10 +1763,15 @@ function changeLocation(nextLocation, entry = 'default') {
     else if (atMuseum) x = 170;
     else if (atStation) x = entry === 'at-estafeta' ? game.clientWidth * 0.23 : entry === 'at-train' ? game.clientWidth * 0.58 : entry === 'from-route' ? game.clientWidth - 150 : 120;
     else if (atValparaiso) x = entry === 'at-train' ? 95 : entry === 'from-map' ? game.clientWidth * 0.24 : entry === 'at-tizne' ? game.clientWidth * 1.34 : entry === 'at-hills' ? game.clientWidth * 1.60 : entry === 'at-lower-hills' ? game.clientWidth * 2.07 : entry === 'at-mid-hills' ? game.clientWidth * 2.44 : entry === 'at-bruma' ? game.clientWidth * 2.62 : entry === 'at-cave' ? game.clientWidth * 3.12 : entry === 'at-connector' ? game.clientWidth * 0.82 : entry === 'at-station-seam' ? game.clientWidth * 0.56 : entry === 'at-plaza-seam' ? game.clientWidth * 1.12 : 160;
-    else if (atValdivia) x = entry === 'at-coipo' ? game.clientWidth * 1.36 : entry === 'at-pier' ? game.clientWidth * 1.83 : entry === 'at-market' ? game.clientWidth * 2.32 : entry === 'at-vendor' ? valdiviaVendorCenter() - 125 : entry === 'at-passage' ? game.clientWidth * 2.82 : entry === 'at-island' ? game.clientWidth * 3.63 : game.clientWidth * 0.22;
+    else if (atValdivia) x = entry === 'at-coipo' ? valdiviaCopo.offsetLeft + valdiviaCopo.offsetWidth / 2 - 110 : entry === 'at-pier' ? game.clientWidth * 1.83 : entry === 'at-market' ? game.clientWidth * 2.32 : entry === 'at-vendor' ? valdiviaVendorCenter() - 125 : entry === 'at-passage' ? game.clientWidth * 2.82 : entry === 'at-island' ? game.clientWidth * 3.63 : game.clientWidth * 0.22;
     else if (atBridge) x = entry === 'at-log' ? game.clientWidth * 1.05 - 50 : entry === 'at-mud' ? game.clientWidth * 1.45 - 50 : entry === 'at-refuge' ? game.clientWidth * 1.56 - 50 : entry === 'from-island' ? game.clientWidth * 1.54 - 50 : game.clientWidth * .50 - 50;
     else if (atCave) x = entry === 'at-goat' ? game.clientWidth * (caveBellCollected ? 3.08 : 2.72) : entry === 'at-sea-lion' ? game.clientWidth * 4.65 : entry === 'at-dog' ? game.clientWidth * 1.05 : entry === 'at-middle' ? game.clientWidth * 3.75 : entry === 'at-bird' ? game.clientWidth * .54 : entry === 'at-bell' ? game.clientWidth * 5.67 : 185;
     else x = entry === 'from-quinta' ? game.clientWidth * 1.6875 - 150 : entry === 'from-museum' ? game.clientWidth * 1.29 : entry === 'at-museum' ? game.clientWidth * 1.40 : entry === 'at-quinta' ? game.clientWidth * 1.20 : entry === 'at-mota' ? game.clientWidth * 0.36 : entry === 'at-plaza' ? game.clientWidth * 0.86 : entry === 'at-neighborhood' ? game.clientWidth * 0.46 : entry === 'at-seam' ? game.clientWidth * 0.90 : game.clientWidth * 0.14;
+    if (atValdivia || atBridge) {
+      copoWorldX = copoFollowing ? Math.max(10, x - 65) : null;
+      valdiviaCopo.style.left = copoFollowing ? `${copoWorldX}px` : '';
+      valdiviaCopo.classList.remove('walking');
+    }
     y = 0;
     velocityY = 0;
     grounded = true;
@@ -1920,7 +1950,7 @@ addEventListener('keydown', (event) => {
       ['Copo', valdiviaFamilyHelped ? '¡La familia ya tiene dónde refugiarse! Gracias por ayudarme, Kuro.' : 'Soy Copo. ¿Ves mi gorro? Me gustan tanto los coipos que lo hice yo mismo.'],
       ['Kuro', valdiviaFamilyHelped ? 'Me alegra haber seguido esas huellitas.' : 'Me gusta. ¿Me acompañas a conocer la feria?'],
       ['Copo', valdiviaFamilyHelped ? 'Cuando llueva, estarán protegidos bajo los juncos.' : 'Claro. Hay unas huellas raras por ahí y todos bromean con que son mías.']
-    ]);
+    ], () => startCopoFollowing());
     if (interaction === 'talk-vendor') startDialogue([
       ['Pudú feriante', '¡Bienvenido a la feria! Tengo manzanas y flores. Si ves huellitas cerca del puesto, síguelas hacia el puente.'],
       ['Kuro', 'Qué lindo gorrito. ¿Lo usas todos los días?'],
@@ -1928,6 +1958,7 @@ addEventListener('keydown', (event) => {
     ]);
     if (interaction === 'look-river') startDialogue([['Kuro', 'Desde este muelle se ve hasta la otra orilla. Me pregunto qué habrá más allá.']]);
     if (interaction === 'inspect-tracks') {
+      startCopoFollowing(true);
       valdiviaTracksFound = true;
       localStorage.setItem('kuro-valdivia-tracks-v1', 'found');
       startDialogue([
@@ -2163,6 +2194,7 @@ function loop(time) {
   kuro.style.left = `${x}px`;
   kuro.style.setProperty('--jump-y', `${y}px`);
   kuro.style.setProperty('--bridge-depth', `${bridgeDepth}px`);
+  updateCopoFollower(dt);
   const interaction = currentInteraction();
   if (interaction === 'bridge-log' && !bridgeLogTouched) {
     bridgeLogTouched = true;

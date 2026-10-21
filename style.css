@@ -266,13 +266,14 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .scene.valdivia { width: calc(min(100vw, 1100px) * 4); overflow: visible; }
 .valdivia-layer { display: none; position: absolute; inset: 0; z-index: 1; overflow: hidden; background: #89aeb0 url('assets/valdivia-riverside-background-v1.webp') left 38% / 50% auto no-repeat; }
 .valdivia-layer::before { content: ''; position: absolute; left: 50%; top: 0; width: 50%; height: 100%; background: url('assets/valdivia-riverside-background-v1.webp') center 38% / 100% auto no-repeat; transform: scaleX(-1); pointer-events: none; }
-.scene.valdivia > :not(.valdivia-layer):not(.kuro) { display: none; }
+.scene.valdivia > :not(.valdivia-layer):not(.kuro):not(.valdivia-copo) { display: none; }
 .scene.valdivia .exterior-layer, .scene.valdivia .interior-layer, .scene.valdivia .plaza-layer, .scene.valdivia .quinta-layer, .scene.valdivia .museum-layer, .scene.valdivia .station-layer, .scene.valdivia .valparaiso-layer, .scene.valdivia .cave-layer { display: none; }
 .scene.valdivia .valdivia-layer { display: block; }
 .scene.valdivia .kuro { --kuro-scale: .76; bottom: calc(15% - 36px + var(--run-lift, 0px) + var(--jump-y, 0px)); }
 .scene.bridge { width: calc(min(100vw, 1100px) * 2.4); height: 650%; bottom: auto; overflow: hidden; }
-.scene.bridge > :not(.bridge-climb-layer):not(.kuro) { display: none; }
+.scene.bridge > :not(.bridge-climb-layer):not(.kuro):not(.valdivia-copo) { display: none; }
 .scene.bridge .bridge-climb-layer { display: block; }
+.scene.bridge.copo-following .valdivia-copo { display: block; bottom: calc(4% + 4px + var(--copo-depth, 0px)); }
 .scene.bridge .kuro { --kuro-scale: .76; bottom: calc(4% - 12px + var(--bridge-depth, 0px) + var(--run-lift, 0px) + var(--jump-y, 0px) - var(--mud-sink, 0px)); }
 .scene.bridge .kuro.back-facing { bottom: calc(4% - 9px + var(--bridge-depth, 0px) + var(--jump-y, 0px) - var(--mud-sink, 0px)); background-image: url('assets/kuro-back-walk-v3.png'); background-size: 100% 100%; background-position: center; transform: scale(var(--kuro-scale, .76)); }
 .scene.bridge .kuro.back-facing.running { animation: bridge-back-walk .64s steps(1, end) infinite; }
@@ -363,7 +364,9 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .market-walkway, .island-walkway { left: 0; right: 0; bottom: 0; height: 18%; }
 .valdivia-market::after { content: ''; position: absolute; z-index: 5; right: 0; bottom: 0; width: 8px; height: 18%; background: #cab890 url('assets/valdivia-riverside-paving-v1.webp') right top / min(100vw, 1100px) 100% no-repeat; pointer-events: none; }
 .market-stalls { left: 4%; bottom: calc(18% - 16px); z-index: 3; width: min(64%, 500px); aspect-ratio: 2 / 1; background: url('assets/valdivia-market-stalls-v4.png') center bottom / contain no-repeat; image-rendering: pixelated; filter: saturate(.9) drop-shadow(3px 5px 3px #324a3b66); pointer-events: none; }
-.market-vendor { left: calc(4% + min(64%, 500px) - 48px); bottom: calc(18% - 35px); z-index: 4; width: clamp(80px, 10vw, 110px); aspect-ratio: 1199 / 1312; background: url('assets/valdivia-pudu-vendor-v1.png') center bottom / contain no-repeat; image-rendering: pixelated; filter: drop-shadow(1px 3px 0 #493b3266); pointer-events: none; }
+.market-vendor { left: 22%; bottom: calc(18% - 7px); z-index: 4; width: clamp(100px, 10vw, 115px); aspect-ratio: 1199 / 1312; background: url('assets/valdivia-pudu-vendor-v1.png') center bottom / contain no-repeat; image-rendering: pixelated; filter: drop-shadow(1px 3px 0 #493b3266); pointer-events: none; animation: market-vendor-idle 3.2s steps(1, end) infinite; }
+.market-stalls-front { left: 4%; bottom: calc(18% - 16px); z-index: 5; width: min(64%, 500px); aspect-ratio: 2 / 1; background: url('assets/valdivia-market-stalls-v4.png') center bottom / contain no-repeat; image-rendering: pixelated; clip-path: inset(80% 0 0); pointer-events: none; }
+@keyframes market-vendor-idle { 0%, 45%, 100% { translate: 0 0; } 20%, 35% { translate: 0 -2px; } 65% { translate: 1px 0; } }
 .market-tracks { z-index: 4; left: 37%; bottom: 8%; width: 26px; height: 32px; background: url('assets/coipo-track-hind-v1.svg') center / contain no-repeat; opacity: .66; transform: rotate(39deg); pointer-events: none; }
 .market-tracks::before, .market-tracks::after { content: ''; position: absolute; width: 20px; height: 26px; background: inherit; }
 .market-tracks::before { left: 60px; top: -14px; transform: rotate(-19deg); }
@@ -396,7 +399,10 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .valdivia-traveler { left: -85px; bottom: calc(18% - 41px); width: 75px; height: 100px; z-index: 4; opacity: 0; background: url('assets/valdivia-crow-traveler-walk-v4.png') 0 0 / 400% 100% no-repeat; image-rendering: pixelated; filter: drop-shadow(1px 3px 2px #253b4366); pointer-events: none; animation: valdivia-traveler-roam 240s linear -45s infinite, valdivia-traveler-steps .64s steps(1, end) -45s infinite; }
 @keyframes valdivia-traveler-roam { 0% { left: -85px; opacity: 0; } 2%, 63% { opacity: 1; } 65% { left: calc(100% + 85px); opacity: 0; } 100% { left: calc(100% + 85px); opacity: 0; } }
 @keyframes valdivia-traveler-steps { 0%, 24.99% { background-position: 0 0; } 25%, 49.99% { background-position: 33.333% 0; } 50%, 74.99% { background-position: 66.667% 0; } 75%, 100% { background-position: 100% 0; } }
-.valdivia-copo { left: calc(77% - 36px); bottom: calc(18% - 35px); width: 72px; height: 86px; z-index: 4; background: url('assets/copo-idle-v2.png') center bottom / contain no-repeat; image-rendering: pixelated; filter: drop-shadow(0 4px 0 #2d484888); animation: copo-idle 3.4s steps(1, end) infinite; }
+.valdivia-copo { display: none; position: absolute; left: calc(38.5% - 36px); bottom: calc(18% - 35px); width: 72px; height: 86px; z-index: 4; background: url('assets/copo-idle-v2.png') center bottom / contain no-repeat; image-rendering: pixelated; filter: drop-shadow(0 4px 0 #2d484888); animation: copo-idle 3.4s steps(1, end) infinite; }
+.scene.valdivia .valdivia-copo { display: block; }
+.valdivia-copo.walking { animation: copo-walk .38s steps(1, end) infinite; }
+@keyframes copo-walk { 50% { translate: 0 -2px; } }
 .scene.valdivia .kuro.bench-sitting { --kuro-scale: 1; bottom: calc(18% + 9px); background-image: url('assets/kuro-bench-sitting-v1.png'); background-size: 75px auto; background-position: center bottom !important; transform: none; }
 @keyframes copo-idle { 50% { transform: translateY(-1px); } }
 .location-label { position: absolute; z-index: 7; top: 48px; left: 50%; translate: -50% 0; padding: 7px 16px; border-radius: 20px; background: #fff4d6d9; color: #6a4840; font-weight: bold; opacity: .9; }
@@ -637,7 +643,7 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
   .game.cave-active .cave-claw:not([hidden]) { display: block; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .street-atmosphere i, .plaza-atmosphere i, .window-sunbeam, .window-petals i, .dust-motes i, .album-sparkle, .zone-node, .bell-awakening, .kuro.double-jump::before, .soot-dog, .soot-bird, .bridge-water-glint, .bridge-mud-bubble, .bridge-sinking-mud::after, .valdivia-copo { animation: none; }
+  .street-atmosphere i, .plaza-atmosphere i, .window-sunbeam, .window-petals i, .dust-motes i, .album-sparkle, .zone-node, .bell-awakening, .kuro.double-jump::before, .soot-dog, .soot-bird, .bridge-water-glint, .bridge-mud-bubble, .bridge-sinking-mud::after, .valdivia-copo, .market-vendor { animation: none; }
   .bridge-mud-hint { transition: none; }
 }
 
