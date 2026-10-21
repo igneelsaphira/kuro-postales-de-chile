@@ -127,6 +127,7 @@ let valdiviaBridgeCrossed = localStorage.getItem('kuro-valdivia-bridge-v1') === 
 let valdiviaFamilyHelped = localStorage.getItem('kuro-valdivia-family-v1') === 'helped';
 let copoFollowing = localStorage.getItem('kuro-valdivia-copo-following-v1') === 'yes' || valdiviaTracksFound;
 let copoWorldX = null;
+let copoWalkHold = 0;
 let sittingInChair = false;
 let sittingOnBench = null;
 let autoEscapingCave = false;
@@ -1694,13 +1695,14 @@ function updateCopoFollower(dt) {
   const targetX = Math.max(10, Math.min(worldWidth - 82, x + (facing === 1 ? -70 : 100)));
   if (copoWorldX === null) copoWorldX = targetX;
   const gap = targetX - copoWorldX;
-  const walking = Math.abs(gap) > 0.5;
-  if (walking) {
+  const moved = Math.abs(gap) > 0.5;
+  if (moved) {
     valdiviaCopo.style.setProperty('--copo-facing', gap < 0 ? -1 : 1);
     copoWorldX += Math.sign(gap) * Math.min(Math.abs(gap), 430 * dt);
   }
+  copoWalkHold = moved ? 0.16 : Math.max(0, copoWalkHold - dt);
   valdiviaCopo.style.left = `${copoWorldX}px`;
-  valdiviaCopo.classList.toggle('walking', walking);
+  valdiviaCopo.classList.toggle('walking', copoWalkHold > 0);
   if (currentPlace === 'bridge') valdiviaCopo.style.setProperty('--copo-depth', `${bridgeDepth + y}px`);
 }
 
