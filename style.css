@@ -269,7 +269,7 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .scene.valdivia > :not(.valdivia-layer):not(.kuro) { display: none; }
 .scene.valdivia .exterior-layer, .scene.valdivia .interior-layer, .scene.valdivia .plaza-layer, .scene.valdivia .quinta-layer, .scene.valdivia .museum-layer, .scene.valdivia .station-layer, .scene.valdivia .valparaiso-layer, .scene.valdivia .cave-layer { display: none; }
 .scene.valdivia .valdivia-layer { display: block; }
-.scene.valdivia .kuro { --kuro-scale: .76; bottom: calc(15% - 15px + var(--run-lift, 0px) + var(--jump-y, 0px)); }
+.scene.valdivia .kuro { --kuro-scale: .76; bottom: calc(15% - 36px + var(--run-lift, 0px) + var(--jump-y, 0px)); }
 .scene.bridge { width: calc(min(100vw, 1100px) * 2.4); height: 650%; bottom: auto; overflow: hidden; }
 .scene.bridge > :not(.bridge-climb-layer):not(.kuro) { display: none; }
 .scene.bridge .bridge-climb-layer { display: block; }
@@ -392,10 +392,10 @@ body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
 .valdivia-lamp { bottom: calc(18% - 10px); width: 70px; height: 210px; z-index: 3; transform: translateX(-35%); background: url('assets/valdivia-riverside-lamp-v1.png') center bottom / contain no-repeat; image-rendering: pixelated; filter: drop-shadow(2px 4px 3px #254b4266); pointer-events: none; }
 .lamp-one { left: 45%; }.lamp-two { left: 82%; }
 .valdivia-bench { left: 60%; bottom: calc(18% - 22px); width: 160px; height: 90px; z-index: 1; background: url('assets/valdivia-riverside-bench-v2.png') center bottom / contain no-repeat; image-rendering: pixelated; filter: drop-shadow(2px 3px 2px #254b4266); pointer-events: none; }
-.valdivia-traveler { left: 10%; bottom: calc(18% - 18px); width: 75px; height: 100px; z-index: 4; opacity: 0; background: url('assets/valdivia-crow-traveler-walk-v4.png') 0 0 / 400% 100% no-repeat; image-rendering: pixelated; filter: drop-shadow(1px 3px 2px #253b4366); pointer-events: none; animation: valdivia-traveler-roam 90s linear -10s infinite, valdivia-traveler-steps .64s steps(1, end) -10s infinite; }
-@keyframes valdivia-traveler-roam { 0% { left: 10%; opacity: 0; transform: scaleX(1); } 3%, 22% { opacity: 1; } 25%, 49.99% { left: 100%; opacity: 0; transform: scaleX(1); } 50% { left: 100%; opacity: 0; transform: scaleX(-1); } 53%, 72% { opacity: 1; } 75%, 99.99% { left: 10%; opacity: 0; transform: scaleX(-1); } 100% { left: 10%; opacity: 0; transform: scaleX(1); } }
+.valdivia-traveler { left: -85px; bottom: calc(18% - 41px); width: 75px; height: 100px; z-index: 4; opacity: 0; background: url('assets/valdivia-crow-traveler-walk-v4.png') 0 0 / 400% 100% no-repeat; image-rendering: pixelated; filter: drop-shadow(1px 3px 2px #253b4366); pointer-events: none; animation: valdivia-traveler-roam 240s linear -45s infinite, valdivia-traveler-steps .64s steps(1, end) -45s infinite; }
+@keyframes valdivia-traveler-roam { 0% { left: -85px; opacity: 0; } 2%, 63% { opacity: 1; } 65% { left: calc(100% + 85px); opacity: 0; } 100% { left: calc(100% + 85px); opacity: 0; } }
 @keyframes valdivia-traveler-steps { 0%, 24.99% { background-position: 0 0; } 25%, 49.99% { background-position: 33.333% 0; } 50%, 74.99% { background-position: 66.667% 0; } 75%, 100% { background-position: 100% 0; } }
-.valdivia-copo { left: calc(77% - 36px); bottom: calc(18% - 12px); width: 72px; height: 86px; z-index: 4; background: url('assets/copo-idle-v2.png') center bottom / contain no-repeat; image-rendering: pixelated; filter: drop-shadow(0 4px 0 #2d484888); animation: copo-idle 3.4s steps(1, end) infinite; }
+.valdivia-copo { left: calc(77% - 36px); bottom: calc(18% - 35px); width: 72px; height: 86px; z-index: 4; background: url('assets/copo-idle-v2.png') center bottom / contain no-repeat; image-rendering: pixelated; filter: drop-shadow(0 4px 0 #2d484888); animation: copo-idle 3.4s steps(1, end) infinite; }
 .scene.valdivia .kuro.bench-sitting { --kuro-scale: 1; bottom: calc(18% + 9px); background-image: url('assets/kuro-bench-sitting-v1.png'); background-size: 75px auto; background-position: center bottom !important; transform: none; }
 @keyframes copo-idle { 50% { transform: translateY(-1px); } }
 .location-label { position: absolute; z-index: 7; top: 48px; left: 50%; translate: -50% 0; padding: 7px 16px; border-radius: 20px; background: #fff4d6d9; color: #6a4840; font-weight: bold; opacity: .9; }
