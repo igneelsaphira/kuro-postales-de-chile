@@ -127,7 +127,7 @@ let valdiviaBridgeCrossed = localStorage.getItem('kuro-valdivia-bridge-v1') === 
 let valdiviaFamilyHelped = localStorage.getItem('kuro-valdivia-family-v1') === 'helped';
 let copoFollowing = localStorage.getItem('kuro-valdivia-copo-following-v1') === 'yes' || valdiviaTracksFound;
 let copoWorldX = null;
-let copoWalkHold = 0;
+let copoChasing = false;
 let sittingInChair = false;
 let sittingOnBench = null;
 let autoEscapingCave = false;
@@ -1686,23 +1686,23 @@ function startCopoFollowing(appearBesideKuro = false) {
   localStorage.setItem('kuro-valdivia-copo-following-v1', 'yes');
   scene.classList.add('copo-following');
   copoWorldX = appearBesideKuro ? Math.max(10, x - 65) : valdiviaCopo.offsetLeft;
+  copoChasing = false;
   valdiviaCopo.style.left = `${copoWorldX}px`;
 }
 
 function updateCopoFollower(dt) {
   if (!copoFollowing || (currentPlace !== 'valdivia' && currentPlace !== 'bridge')) return;
   const worldWidth = game.clientWidth * (currentPlace === 'bridge' ? 2.4 : 4);
-  const targetX = Math.max(10, Math.min(worldWidth - 82, x + (facing === 1 ? -70 : 100)));
-  if (copoWorldX === null) copoWorldX = targetX;
-  const gap = targetX - copoWorldX;
-  const moved = Math.abs(gap) > 0.5;
-  if (moved) {
-    valdiviaCopo.style.setProperty('--copo-facing', gap < 0 ? -1 : 1);
-    copoWorldX += Math.sign(gap) * Math.min(Math.abs(gap), 430 * dt);
-  }
-  copoWalkHold = moved ? 0.16 : Math.max(0, copoWalkHold - dt);
+  if (copoWorldX === null) copoWorldX = Math.max(10, x - 65);
+  const gap = x + 50 - (copoWorldX + 36);
+  const distance = Math.abs(gap);
+  if (distance > 145) copoChasing = true;
+  if (distance <= 92) copoChasing = false;
+  const step = copoChasing ? Math.min(Math.max(0, distance - 92), 430 * dt) : 0;
+  if (step > 0.5) copoWorldX = Math.max(10, Math.min(worldWidth - 82, copoWorldX + Math.sign(gap) * step));
+  valdiviaCopo.style.setProperty('--copo-facing', step > 0.5 ? Math.sign(gap) : facing);
   valdiviaCopo.style.left = `${copoWorldX}px`;
-  valdiviaCopo.classList.toggle('walking', copoWalkHold > 0);
+  valdiviaCopo.classList.toggle('walking', step > 0.5);
   if (currentPlace === 'bridge') valdiviaCopo.style.setProperty('--copo-depth', `${bridgeDepth + y}px`);
 }
 
@@ -1769,6 +1769,7 @@ function changeLocation(nextLocation, entry = 'default') {
     else x = entry === 'from-quinta' ? game.clientWidth * 1.6875 - 150 : entry === 'from-museum' ? game.clientWidth * 1.29 : entry === 'at-museum' ? game.clientWidth * 1.40 : entry === 'at-quinta' ? game.clientWidth * 1.20 : entry === 'at-mota' ? game.clientWidth * 0.36 : entry === 'at-plaza' ? game.clientWidth * 0.86 : entry === 'at-neighborhood' ? game.clientWidth * 0.46 : entry === 'at-seam' ? game.clientWidth * 0.90 : game.clientWidth * 0.14;
     if (atValdivia || atBridge) {
       copoWorldX = copoFollowing ? Math.max(10, x - 65) : null;
+      copoChasing = false;
       valdiviaCopo.style.left = copoFollowing ? `${copoWorldX}px` : '';
       valdiviaCopo.classList.remove('walking');
     }
@@ -1947,8 +1948,8 @@ addEventListener('keydown', (event) => {
     }
     if (interaction === 'talk-bruma') talkToBruma();
     if (interaction === 'talk-copo') startDialogue([
-      ['Copo', valdiviaFamilyHelped ? '¡La familia ya tiene dónde refugiarse! Gracias por ayudarme, Kuro.' : 'Soy Copo. ¿Ves mi gorro? Me gustan tanto los coipos que lo hice yo mismo.'],
-      ['Kuro', valdiviaFamilyHelped ? 'Me alegra haber seguido esas huellitas.' : 'Me gusta. ¿Me acompañas a conocer la feria?'],
+      ['Copo', valdiviaFamilyHelped ? '¡La familia ya tiene dónde refugiarse! Gracias por ayudarme, Kuro.' : 'Hola, soy Copo. ¿De dónde vienes?'],
+      ['Kuro', valdiviaFamilyHelped ? 'Me alegra haber seguido esas huellitas.' : 'Vengo de Santiago. ¿Me acompañas a conocer la feria?'],
       ['Copo', valdiviaFamilyHelped ? 'Cuando llueva, estarán protegidos bajo los juncos.' : 'Claro. Hay unas huellas raras por ahí y todos bromean con que son mías.']
     ], () => startCopoFollowing());
     if (interaction === 'look-river') startDialogue([['Kuro', 'Desde este muelle se ve hasta la otra orilla. Me pregunto qué habrá más allá.']]);
