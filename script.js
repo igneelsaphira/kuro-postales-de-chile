@@ -1694,8 +1694,11 @@ function updateCopoFollower(dt) {
   const targetX = Math.max(10, Math.min(worldWidth - 82, x + (facing === 1 ? -70 : 100)));
   if (copoWorldX === null) copoWorldX = targetX;
   const gap = targetX - copoWorldX;
-  const walking = Math.abs(gap) > 8;
-  if (walking) copoWorldX += Math.sign(gap) * Math.min(Math.abs(gap), 430 * dt);
+  const walking = Math.abs(gap) > 0.5;
+  if (walking) {
+    valdiviaCopo.style.setProperty('--copo-facing', gap < 0 ? -1 : 1);
+    copoWorldX += Math.sign(gap) * Math.min(Math.abs(gap), 430 * dt);
+  }
   valdiviaCopo.style.left = `${copoWorldX}px`;
   valdiviaCopo.classList.toggle('walking', walking);
   if (currentPlace === 'bridge') valdiviaCopo.style.setProperty('--copo-depth', `${bridgeDepth + y}px`);
