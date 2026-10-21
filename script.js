@@ -1191,17 +1191,13 @@ const portraitSheets = {
   },
   Copo: {
     neutral: 'assets/copo-dialogue-v2.png'
-  },
-  'Pudú feriante': {
-    neutral: 'assets/valdivia-pudu-vendor-v1.png'
   }
 };
 const npcPortraits = {
   Mota: portraitSheets.Mota.neutral,
   Tizne: portraitSheets.Tizne.neutral,
   'Doña Bruma': portraitSheets['Doña Bruma'].neutral,
-  Copo: portraitSheets.Copo.neutral,
-  'Pudú feriante': portraitSheets['Pudú feriante'].neutral
+  Copo: portraitSheets.Copo.neutral
 };
 
 const portraitEmotionState = {
@@ -1656,7 +1652,6 @@ function currentInteraction() {
   if (currentPlace === 'valdivia' && Math.abs(x + 50 - valdiviaBenchCenter('island')) < 68) return 'sit-bench-island';
   if (currentPlace === 'valdivia' && valdiviaBridgeCrossed &&
     x >= game.clientWidth * 2.94 && x <= game.clientWidth * 3.04) return 'return-bridge';
-  if (currentPlace === 'valdivia' && Math.abs(x + 50 - valdiviaVendorCenter()) < 80) return 'talk-vendor';
   if (currentPlace === 'valdivia' && x >= game.clientWidth * 2.2 && x <= game.clientWidth * 2.52) return 'inspect-tracks';
   if (currentPlace === 'valdivia' && x >= game.clientWidth * 2.72 && x <= game.clientWidth * 3.05) return 'inspect-passage';
   if (currentPlace === 'bridge' && bridgeDepth >= bridgeTop() - 24) return 'cross-bridge';
@@ -1951,11 +1946,6 @@ addEventListener('keydown', (event) => {
       ['Kuro', valdiviaFamilyHelped ? 'Me alegra haber seguido esas huellitas.' : 'Me gusta. ¿Me acompañas a conocer la feria?'],
       ['Copo', valdiviaFamilyHelped ? 'Cuando llueva, estarán protegidos bajo los juncos.' : 'Claro. Hay unas huellas raras por ahí y todos bromean con que son mías.']
     ], () => startCopoFollowing());
-    if (interaction === 'talk-vendor') startDialogue([
-      ['Pudú feriante', '¡Bienvenido a la feria! Tengo manzanas y flores. Si ves huellitas cerca del puesto, síguelas hacia el puente.'],
-      ['Kuro', 'Qué lindo gorrito. ¿Lo usas todos los días?'],
-      ['Pudú feriante', '¡Hasta cuando llueve! Así todos saben dónde encontrar mi puesto.']
-    ]);
     if (interaction === 'look-river') startDialogue([['Kuro', 'Desde este muelle se ve hasta la otra orilla. Me pregunto qué habrá más allá.']]);
     if (interaction === 'inspect-tracks') {
       startCopoFollowing(true);
@@ -2236,7 +2226,6 @@ function loop(time) {
     'talk-tizne': 'Hablar con Tizne',
     'talk-bruma': brumaBellReturned ? 'Hablar con Doña Bruma' : caveBellCollected ? 'Devolver el cascabel' : 'Hablar con Doña Bruma',
     'talk-copo': 'Hablar con Copo',
-    'talk-vendor': 'Hablar con el feriante',
     'look-river': 'Mirar el río',
     'inspect-tracks': valdiviaTracksFound ? 'Mirar las huellas' : 'Investigar huellitas',
     'inspect-passage': valdiviaPassageFound ? 'Entrar a la subida' : 'Investigar bajo el puente',
