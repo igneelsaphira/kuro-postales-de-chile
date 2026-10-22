@@ -196,6 +196,7 @@ let valdiviaFamilyHelped = localStorage.getItem('kuro-valdivia-family-v1') === '
 let copoFollowing = localStorage.getItem('kuro-valdivia-copo-following-v1') === 'yes' || valdiviaTracksFound;
 let copoWorldX = null;
 let copoChasing = false;
+let copoFacing = 1;
 let copoBenchSide = -1;
 let vendorAttentionTarget = null;
 let vendorFacing = 1;
@@ -1762,6 +1763,7 @@ function startCopoFollowing(appearBesideKuro = false) {
   scene.classList.add('copo-following');
   copoWorldX = appearBesideKuro ? Math.max(10, x - 65) : valdiviaCopo.offsetLeft;
   copoChasing = false;
+  copoFacing = Math.sign(x + 50 - (copoWorldX + 36)) || 1;
   valdiviaCopo.style.left = `${copoWorldX}px`;
 }
 
@@ -1777,7 +1779,8 @@ function updateCopoFollower(dt) {
     copoWorldX += Math.sign(gap) * step;
     copoChasing = false;
     valdiviaCopo.style.left = `${copoWorldX}px`;
-    valdiviaCopo.style.setProperty('--copo-facing', step > 0.5 ? Math.sign(gap) : -copoBenchSide);
+    copoFacing = step > 0.5 ? Math.sign(gap) : -copoBenchSide;
+    valdiviaCopo.style.setProperty('--copo-facing', copoFacing);
     valdiviaCopo.classList.toggle('walking', step > 0.5);
     return;
   }
@@ -1787,7 +1790,8 @@ function updateCopoFollower(dt) {
   if (distance <= 92) copoChasing = false;
   const step = copoChasing ? Math.min(Math.max(0, distance - 92), 430 * dt) : 0;
   if (step > 0.5) copoWorldX = Math.max(10, Math.min(worldWidth - 82, copoWorldX + Math.sign(gap) * step));
-  valdiviaCopo.style.setProperty('--copo-facing', step > 0.5 ? Math.sign(gap) : facing);
+  if (step > 0.5) copoFacing = Math.sign(gap);
+  valdiviaCopo.style.setProperty('--copo-facing', copoFacing);
   valdiviaCopo.style.left = `${copoWorldX}px`;
   valdiviaCopo.classList.toggle('walking', step > 0.5);
   if (currentPlace === 'bridge') valdiviaCopo.style.setProperty('--copo-depth', `${bridgeDepth + y}px`);
@@ -1897,6 +1901,10 @@ function changeLocation(nextLocation, entry = 'default') {
       copoWorldX = copoFollowing ? Math.max(10, x - 65) : null;
       copoChasing = false;
       valdiviaCopo.style.left = copoFollowing ? `${copoWorldX}px` : '';
+      if (copoFollowing) {
+        copoFacing = Math.sign(x + 50 - (copoWorldX + 36)) || 1;
+        valdiviaCopo.style.setProperty('--copo-facing', copoFacing);
+      }
       valdiviaCopo.classList.remove('walking');
     }
     y = 0;
