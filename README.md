@@ -2,7 +2,19 @@
 
 Juego cozy de exploración y plataformas protagonizado por Kuro, un gatito viajero que recorre Chile, fotografía miradores y llena su Álbum de Viaje para compartir sus aventuras con su abuelita.
 
-## Prototipo actual
+## Dos versiones jugables
+
+- **Web**. El prototipo se abre en el navegador desde [`web/index.html`](web/index.html) con un servidor local.
+- **Godot alpha v0.2**. Importa [`godot/project.godot`](godot/project.godot) en Godot 4.7.2 y pulsa **F5**. La alpha incluye la ruta hasta Isla Teja. Consulta la [guía del proyecto Godot](godot/README.md).
+
+### Grabaciones
+
+- [Partida completa en Godot · 6:53, con audio](outputs/partida-completa-kuro-godot.mp4)
+- [Comparación web y Godot · 38 segundos](outputs/comparacion-kuro-web-godot.mp4)
+- [Prueba del prototipo web · 2:42](outputs/prueba-kuro-web.mp4)
+- [Godot en escritorio y vista móvil](outputs/kuro-godot-v02.png)
+
+## Prototipo web
 
 El standalone web incluye:
 
@@ -28,13 +40,25 @@ El standalone web incluye:
 - Movimiento, salto, carrera, cámara e interacciones.
 - Subida y bajada de tierra vistas desde arriba dentro del Puente Pedro de Valdivia. El recorrido se extiende hacia ambos lados de la pantalla: terrazas de barro, desvíos entre vigas, huellas, una orilla con bote y juncos y un humedal antes de llegar a los coipos de Isla Teja. El barro movedizo atasca a Kuro y lo hace volver a tierra firme; en otro atajo puede empujar un tronco con `E` para cruzar un charco, o tomar la ruta larga. Kuro se ve de espaldas al subir y de frente al bajar, alternando las patas y la cola al caminar.
 
-## Abrir localmente
+## Abrir la versión web
 
-Abre `index.html` en un navegador o inicia un servidor web local desde la carpeta del proyecto.
+Desde la raíz del repositorio, inicia `python3 -m http.server 8000` y abre [Kuro en localhost](http://127.0.0.1:8000/web/). La entrada de la raíz también abre el juego web y conserva los parámetros de prueba.
 
 Controles principales: flechas o `A`/`D` para moverse, `Shift` para correr, `Espacio` para saltar, `E` para interactuar y `F` para dar un zarpazo dentro de la cueva.
 
-Para revisar directamente la subida del puente, abre `index.html?preview=bridge`. Usa `↑`/`W` para subir, `↓`/`S` para bajar y `←`/`→` para seguir los giros del camino. Pulsa `E` arriba para cruzar hacia los coipos o abajo para volver a la feria.
+Pulsa `H` o el botón `?` para consultar los controles durante la partida.
+
+El encuadre se adapta a la ventana. En vertical, la cámara muestra menos terreno a los lados para que Kuro se vea más grande. En pantallas táctiles puedes usar las flechas junto con **Correr**, **Saltar**, **Acción** y **Zarpazo** al entrar en la cueva.
+
+Para revisar directamente la subida del puente, abre `web/index.html?preview=bridge`. Usa `↑`/`W` para subir, `↓`/`S` para bajar y `←`/`→` para seguir los giros del camino. Pulsa `E` arriba para cruzar hacia los coipos o abajo para volver a la feria.
+
+## Coordenadas y cámara
+
+Los escenarios, las interacciones y los guardados web usan la misma unidad de mundo en todas las pantallas. `web/game-camera.js` calcula la escala, el ancho visible y el desplazamiento horizontal. `web/script.js` le entrega la posición de Kuro y los límites de la escena, y aplica el encuadre al escenario. El HUD y los menús se ajustan por separado con CSS.
+
+La Casa de Kuro y el recorrido de Barrio Yungay hasta Quinta Normal usan [Phaser 4.2.1](https://phaser.io/download/release/v4.2.1). `web/phaser-world.js` recibe la posición, el fotograma y la cámara de la partida. Las dos escenas comparten el lienzo y las texturas de Kuro. El motor se pausa al salir de ese recorrido. La distribución oficial y su licencia MIT están en `web/vendor/phaser` para jugar sin conexión.
+
+Abre `web/index.html?preview=street` para probar Barrio Yungay junto a la puerta de la casa, o `web/index.html?preview=street&at=mota` para ir al rincón de Mota. Agrega `&renderer=dom` para comparar con el renderizador original.
 
 ## Estado
 

@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/stage.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/quinta-normal-unificada-v1.png" id="2"]
+
+[node name="Quinta" type="Node2D"]
+script = ExtResource("1")
+extent = Vector2(1100, 619)
+floor_percent = 0.845
+
+[node name="Panorama" type="Sprite2D" parent="."]
+position = Vector2(550.0000, 309.5000)
+scale = Vector2(0.65789474, 0.65781084)
+texture = ExtResource("2")

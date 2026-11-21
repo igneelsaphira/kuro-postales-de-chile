@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/stage.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/barrio-plaza-quinta-continuo-pixel-v1.png" id="2"]
+[ext_resource type="Texture2D" path="res://assets/mota-reading.png" id="3"]
+[ext_resource type="Texture2D" path="res://assets/mesita-once-mota-v1.png" id="4"]
+
+[node name="Street" type="Node2D"]
+script = ExtResource("1")
+extent = Vector2(1856.25, 619)
+floor_percent = 0.78
+
+[node name="Panorama" type="Sprite2D" parent="."]
+position = Vector2(928.1250, 309.5000)
+scale = Vector2(0.85462707, 0.85497238)
+texture = ExtResource("2")
+
+[node name="Mota" type="Sprite2D" parent="."]
+position = Vector2(575.4375, 421.8450)
+scale = Vector2(0.07070707, 0.07070707)
+texture = ExtResource("3")
+z_index = 1
+
+[node name="TeaTable" type="Sprite2D" parent="."]
+position = Vector2(636.4375, 436.8450)
+scale = Vector2(0.04739705, 0.04739705)
+texture = ExtResource("4")
+z_index = 2

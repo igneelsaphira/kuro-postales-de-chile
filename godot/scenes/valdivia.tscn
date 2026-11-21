@@ -1,0 +1,150 @@
+[gd_scene load_steps=22 format=3]
+
+[ext_resource type="Script" path="res://scripts/valdivia_stage.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/valdivia-riverside-background-v1.webp" id="2"]
+[ext_resource type="Texture2D" path="res://assets/valdivia-riverside-background-v1.webp" id="3"]
+[ext_resource type="Texture2D" path="res://assets/valdivia-riverside-paving-v1.webp" id="4"]
+[ext_resource type="Texture2D" path="res://assets/valdivia-riverside-railing-v1.png" id="8"]
+[ext_resource type="Texture2D" path="res://assets/valdivia-station-building-v1.webp" id="29"]
+[ext_resource type="Texture2D" path="res://assets/valdivia-riverside-bench-v2.png" id="30"]
+[ext_resource type="Texture2D" path="res://assets/valdivia-riverside-tree-wide-v1.webp" id="31"]
+[ext_resource type="Texture2D" path="res://assets/valdivia-riverside-tree-slender-v1.webp" id="32"]
+[ext_resource type="Texture2D" path="res://assets/valdivia-riverside-tree-wide-v1.webp" id="33"]
+[ext_resource type="Texture2D" path="res://assets/valdivia-riverside-lamp-v1.png" id="34"]
+[ext_resource type="Texture2D" path="res://assets/valdivia-riverside-lamp-v1.png" id="35"]
+[ext_resource type="Texture2D" path="res://assets/valdivia-market-bridge-v1.png" id="36"]
+[ext_resource type="Texture2D" path="res://assets/valdivia-market-stalls-v8.png" id="37"]
+[ext_resource type="Texture2D" path="res://assets/valdivia-pudu-vendor-sprite-v3.png" id="38"]
+[ext_resource type="Texture2D" path="res://assets/valdivia-arrayan-v1.png" id="39"]
+[ext_resource type="Texture2D" path="res://assets/valdivia-riverside-bench-v2.png" id="40"]
+[ext_resource type="Texture2D" path="res://assets/coipo-track-hind-v1.svg" id="41"]
+[ext_resource type="Texture2D" path="res://assets/coipo-track-hind-v1.svg" id="42"]
+[ext_resource type="Texture2D" path="res://assets/coipo-track-hind-v1.svg" id="43"]
+
+[sub_resource type="AtlasTexture" id="Frame38"]
+atlas = ExtResource("38")
+region = Rect2(0, 0, 384, 512)
+filter_clip = true
+
+[node name="Valdivia" type="Node2D"]
+script = ExtResource("1")
+extent = Vector2(4400, 619)
+floor_percent = 0.9081583198707592
+
+[node name="RiverWest" type="Sprite2D" parent="."]
+position = Vector2(1100.0000, 340.7934)
+scale = Vector2(1.10943016, 1.10943016)
+texture = ExtResource("2")
+
+[node name="RiverEast" type="Sprite2D" parent="."]
+position = Vector2(3300.0000, 340.7934)
+scale = Vector2(1.10943016, 1.10943016)
+texture = ExtResource("3")
+flip_h = true
+
+[node name="Paving" type="Sprite2D" parent="."]
+position = Vector2(2200, 563.29)
+scale = Vector2(1.0000000000, 0.3035967302)
+texture_repeat = 2
+texture = ExtResource("4")
+region_enabled = true
+region_rect = Rect2(0, 0, 4400.00000, 367)
+
+[node name="Rail" type="Sprite2D" parent="."]
+position = Vector2(2200, 484.08)
+scale = Vector2(0.1096605744, 0.0572472594)
+texture_repeat = 2
+texture = ExtResource("8")
+region_enabled = true
+region_rect = Rect2(0, 0, 40123.80952, 821)
+
+[node name="TrainStation" type="Sprite2D" parent="."]
+position = Vector2(366.0000, 380.9941)
+scale = Vector2(0.39814200, 0.39814200)
+texture = ExtResource("29")
+z_index = 1
+
+[node name="Bench" type="Sprite2D" parent="."]
+position = Vector2(1400.0000, 484.5800)
+scale = Vector2(0.09564293, 0.09564293)
+texture = ExtResource("30")
+z_index = 1
+
+[node name="TreesWest" type="Sprite2D" parent="."]
+position = Vector2(660.0000, 353.6500)
+scale = Vector2(0.46223958, 0.46223958)
+texture = ExtResource("31")
+z_index = 2
+
+[node name="TreesCenter" type="Sprite2D" parent="."]
+position = Vector2(1188.0000, 366.1500)
+scale = Vector2(0.42968750, 0.42968750)
+texture = ExtResource("32")
+z_index = 2
+
+[node name="TreesEast" type="Sprite2D" parent="."]
+position = Vector2(1694.0000, 346.1500)
+scale = Vector2(0.48177083, 0.48177083)
+texture = ExtResource("33")
+flip_h = true
+z_index = 2
+
+[node name="LampWest" type="Sprite2D" parent="."]
+position = Vector2(1000.5000, 412.5800)
+scale = Vector2(0.09668508, 0.09668508)
+texture = ExtResource("34")
+z_index = 2
+
+[node name="LampEast" type="Sprite2D" parent="."]
+position = Vector2(1814.5000, 412.5800)
+scale = Vector2(0.09668508, 0.09668508)
+texture = ExtResource("35")
+z_index = 2
+
+[node name="MarketBridge" type="Sprite2D" parent="."]
+position = Vector2(2970.0000, 338.0000)
+scale = Vector2(0.64487035, 0.64487035)
+texture = ExtResource("36")
+z_index = 3
+
+[node name="MarketStalls" type="Sprite2D" parent="."]
+position = Vector2(2494.0000, 398.5800)
+scale = Vector2(0.28184893, 0.28184893)
+texture = ExtResource("37")
+z_index = 4
+
+[node name="Vendor" type="Sprite2D" parent="."]
+position = Vector2(2428.5000, 413.5800)
+scale = Vector2(0.27343750, 0.27343750)
+texture = SubResource("Frame38")
+z_index = 3
+
+[node name="Arrayan" type="Sprite2D" parent="."]
+position = Vector2(3520.0000, 340.5008)
+scale = Vector2(0.26688907, 0.26688907)
+texture = ExtResource("39")
+z_index = 5
+
+[node name="IslandBench" type="Sprite2D" parent="."]
+position = Vector2(3644.0000, 471.5800)
+scale = Vector2(0.09564293, 0.09564293)
+texture = ExtResource("40")
+z_index = 4
+
+[node name="Track0" type="Sprite2D" parent="."]
+position = Vector2(2540.0000, 550.0000)
+scale = Vector2(0.20833333, 0.20312500)
+texture = ExtResource("41")
+z_index = 5
+
+[node name="Track1" type="Sprite2D" parent="."]
+position = Vector2(2600.0000, 536.0000)
+scale = Vector2(0.20833333, 0.20312500)
+texture = ExtResource("42")
+z_index = 5
+
+[node name="Track2" type="Sprite2D" parent="."]
+position = Vector2(2675.0000, 519.0000)
+scale = Vector2(0.20833333, 0.20312500)
+texture = ExtResource("43")
+z_index = 5

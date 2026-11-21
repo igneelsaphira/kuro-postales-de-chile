@@ -1,0 +1,41 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/stage.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/valparaiso-continuo-pixel-v1.png" id="2"]
+[ext_resource type="Texture2D" path="res://assets/valparaiso-cerro-cueva-pixel-v1.png" id="3"]
+[ext_resource type="Texture2D" path="res://assets/tizne-pixel-v2.png" id="4"]
+[ext_resource type="Texture2D" path="res://assets/dona-bruma-pixel-v2.png" id="5"]
+
+[sub_resource type="AtlasTexture" id="Frame4"]
+atlas = ExtResource("4")
+region = Rect2(0, 0, 724, 724)
+filter_clip = true
+
+[node name="Valparaiso" type="Node2D"]
+script = ExtResource("1")
+extent = Vector2(3616.25, 619)
+floor_percent = 0.86
+hill_profile = PackedVector2Array(0.0000, 436.3950, 1650.0000, 507.9239, 1760.0000, 528.0070, 1852.8125, 528.0070, 1945.6250, 529.8640, 2038.4375, 525.5310, 2131.2500, 515.0080, 2224.0625, 503.8660, 2316.8750, 497.0570, 2409.6875, 487.7720, 2502.5000, 482.2010, 2595.3125, 473.5350, 2688.1250, 462.3930, 2780.9375, 446.9180, 2873.7500, 435.7760, 2966.5625, 424.6340, 3059.3750, 415.9680, 3152.1875, 411.0160, 3245.0000, 409.1590, 3337.8125, 408.5400, 3430.6250, 409.1590, 3523.4375, 410.3970, 3616.2500, 411.0160)
+
+[node name="Panorama" type="Sprite2D" parent="."]
+position = Vector2(928.1250, 309.5000)
+scale = Vector2(0.85462707, 0.85497238)
+texture = ExtResource("2")
+
+[node name="Hills" type="Sprite2D" parent="."]
+position = Vector2(2688.1250, 309.5000)
+scale = Vector2(0.85462707, 0.85497238)
+texture = ExtResource("3")
+
+[node name="Tizne" type="Sprite2D" parent="."]
+position = Vector2(1593.1875, 430.3200)
+scale = Vector2(0.14502762, 0.14502762)
+texture = SubResource("Frame4")
+z_index = 2
+
+[node name="Bruma" type="Sprite2D" parent="."]
+position = Vector2(3077.2500, 349.8908)
+scale = Vector2(0.08046818, 0.08046818)
+texture = ExtResource("5")
+flip_h = true
+z_index = 2
